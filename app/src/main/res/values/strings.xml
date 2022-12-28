@@ -1,6 +1,23 @@
 <resources>
     <string name="app_name">LaureApp</string>
+    <string name="app_name_upperCase"><b>LAURE</b>APP</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="content_description_notification">Show notifications</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome! "</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="login">login</string>
+    <string name="login_guest"><u>Enter as guest</u></string>
+    <string name="favorite">Favourites</string>
+    <string name="content_description_favorite">Add to favourites</string>
+    <string name="search">Search</string>
+    <string name="content_description_search">Search request</string>
 </resources>
