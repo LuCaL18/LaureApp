@@ -2,19 +2,28 @@ package com.uniba.mobile.cddgl.laureapp.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.uniba.mobile.cddgl.laureapp.MainActivity;
+import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
+    private MenuProvider provider;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,8 +39,44 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.app_name_upperCase);
+        }
+
+        provider = new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menu.clear();
+                menuInflater.inflate(R.menu.app_bar_home, menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    //TODO: gestire barra per fragment come fatto qui
+                    case R.id.favorite: {
+                        return true;
+                    }
+                    default:
+                        return false;
+                }
+            }
+
+        };
+
+        requireActivity().addMenuProvider(provider);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        requireActivity().removeMenuProvider(provider);
         binding = null;
+        provider = null;
     }
 }
