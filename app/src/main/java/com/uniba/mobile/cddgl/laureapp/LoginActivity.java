@@ -30,10 +30,6 @@ public class LoginActivity extends AppCompatActivity {
 
         this.loggedInUser = loginViewModel.getLoggedUser().getValue();
 
-        if (this.loggedInUser != null) {
-            goToMainActivity();
-        }
-
         loginViewModel.getLoggedUser().observe(this, new Observer<LoggedInUser>() {
 
             @Override
@@ -47,8 +43,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (this.loggedInUser != null) {
+            goToMainActivity();
+        }
     }
 
     @Override

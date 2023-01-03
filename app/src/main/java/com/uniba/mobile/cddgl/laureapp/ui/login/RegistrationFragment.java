@@ -23,12 +23,12 @@ import android.widget.Toast;
 
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
-import com.uniba.mobile.cddgl.laureapp.databinding.FragmentSignInBinding;
+import com.uniba.mobile.cddgl.laureapp.databinding.FragmentRegistrationBinding;
 
-public class SignInFragment extends Fragment {
+public class RegistrationFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
-    private FragmentSignInBinding binding;
+    private FragmentRegistrationBinding binding;
 
     @Nullable
     @Override
@@ -36,7 +36,7 @@ public class SignInFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = FragmentSignInBinding.inflate(inflater, container, false);
+        binding = FragmentRegistrationBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -44,26 +44,38 @@ public class SignInFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
 
         final EditText usernameEditText = binding.username;
+        final EditText nameEditText = binding.name;
+        final EditText surnameEditText = binding.surname;
+        final EditText dobEditText = binding.birthDay;
+        final EditText bioEditText = binding.bio;
         final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
+        final Button registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
 
-        loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
+        loginViewModel.getRegisterFormState().observe(getViewLifecycleOwner(), new Observer<RegisterFormState>() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
+            public void onChanged(@Nullable RegisterFormState registerFormState) {
+                if (registerFormState == null) {
                     return;
                 }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                registerButton.setEnabled(registerFormState.isDataValid());
+                if (registerFormState.getUsernameError() != null) {
+                    usernameEditText.setError(getString(registerFormState.getUsernameError()));
                 }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                if (registerFormState.getPasswordError() != null) {
+                    passwordEditText.setError(getString(registerFormState.getPasswordError()));
+                }
+                if (registerFormState.getNameError() != null) {
+                    nameEditText.setError(getString(registerFormState.getNameError()));
+                }
+                if (registerFormState.getSurnameError() != null) {
+                    surnameEditText.setError(getString(registerFormState.getSurnameError()));
+                }
+                if (registerFormState.getBioError() != null) {
+                    bioEditText.setError(getString(registerFormState.getBioError()));
                 }
             }
         });
@@ -99,37 +111,44 @@ public class SignInFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.registerDataChanged(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString(), nameEditText.getText().toString(),
+                        surnameEditText.getText().toString(), bioEditText.getText().toString());
             }
         };
+
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
+        nameEditText.addTextChangedListener(afterTextChangedListener);
+        surnameEditText.addTextChangedListener(afterTextChangedListener);
+        bioEditText.addTextChangedListener(afterTextChangedListener);
+
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                    loginViewModel.register(usernameEditText.getText().toString(),
+                            passwordEditText.getText().toString(), nameEditText.getText().toString(),
+                            surnameEditText.getText().toString(), dobEditText.getText().toString(), bioEditText.getText().toString());
                 }
                 return false;
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.register(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString(), nameEditText.getText().toString(),
+                        surnameEditText.getText().toString(), dobEditText.getText().toString(), bioEditText.getText().toString());
             }
         });
     }
 
     private void updateUiWithUser(String displayName) {
         String welcome = getString(R.string.welcome) + displayName;
-        // TODO : initiate successful logged in experience
         if (getContext() != null && getContext().getApplicationContext() != null) {
             Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
         }

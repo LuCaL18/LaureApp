@@ -5,15 +5,12 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="content_description_notification">Show notifications</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="register">Register</string>
     <string name="welcome">"Welcome! "</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="registration_failed">"Registration failed"</string>
     <string name="login">login</string>
     <string name="login_guest"><u>Enter as guest</u></string>
     <string name="favorite">Favourites</string>
@@ -32,4 +29,25 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_gallery">Gallery</string>
+
+<!--    USER FIELDS-->
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="birth_day">Date of birth</string>
+    <string name="bio">Biography</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+
+<!--    ERROR USER-->
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_name">Name must not contain special characters</string>
+    <string name="invalid_surname">Surname must not contain special characters</string>
+    <string name="invalid_bio">Biography must contain a maximum of 200 characters</string>
+
+<!--    FIREBASE EXCEPTION-->
+    <string name="weak_password">Your password is too weak</string>
+    <string name="invalid_credentials">Your email is invalid or already in use</string>
+    <string name="user_collision">User is already registered with this email</string>
+
 </resources>
