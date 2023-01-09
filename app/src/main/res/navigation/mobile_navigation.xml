@@ -31,4 +31,5 @@
         android:name="com.uniba.mobile.cddgl.laureapp.ui.task.NewTaskFragment"
         android:label="@string/new_task"
         tools:layout="@layout/fragment_new_task" />
+
 </navigation>
