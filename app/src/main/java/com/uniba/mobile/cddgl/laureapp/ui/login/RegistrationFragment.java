@@ -50,9 +50,9 @@ public class RegistrationFragment extends Fragment {
         final EditText nameEditText = binding.name;
         final EditText surnameEditText = binding.surname;
         final EditText dobEditText = binding.birthDay;
-        final EditText bioEditText = binding.bio;
+        final EditText bioEditText = binding.biography;
         final EditText passwordEditText = binding.password;
-        final Button registerButton = binding.register;
+        final Button registerButton = binding.add;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getRegisterFormState().observe(getViewLifecycleOwner(), new Observer<RegisterFormState>() {

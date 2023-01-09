@@ -82,7 +82,7 @@
         app:layout_constraintTop_toBottomOf="@+id/surname" />
 
     <EditText
-        android:id="@+id/bio"
+        android:id="@+id/biography"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -115,10 +115,10 @@
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bio" />
+        app:layout_constraintTop_toBottomOf="@+id/biography" />
 
     <Button
-        android:id="@+id/register"
+        android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
