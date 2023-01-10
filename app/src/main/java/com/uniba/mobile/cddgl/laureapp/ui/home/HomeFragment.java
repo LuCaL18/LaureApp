@@ -15,6 +15,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
@@ -24,6 +26,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private MenuProvider provider;
+    private final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        NavController navController = NavHostFragment.findNavController(this);
 
         if(actionBar != null) {
             actionBar.setTitle(R.string.app_name_upperCase);
@@ -59,7 +63,8 @@ public class HomeFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     //TODO: gestire barra per fragment come fatto qui
-                    case R.id.favorite: {
+                    case NOTIFICATION_APP_BAR: {
+                        navController.navigate(R.id.action_navigation_home_to_chatFragment);
                         return true;
                     }
                     default:

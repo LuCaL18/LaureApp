@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp;
+package com.uniba.mobile.cddgl.laureapp.ui.login;
 
 import android.os.Bundle;
 
@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
@@ -16,26 +15,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
-import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link StartFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class StartFragment extends Fragment {
     private NavController navController;
 
     public StartFragment() {
         // Required empty public constructor
-    }
-
-    public static StartFragment newInstance() {
-        StartFragment fragment = new StartFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -62,17 +49,11 @@ public class StartFragment extends Fragment {
         Button signInButton = view.findViewById(R.id.buttonSignIn);
         TextView guestText = view.findViewById(R.id.textGuest);
 
-        loginButton.setOnClickListener(view1 -> {
-            navController.navigate(R.id.action_startFragment_to_loginFragment);
-        });
+        loginButton.setOnClickListener(view1 -> navController.navigate(R.id.action_startFragment_to_loginFragment));
 
-        signInButton.setOnClickListener(view1 -> {
-            navController.navigate(R.id.action_startFragment_to_signInFragment);
-        });
+        signInButton.setOnClickListener(view1 -> navController.navigate(R.id.action_startFragment_to_signInFragment));
 
-        guestText.setOnClickListener(view1 -> {
-            loginViewModel.setLoggedUser(new LoggedInUser("ospite", "GUEST"));
-        });
+        guestText.setOnClickListener(view1 -> loginViewModel.setLoggedUser(new LoggedInUser("ospite", "GUEST")));
     }
 
 
