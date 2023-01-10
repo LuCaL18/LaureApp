@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
-import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModel;
-
 public class NewTaskModelFactory implements ViewModelProvider.Factory {
 
     @NonNull

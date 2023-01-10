@@ -51,7 +51,6 @@ public class NewTaskFragment extends Fragment {
 
         binding = FragmentNewTaskBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     @Override
