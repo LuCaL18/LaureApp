@@ -7,17 +7,148 @@
     tools:context=".ui.task.NewTaskFragment">
 
     <TextView
-        android:id="@+id/text_newtask"
-        android:layout_width="match_parent"
+        android:id="@+id/nomestato_testo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
+        android:layout_marginStart="65dp"
+        android:layout_marginTop="95dp"
+        android:layout_marginEnd="297dp"
+        android:layout_marginBottom="617dp"
+        android:text="Nome Task"
+        android:textColor="@color/primary_green"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/stato_testo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="327dp"
+        android:layout_marginBottom="508dp"
+        android:text="Stato"
+        android:textColor="@color/primary_green"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nomestato_testo" />
+
+    <TextView
+        android:id="@+id/descrizione_testo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="73dp"
+        android:layout_marginEnd="268dp"
+        android:layout_marginBottom="408dp"
+        android:text="Descrizione"
+        android:textColor="@color/primary_green"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stato_testo" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="151dp"
+        android:layout_marginTop="561dp"
+        android:layout_marginEnd="152dp"
+        android:layout_marginBottom="122dp"
+        android:text="ADD TASK"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/barra1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="91dp"
+        app:layout_constraintBottom_toTopOf="@id/nomestato_testo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/nometask"
+        android:layout_width="311dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginBottom="15dp"
+        android:hint="nome task"
+        app:layout_constraintBottom_toTopOf="@+id/stato_testo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nomestato_testo"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/barra2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="91dp"
+        app:layout_constraintBottom_toTopOf="@+id/nomestato_testo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/stato"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginBottom="15dp"
+        android:hint="stato"
+        app:layout_constraintBottom_toTopOf="@+id/descrizione_testo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stato_testo" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="91dp"
+        app:layout_constraintBottom_toTopOf="@+id/nomestato_testo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="314dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginBottom="30dp"
+        android:hint="descrizione"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descrizione_testo"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
