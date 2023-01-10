@@ -126,6 +126,7 @@
         app:layout_constraintTop_toBottomOf="@+id/stato_testo" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/barra3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="91dp"
@@ -137,6 +138,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/descrizione"
         android:layout_width="314dp"
         android:layout_height="48dp"
         android:layout_marginStart="38dp"

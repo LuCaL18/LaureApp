@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,12 +57,12 @@ public class NewTaskFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        newtaskViewModel = new ViewModelProvider(requireActivity()).get(NewTaskViewModel.class);
+        NewTaskViewModel newtaskViewModel = new ViewModelProvider(requireActivity()).get(NewTaskViewModel.class);
 
-        final EditText nometaskEditText = binding.nomeTask;
+        final EditText nometaskEditText = binding.nometask;
         final EditText statoEditText = binding.stato;
-        final EditText descrizione = binding.descrizione;
-        final Button addtaskEditText = binding.addtask;
+        final EditText descrizioneEditText = binding.descrizione;
+        final Button addtaskButton = binding.button;
 
         newtaskViewModel.getnewtaskFormState().observe(getViewLifecycleOwner(), new Observer<NewTaskFormState>() {
             @Override
@@ -78,23 +80,22 @@ public class NewTaskFragment extends Fragment {
             }
         });
 
-        newtaskViewModel.getnewtaskResult().observe(getViewLifecycleOwner(), new Observer<newtaskResult>() {
+        /* newtaskViewModel.getnewtaskResult().observe(getViewLifecycleOwner(), new Observer<newtaskResult>() {
             @Override
             public void onChanged(@Nullable NewTaskResult newtaskResult) {
                 if (newtaskResult == null) {
                     return;
                 }
-                loadingProgressBar.setVisibility(View.GONE);
                 if (newtaskResult.getError() != null) {
                     showNewTaskFailure(newtaskResult.getError());
                 }
                 if (newtaskResult.getSuccess() != null) {
                     NewTaskIn result = newtaskResult.getSuccess();
-                    updateUiWithUser(result.getDisplayName());
+                    updateUIwithUser(result.getNomeTask());
                     newtaskViewModel.setLoggedUser(result);
                 }
             }
-        });
+        }); */
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -110,7 +111,7 @@ public class NewTaskFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 newtaskViewModel.newtaskDataChanged(nometaskEditText.getText().toString(),
-                        statoEditText.getText().toString());
+                        statoEditText.getText().toString(),descrizioneEditText.getText().toString());
             }
         };
         nometaskEditText.addTextChangedListener(afterTextChangedListener);
@@ -120,19 +121,18 @@ public class NewTaskFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    newtaskViewModel.addTask(nometaskEditText.getText().toString(),
-                            statoEditText.getText().toString());
+                    newtaskViewModel.insertNewTask(nometaskEditText.getText().toString(),
+                            statoEditText.getText().toString(),descrizioneEditText.getText().toString());
                 }
                 return false;
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        addtaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                newtaskViewModel.login(nometaskEditText.getText().toString(),
-                        statoEditText.getText().toString());
+                newtaskViewModel.insertNewTask(nometaskEditText.getText().toString(),
+                        statoEditText.getText().toString(),descrizioneEditText.getText().toString());
             }
         });
     }

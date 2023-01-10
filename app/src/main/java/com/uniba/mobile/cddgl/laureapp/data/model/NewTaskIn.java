@@ -1,5 +1,4 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
-
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 
 /**
@@ -9,9 +8,9 @@ public class NewTaskIn {
 
     private String nomeTask;
     private String stato;
-    private String[] descrizione;
+    private String descrizione;
 
-    public NewTaskIn(String nomeTask, String stato, String[] descrizione) {
+    public NewTaskIn(String nomeTask, String stato, String descrizione, RoleUser student) {
         this.nomeTask = nomeTask;
         this.stato = stato;
         this.descrizione = descrizione;
@@ -33,11 +32,11 @@ public class NewTaskIn {
         this.stato = stato;
     }
 
-    public String[] getDescrizione() {
+    public String getDescrizione() {
         return descrizione;
     }
 
-    public void setDescrizione(String[] descrizione) {
+    public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
 

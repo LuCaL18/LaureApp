@@ -45,6 +45,11 @@
     <string name="invalid_surname">Surname must not contain special characters</string>
     <string name="invalid_bio">Biography must contain a maximum of 200 characters</string>
 
+    <!--    ERROR TASK-->
+    <string name="invalid_state">Not a valid state</string>
+    <string name="invalid_taskname">Not a valid name for a task</string>
+    <string name="invalid_description">Description must contain a maximum of 200 characters</string>
+
     <!--    FIREBASE EXCEPTION-->
     <string name="weak_password">Your password is too weak</string>
     <string name="invalid_credentials">Your email is invalid or already in use</string>
