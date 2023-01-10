@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/primary_green</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/message_green</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/grey_app</item>
         <!-- Status bar color. -->

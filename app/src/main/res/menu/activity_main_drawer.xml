@@ -16,5 +16,9 @@
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_favorite_24dp"
             android:title="@string/new_task" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_logout_24"
+            android:title="@string/logout" />
     </group>
 </menu>
