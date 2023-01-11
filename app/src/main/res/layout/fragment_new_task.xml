@@ -7,7 +7,7 @@
     tools:context=".ui.task.NewTaskFragment">
 
     <TextView
-        android:id="@+id/nomestato_testo"
+        android:id="@+id/nometask_testo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nomestato_testo" />
+        app:layout_constraintTop_toBottomOf="@+id/nometask_testo" />
 
     <TextView
         android:id="@+id/descrizione_testo"
@@ -76,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="91dp"
-        app:layout_constraintBottom_toTopOf="@id/nomestato_testo"
+        app:layout_constraintBottom_toTopOf="@id/nometask_testo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -96,7 +96,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nomestato_testo"
+        app:layout_constraintTop_toBottomOf="@+id/nometask_testo"
         app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -104,7 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="91dp"
-        app:layout_constraintBottom_toTopOf="@+id/nomestato_testo"
+        app:layout_constraintBottom_toTopOf="@+id/nometask_testo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -130,7 +130,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="91dp"
-        app:layout_constraintBottom_toTopOf="@+id/nomestato_testo"
+        app:layout_constraintBottom_toTopOf="@+id/nometask_testo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

@@ -59,6 +59,7 @@
     <!--    ERROR TASK-->
     <string name="invalid_state">Not a valid state</string>
     <string name="invalid_taskname">Not a valid name for a task</string>
+    <string name="invalid_task">Not a valid task</string>
     <string name="invalid_description">Description must contain a maximum of 200 characters</string>
 
     <!--    FIREBASE EXCEPTION-->
