@@ -1,27 +1,23 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
-import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 
-/**
- * Data class that captures user information for logged in users retrieved from LoginRepository
- */
-public class NewTaskIn {
+public class Task {
 
-    private String nomeTask;
+    private String nometask;
     private String stato;
     private String descrizione;
 
-    public NewTaskIn(String nomeTask, String stato, String descrizione, RoleUser student) {
-        this.nomeTask = nomeTask;
+    public Task (String nometask, String stato, String descrizione) {
+        this.nometask = nometask;
         this.stato = stato;
         this.descrizione = descrizione;
     }
 
-    public String getNomeTask() {
-        return nomeTask;
+    public String getNometask() {
+        return nometask;
     }
 
-    public void setNomeTask(String nomeTask) {
-        this.nomeTask = nomeTask;
+    public void setNometask(String nometask) {
+        this.nometask = nometask;
     }
 
     public String getStato() {

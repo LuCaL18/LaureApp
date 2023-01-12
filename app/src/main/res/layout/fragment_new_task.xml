@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/stato_testo" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/addtask_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="151dp"
@@ -146,7 +146,7 @@
         android:layout_marginEnd="62dp"
         android:layout_marginBottom="30dp"
         android:hint="descrizione"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/addtask_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
