@@ -44,10 +44,10 @@ public class NewTaskFragment extends Fragment {
         addtaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                Task task = new Task();
                 String nometask = nometaskEditText.getText().toString();
                 String stato = statoEditText.getText().toString();
                 String descrizione = descrizioneEditText.getText().toString();
+                Task task = new Task(nometask,stato,descrizione);
                 listener.onAddTaskClicked(task);
             }
         });
