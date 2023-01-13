@@ -30,7 +30,7 @@
 
     <string name="menu_gallery">Gallery</string>
 
-<!--    USER FIELDS-->
+    <!--    USER FIELDS-->
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="birth_day">Date of birth</string>
@@ -38,16 +38,33 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
 
-<!--    ERROR USER-->
+    <!--    ERROR USER-->
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="invalid_name">Name must not contain special characters</string>
     <string name="invalid_surname">Surname must not contain special characters</string>
     <string name="invalid_bio">Biography must contain a maximum of 200 characters</string>
 
-<!--    FIREBASE EXCEPTION-->
+    <!--    FIREBASE EXCEPTION-->
     <string name="weak_password">Your password is too weak</string>
     <string name="invalid_credentials">Your email is invalid or already in use</string>
     <string name="user_collision">User is already registered with this email</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nome_tesi">NOME TESI</string>
+    <string name="relatori">RELATORI</string>
+    <string name="vincoli">VINCOLI</string>
+    <string name="task">TASK</string>
+    <string name="crea_tesi">Crea tesi</string>
+    <string name="popvincoli">Vincoli</string>
+    <string name="creare_task">Creare task</string>
+    <string name="accettare_tesisti">Accettare tesisti</string>
+    <string name="modificare_eliminare_task">Modificare/eliminare task</string>
+    <string name="modificare_tesi">Modificare tesi</string>
+    <string name="cancella">CANCELLA</string>
+    <string name="aggiungi">AGGIUNGI</string>
+    <string name="email">EMAIL</string>
+    <string name="cognome">COGNOME</string>
+    <string name="nome">NOME</string>
 
 </resources>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/T_vincoli"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/vincoli"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:layout_marginTop="10dp" />
+
+<LinearLayout
+    android:id="@+id/layout1"
+    android:layout_width="0dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintWidth_percent="0.5"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintTop_toBottomOf="@id/T_vincoli">
+
+    <CheckBox
+        android:id="@+id/vincolo1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/creare_task" />
+
+    <CheckBox
+        android:id="@+id/vincolo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:text="@string/accettare_tesisti" />
+
+    <CheckBox
+        android:id="@+id/vincolo3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/modificare_eliminare_task"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        />
+
+    <CheckBox
+        android:id="@+id/vincolo4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/modificare_tesi"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        />
+</LinearLayout>
+
+<LinearLayout
+        android:id="@+id/layout2"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.5"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/T_vincoli"
+        app:layout_constraintStart_toEndOf="@id/layout1">
+
+        <CheckBox
+            android:id="@+id/vincolo5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Creare task" />
+
+        <CheckBox
+            android:id="@+id/vincolo6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            android:text="Accettare tesisti" />
+
+        <CheckBox
+            android:id="@+id/vincolo7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modificare/eliminare task"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            />
+
+        <CheckBox
+            android:id="@+id/vincolo8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modificare tesi"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/T_capacita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="Capacita e skills"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout1"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"/>
+
+    <EditText
+        android:id="@+id/CeS_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ES...Programmare in java..."
+        app:layout_constraintTop_toBottomOf="@+id/T_capacita"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/saveButton"
+        app:layout_constraintTop_toBottomOf="@id/CeS_edit"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:text="@string/aggiungi"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cancelButton"
+        app:layout_constraintTop_toBottomOf="@id/CeS_edit"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:text="@string/cancella"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

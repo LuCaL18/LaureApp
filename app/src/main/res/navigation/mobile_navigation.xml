@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.home.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_tesiFragmant"
+            app:destination="@id/tesiFragmant" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -26,4 +30,13 @@
         android:name="com.uniba.mobile.cddgl.laureapp.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
+    <fragment
+        android:id="@+id/tesiFragmant"
+        android:name="com.uniba.mobile.cddgl.laureapp.TesiFragment"
+        android:label="@string/crea_tesi"
+        tools:layout="@layout/fragment_tesi" >
+        <action
+            android:id="@+id/action_tesiFragmant_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 </navigation>

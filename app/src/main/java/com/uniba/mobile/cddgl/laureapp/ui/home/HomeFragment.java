@@ -1,5 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
@@ -43,6 +46,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        NavController navController = NavHostFragment.findNavController(this);
 
         if(actionBar != null) {
             actionBar.setTitle(R.string.app_name_upperCase);
@@ -61,6 +65,9 @@ public class HomeFragment extends Fragment {
                     //TODO: gestire barra per fragment come fatto qui
                     case R.id.favorite: {
                         return true;
+                    }
+                    case R.id.search: {
+                        navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
                     }
                     default:
                         return false;
