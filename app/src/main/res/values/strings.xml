@@ -47,6 +47,12 @@
     <string name="role_professor">Professor</string>
     <string name="forgot_password"><u>Forgot password?</u></string>
 
+    <!--    TASK FIELD-->
+    <string name="nometask">Nome Task</string>
+    <string name="stato">Stato</string>
+    <string name="descrizione">Descrizione</string>
+    <string name="scadenza">Scadenza</string>
+
     <!--    ERROR USER-->
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
@@ -61,6 +67,7 @@
     <string name="invalid_taskname">Not a valid name for a task</string>
     <string name="invalid_task">Not a valid task</string>
     <string name="invalid_description">Description must contain a maximum of 200 characters</string>
+    <string name="invalid_scadenza">Not a valid end date</string>
 
     <!--    FIREBASE EXCEPTION-->
     <string name="weak_password">Your password is too weak</string>

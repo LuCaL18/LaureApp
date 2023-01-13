@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
+import com.uniba.mobile.cddgl.laureapp.ui.component.DatePickerFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +27,7 @@ import java.util.Map;
 public class NewTaskFragment extends Fragment {
 
     private FirebaseFirestore db;
-    private EditText nometaskEditText,statoEditText,descrizioneEditText;
+    private EditText nometaskEditText,statoEditText,descrizioneEditText,scadenzaEditText;
     private Button addtaskButton;
     private OnFragmentInteractionListener listener;
 
@@ -49,7 +51,13 @@ public class NewTaskFragment extends Fragment {
         nometaskEditText = view.findViewById(R.id.nometask);
         statoEditText = view.findViewById(R.id.stato);
         descrizioneEditText = view.findViewById(R.id.descrizione);
+        scadenzaEditText = view.findViewById(R.id.scadenza);
         addtaskButton = view.findViewById(R.id.addtask_button);
+
+        scadenzaEditText.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.show(getParentFragmentManager(), "date picker");
+        });
 
         addtaskButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -57,10 +65,12 @@ public class NewTaskFragment extends Fragment {
                 String nometask = nometaskEditText.getText().toString();
                 String stato = statoEditText.getText().toString();
                 String descrizione = descrizioneEditText.getText().toString();
+                String scadenza = scadenzaEditText.getText().toString();
                 Map<String,Object> listaTask = new HashMap<>();
                 listaTask.put("nomeTask",nometask);
                 listaTask.put("stato",stato);
                 listaTask.put("descrizione",descrizione);
+                listaTask.put("scadenza",scadenza);
                 db.collection("task")
                         .add(listaTask)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

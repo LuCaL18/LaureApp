@@ -5,11 +5,13 @@ public class Task {
     private String nometask;
     private String stato;
     private String descrizione;
+    private String scadenza;
 
-    public Task (String nometask, String stato, String descrizione) {
+    public Task (String nometask, String stato, String descrizione, String scadenza) {
         this.nometask = nometask;
         this.stato = stato;
         this.descrizione = descrizione;
+        this.scadenza = scadenza;
     }
 
     public Task () {
@@ -38,6 +40,14 @@ public class Task {
 
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
+    }
+
+    public String getScadenza() {
+        return scadenza;
+    }
+
+    public void setScadenza(String scadenza) {
+        this.scadenza = scadenza;
     }
 
 }
