@@ -12,6 +12,10 @@ public class Task {
         this.descrizione = descrizione;
     }
 
+    public Task () {
+
+    }
+
     public String getNometask() {
         return nometask;
     }
