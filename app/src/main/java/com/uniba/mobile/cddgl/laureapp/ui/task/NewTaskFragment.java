@@ -69,7 +69,7 @@ public class NewTaskFragment extends Fragment {
                 task.setNometask(nometaskEditText.getText().toString());
                 task.setStato(statoEditText.getText().toString());
                 task.setDescrizione(descrizioneEditText.getText().toString());
-                databaseReference = firebaseDatabase.getReference("task");
+                databaseReference = firebaseDatabase.getReference("task").child("newtask");
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
