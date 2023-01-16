@@ -65,7 +65,7 @@ public class RegistrationFragment extends Fragment {
         final ProgressBar loadingProgressBar = binding.loading;
 
         dobEditText.setOnClickListener(v -> {
-            DialogFragment datePicker = new DatePickerFragment();
+            DialogFragment datePicker = new DatePickerFragment(R.layout.fragment_registration);
             datePicker.show(getParentFragmentManager(), "date picker");
         });
 
