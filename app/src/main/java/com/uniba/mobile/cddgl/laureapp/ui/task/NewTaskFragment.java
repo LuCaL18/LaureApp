@@ -57,34 +57,33 @@ public class NewTaskFragment extends Fragment {
         scadenzaEditText.setOnClickListener(v -> {
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.show(getParentFragmentManager(), "date picker");
-        });
-
-        addtaskButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick (View view) {
-                String nometask = nometaskEditText.getText().toString();
-                String stato = statoEditText.getText().toString();
-                String descrizione = descrizioneEditText.getText().toString();
-                String scadenza = scadenzaEditText.getText().toString();
-                Map<String,Object> listaTask = new HashMap<>();
-                listaTask.put("nomeTask",nometask);
-                listaTask.put("stato",stato);
-                listaTask.put("descrizione",descrizione);
-                listaTask.put("scadenza",scadenza);
-                db.collection("task")
-                        .add(listaTask)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(getContext(), "successfull", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
+            addtaskButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick (View view) {
+                    String nometask = nometaskEditText.getText().toString();
+                    String stato = statoEditText.getText().toString();
+                    String descrizione = descrizioneEditText.getText().toString();
+                    String scadenza = scadenzaEditText.getText().toString();
+                    Map<String,Object> listaTask = new HashMap<>();
+                    listaTask.put("nomeTask",nometask);
+                    listaTask.put("stato",stato);
+                    listaTask.put("descrizione",descrizione);
+                    listaTask.put("scadenza",scadenza);
+                    db.collection("task")
+                            .add(listaTask)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Toast.makeText(getContext(), "successfull", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            });
         });
         return view;
     }

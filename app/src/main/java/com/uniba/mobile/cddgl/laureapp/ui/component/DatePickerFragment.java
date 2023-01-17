@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.uniba.mobile.cddgl.laureapp.R;
 
@@ -36,7 +37,13 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dateString = dateFormat.format(c.getTime());
 
-        EditText dateField = getParentFragment().getView().findViewById(R.id.birthDay);
+        EditText dateField = null;
+        String root = (String) ((NavHostFragment)getParentFragment()).getNavController().getCurrentDestination().getLabel();
+        if (root == "fragment_sign_in") {
+            dateField = getParentFragment().getView().findViewById(R.id.birthDay);
+        } else if (root == "new_task") {
+            dateField = getParentFragment().getView().findViewById(R.id.scadenza);
+        }
         dateField.setError(null);
         dateField.setText(dateString);
     }
