@@ -55,7 +55,7 @@ public class NewTaskFragment extends Fragment {
         addtaskButton = view.findViewById(R.id.addtask_button);
 
         scadenzaEditText.setOnClickListener(v -> {
-            DialogFragment datePicker = new DatePickerFragment();
+            DialogFragment datePicker = new DatePickerFragment(R.layout.fragment_new_task);
             datePicker.show(getParentFragmentManager(), "date picker");
             addtaskButton.setOnClickListener(new View.OnClickListener(){
                 @Override

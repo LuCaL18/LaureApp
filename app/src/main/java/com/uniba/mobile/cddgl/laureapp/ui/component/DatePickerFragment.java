@@ -5,17 +5,22 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.EditText;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import com.uniba.mobile.cddgl.laureapp.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
+    private static final int FRAGMENT_REGISTRATION = R.layout.fragment_registration;
+    private static final int FRAGMENT_NEWTASK = R.layout.fragment_new_task;
+    private final int layout;
+
+    public DatePickerFragment(int contentLayoutId) {
+        layout = contentLayoutId;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -34,17 +39,25 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         final Calendar c = Calendar.getInstance();
         c.set(year, month, day);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String dateString = dateFormat.format(c.getTime());
 
-        EditText dateField = null;
-        String root = (String) ((NavHostFragment)getParentFragment()).getNavController().getCurrentDestination().getLabel();
-        if (root == "fragment_sign_in") {
-            dateField = getParentFragment().getView().findViewById(R.id.birthDay);
-        } else if (root == "new_task") {
-            dateField = getParentFragment().getView().findViewById(R.id.scadenza);
+        EditText dateField;
+
+        switch(layout) {
+            case FRAGMENT_REGISTRATION:
+                dateField = getParentFragment().getView().findViewById(R.id.birthDay);
+                break;
+            case FRAGMENT_NEWTASK:
+                dateField = getParentFragment().getView().findViewById(R.id.scadenza);
+                break;
+            default:
+                dateField = null;
         }
-        dateField.setError(null);
-        dateField.setText(dateString);
+
+        if( dateField != null) {
+            dateField.setError(null);
+            dateField.setText(dateString);
+        }
     }
 }
