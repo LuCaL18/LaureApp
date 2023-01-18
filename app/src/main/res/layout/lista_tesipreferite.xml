@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,30 +16,44 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="18dp"
             android:orientation="horizontal">
-            
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:orientation="vertical">
-                
-                <TextView
-                    android:id="@+id/listatesi_testo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lista Tesi"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/prova1"
+                    android:id="@+id/nometesi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tesi"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/nomerelatore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Prova"/>
+                    android:text="Relatore" />
 
             </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/visualizza"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_menu_view"
+                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_delete"
+                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
         </LinearLayout>
 
