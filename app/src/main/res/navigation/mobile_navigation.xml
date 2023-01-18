@@ -35,7 +35,11 @@
         android:name="com.uniba.mobile.cddgl.laureapp.ui.task.NewTaskFragment"
         android:label="@string/new_task"
         tools:layout="@layout/fragment_new_task" />
-
+    <fragment
+        android:id="@+id/nav_tesi_preferite"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.TesiPreferiteFragment"
+        android:label="@string/tesi_preferite"
+        tools:layout="@layout/fragment_new_task" />
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.actionBar.notifications.ChatFragment"
