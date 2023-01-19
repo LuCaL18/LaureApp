@@ -43,7 +43,7 @@ public class TesiPreferiteFragment extends Fragment {
         nomeTesiView = view.findViewById(R.id.nometesi);
         relatoreView = view.findViewById(R.id.nomerelatore);
         visualizzaButton = view.findViewById(R.id.visualizza);
-        deleteButton = view.findViewById(R.id.delete);
+        deleteButton = view.findViewById(R.id.add);
 
         visualizzaButton.setOnClickListener(v -> {
 

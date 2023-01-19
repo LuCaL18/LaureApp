@@ -2,65 +2,57 @@ package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ListaTesiFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ListaTesiFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FirebaseFirestore db;
+    private TextView nomeTesiView;
+    private TextView relatoreView;
+    private ImageButton visualizzaButton;
+    private ImageButton addButton;
 
     public ListaTesiFragment() {
-        // Required empty public constructor
+        //
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListaTesiFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ListaTesiFragment newInstance(String param1, String param2) {
-        ListaTesiFragment fragment = new ListaTesiFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static ListaTesiFragment newInstance() {
+        return new ListaTesiFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lista_tesi, container, false);
+        View view2 = inflater.inflate(R.layout.fragment_lista_tesi,container,false);
+        View view = inflater.inflate(R.layout.lista_tesi,container,false);
+        db = FirebaseFirestore.getInstance();
+        nomeTesiView = view.findViewById(R.id.nometesi2);
+        relatoreView = view.findViewById(R.id.nomerelatore2);
+        visualizzaButton = view.findViewById(R.id.visualizzaTesi);
+        addButton = view.findViewById(R.id.addTesi);
+
+        addButton.setOnClickListener(v -> {
+
+        });
+        visualizzaButton.setOnClickListener(v -> {
+
+        });
+        return view2;
     }
+
 }
