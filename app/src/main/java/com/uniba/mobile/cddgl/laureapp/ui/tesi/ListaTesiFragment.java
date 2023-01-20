@@ -1,17 +1,25 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 
 public class ListaTesiFragment extends Fragment {
@@ -38,21 +46,9 @@ public class ListaTesiFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view2 = inflater.inflate(R.layout.fragment_lista_tesi,container,false);
-        View view = inflater.inflate(R.layout.lista_tesi,container,false);
-        db = FirebaseFirestore.getInstance();
-        nomeTesiView = view.findViewById(R.id.nometesi2);
-        relatoreView = view.findViewById(R.id.nomerelatore2);
-        visualizzaButton = view.findViewById(R.id.visualizzaTesi);
-        addButton = view.findViewById(R.id.addTesi);
-
-        addButton.setOnClickListener(v -> {
-
-        });
-        visualizzaButton.setOnClickListener(v -> {
-
-        });
-        return view2;
+        View view = inflater.inflate(R.layout.fragment_lista_tesi,container,false);
+        ListView listView = view.findViewById(R.id.listatesi);
+        return view;
     }
 
 }

@@ -78,6 +78,7 @@
     <string name="user_collision">User is already registered with this email</string>
     <string name="new_task">New Task</string>
     <string name="tesi_preferite">Tesi Preferite</string>
+    <string name="lista_tesi">Lista Tesi</string>
     <string name="title_activity_new_task">NewTaskActivity</string>
 
     <string name="menu_home">Home</string>

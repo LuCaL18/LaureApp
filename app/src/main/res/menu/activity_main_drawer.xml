@@ -17,6 +17,12 @@
             android:icon="@android:drawable/ic_input_add"
             android:title="@string/new_task" />
         <item
+            android:id="@+id/nav_lista_tesi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@android:drawable/ic_menu_sort_by_size"
+            android:title="@string/lista_tesi" />
+        <item
             android:id="@+id/nav_tesi_preferite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
