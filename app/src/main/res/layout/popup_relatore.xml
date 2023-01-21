@@ -5,18 +5,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:background="@drawable/relatore"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/relatore"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="70dp"
-        android:contentDescription="TODO" />
+        android:layout_marginTop="50dp"
+        android:contentDescription="TODO"
+        app:civ_border_color="@color/primary_green"
+        app:civ_border_width="3dp"
+        />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/nome"
@@ -24,27 +27,29 @@
         android:textSize="24sp"
         android:layout_marginTop="15dp"
         android:hint="@string/nome"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:visibility="invisible"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cognome"
-        app:layout_constraintTop_toBottomOf="@+id/nome"
-        android:textSize="24sp"
-        android:layout_marginTop="15dp"
-        android:hint="@string/cognome"
-        android:textAlignment="center"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/email"
-        app:layout_constraintTop_toBottomOf="@+id/cognome"
+        app:layout_constraintTop_toBottomOf="@+id/nome"
         android:textSize="24sp"
         android:layout_marginTop="15dp"
         android:hint="@string/email"
         android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/veriica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/email"
+        android:text="@string/verifica_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <CheckBox
         android:id="@+id/permesso1"
@@ -52,7 +57,7 @@
         android:layout_height="wrap_content"
         android:text="@string/creare_task"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/email"
+        app:layout_constraintTop_toBottomOf="@id/veriica"
         android:layout_marginTop="15dp"
         android:layout_marginStart="12dp"
         />
@@ -63,7 +68,7 @@
         android:layout_height="wrap_content"
         android:text="@string/accettare_tesisti"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/email"
+        app:layout_constraintTop_toBottomOf="@id/veriica"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="12dp"
         />
@@ -97,7 +102,8 @@
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
-        android:text="@string/aggiungi"/>
+        android:text="@string/aggiungi"
+        android:visibility="invisible"/>
 
     <Button
         android:layout_width="wrap_content"

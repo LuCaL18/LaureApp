@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:text="@string/creare_task" />
+        android:text="Conoscere bene l'inglese" />
 
     <CheckBox
         android:id="@+id/vincolo2"
@@ -38,13 +38,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginStart="15dp"
-        android:text="@string/accettare_tesisti" />
+        android:text="Competenze in matematica" />
 
     <CheckBox
         android:id="@+id/vincolo3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/modificare_eliminare_task"
+        android:text="Competenze in fisica"
         android:layout_marginTop="15dp"
         android:layout_marginStart="15dp"
         />
@@ -53,7 +53,7 @@
         android:id="@+id/vincolo4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/modificare_tesi"
+        android:text="Competenze in chimica"
         android:layout_marginTop="15dp"
         android:layout_marginStart="15dp"
         />
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
-            android:text="Creare task" />
+            android:text="Nessun esame rimanente" />
 
         <CheckBox
             android:id="@+id/vincolo6"
@@ -82,13 +82,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="15dp"
-            android:text="Accettare tesisti" />
+            android:text="Media voti > 25" />
 
         <CheckBox
             android:id="@+id/vincolo7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Modificare/eliminare task"
+            android:text="Conoscenza approfondita della lingua italiana"
             android:layout_marginTop="15dp"
             android:layout_marginStart="15dp"
             />
@@ -97,7 +97,7 @@
             android:id="@+id/vincolo8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Modificare tesi"
+            android:text="Competenze in ambito medico"
             android:layout_marginTop="15dp"
             android:layout_marginStart="15dp"
             />

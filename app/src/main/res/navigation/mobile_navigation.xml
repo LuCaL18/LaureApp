@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_navigation_home_to_tesiFragmant"
             app:destination="@id/tesiFragmant" />
+        <action
+            android:id="@+id/action_navigation_home_to_lista_tesi"
+            app:destination="@id/lista_tesi" />
     </fragment>
 
     <fragment
@@ -39,4 +42,9 @@
             android:id="@+id/action_tesiFragmant_to_navigation_home"
             app:destination="@id/navigation_home" />
     </fragment>
+    <fragment
+        android:id="@+id/lista_tesi"
+        android:name="com.uniba.mobile.cddgl.laureapp.lista_tesi"
+        android:label="fragment_lista_tesi"
+        tools:layout="@layout/fragment_lista_tesi" />
 </navigation>

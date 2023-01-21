@@ -8,7 +8,6 @@
         android:icon="@drawable/ic_favorite_24dp"
         android:title="@string/favorite"
         app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/notification"
         android:contentDescription="@string/content_description_notification"
@@ -16,10 +15,10 @@
         android:title="@string/title_notifications"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/search"
-        android:contentDescription="@string/content_description_search"
-        android:icon="@drawable/ic_search_24dp"
-        android:title="@string/search"
+        android:id="@+id/crea"
+        android:contentDescription="@string/crea_tesi"
+        android:icon="@drawable/ic_baseline_post_add_24"
+        android:title="@string/crea_tesi"
         app:showAsAction="ifRoom" />
 
 </menu>

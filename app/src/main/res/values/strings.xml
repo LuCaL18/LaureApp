@@ -59,12 +59,15 @@
     <string name="popvincoli">Vincoli</string>
     <string name="creare_task">Creare task</string>
     <string name="accettare_tesisti">Accettare tesisti</string>
-    <string name="modificare_eliminare_task">Modificare/eliminare task</string>
+    <string name="modificare_eliminare_task">Modificare ed \n eliminare task</string>
     <string name="modificare_tesi">Modificare tesi</string>
     <string name="cancella">CANCELLA</string>
     <string name="aggiungi">AGGIUNGI</string>
     <string name="email">EMAIL</string>
     <string name="cognome">COGNOME</string>
     <string name="nome">NOME</string>
+    <string name="vedi_tutte">Vedi tutte</string>
+    <string name="task_creati">TASK CREATI</string>
+    <string name="verifica_email">VERIFICA EMAIL</string>
 
 </resources>

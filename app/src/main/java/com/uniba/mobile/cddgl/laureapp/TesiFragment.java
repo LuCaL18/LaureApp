@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentTesiBinding;
 
 import java.util.HashMap;
@@ -33,15 +37,17 @@ import java.util.Map;
 
 public class TesiFragment extends Fragment {
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference relatoriRef = db.collection("relatore");
     private FragmentTesiBinding binding;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog.Builder dialogBuilder2;
     private AlertDialog dialog;
     private AlertDialog dialog2;
-    private EditText popup_nome, popup_cognome, popup_email, popup_capacita;
-    private Button cancel, save, salva;
+    private EditText popup_email, popup_capacita;
+    private TextView popup_nome;
+    private Button cancel, save, salva, verifica;
     private ImageView B_aggiungi_relatore, B_aggiungi_vincoli, B_aggiungi_task;
-    private FirebaseFirestore db;
     private BottomNavigationView navBar;
     private CheckBox permesso1, permesso2, permesso3, permesso4;
     private CheckBox vincolo1, vincolo2, vincolo3, vincolo4, vincolo5, vincolo6, vincolo7, vincolo8;
@@ -69,16 +75,19 @@ public class TesiFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = NavHostFragment.findNavController(this);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         B_aggiungi_relatore = binding.aggiungiRelatore;
         B_aggiungi_relatore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialogBuilder = new AlertDialog.Builder(getContext());
                 final View relatorePopup = getLayoutInflater().inflate(R.layout.popup_relatore, null);
+                dialogBuilder.setView(relatorePopup);
+                dialog = dialogBuilder.create();
+                dialog.show();
+
                 popup_nome = relatorePopup.findViewById(R.id.nome);
-                popup_cognome = relatorePopup.findViewById(R.id.cognome);
                 popup_email = relatorePopup.findViewById(R.id.email);
+
                 permesso1 = relatorePopup.findViewById(R.id.permesso1);
                 permesso2 = relatorePopup.findViewById(R.id.permesso2);
                 permesso3 = relatorePopup.findViewById(R.id.permesso3);
@@ -87,20 +96,42 @@ public class TesiFragment extends Fragment {
                 save = relatorePopup.findViewById(R.id.saveButton);
                 cancel = relatorePopup.findViewById(R.id.cancelButton);
 
-                dialogBuilder.setView(relatorePopup);
-                dialog = dialogBuilder.create();
-                dialog.show();
+                verifica = relatorePopup.findViewById(R.id.veriica);
+                verifica.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    relatoriRef.whereEqualTo("email", popup_email.getText().toString())
+                            .limit(1)
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Relatore relatoreObj = documentSnapshot.toObject(Relatore.class);
+                            popup_nome.setText(relatoreObj.getNome() + " " + relatoreObj.getCognome());
+                            popup_nome.setVisibility(View.VISIBLE);
+                            save.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "L'email non è presente nel database", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                    }
+                });
 
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         String permessi = "";
                         if(permesso1.isChecked()){
-                            permessi += permesso1.getText() + ",";
+                            permessi += permesso1.getText() + ", ";
                         }
                         if(permesso2.isChecked())
                         {
-                            permessi += permesso2.getText() + ",";
+                            permessi += permesso2.getText() + ", ";
                         }
                         if(permesso3.isChecked()){
                             permessi += permesso3.getText() + ", ";
@@ -108,10 +139,14 @@ public class TesiFragment extends Fragment {
                         if(permesso4.isChecked()){
                             permessi += permesso4.getText() + ", ";
                         }
-                        permessi.substring(0, permessi.length()-2);
+                        if(permessi.length()>2){
+                            permessi = permessi.substring(0, permessi.length()-2);
+                        }
+                        else
+                            permessi += "nessun permesso";
                         LinearLayout parentLayout = binding.relatoriTesi;
                         TextView nuovo_relatore = new TextView(getContext());
-                        nuovo_relatore.setText(popup_nome.getText()+" "+popup_cognome.getText() + " (" + permessi + ").");
+                        nuovo_relatore.setText(popup_nome.getText() + " " + " (" + permessi + ").");
                         nuovo_relatore.setTextSize(20);
                         nuovo_relatore.setTextColor(Color.BLACK);
                         parentLayout.addView(nuovo_relatore);
@@ -128,9 +163,10 @@ public class TesiFragment extends Fragment {
             }
         });
 
-/*
- * vincoli
- */
+        /*
+         * vincoli
+         */
+
         LinearLayout parentLayout = binding.vincoliTesi;
         TextView Vincoli = new TextView(getContext());
         Vincoli.setTextSize(20);
@@ -168,32 +204,31 @@ public class TesiFragment extends Fragment {
                     public void onClick(View view) {
                         String vincoli = "";
                         if(vincolo1.isChecked()){
-                            vincoli += vincolo1.getText();
+                            vincoli += vincolo1.getText() + "\n";
                         }
                         if(vincolo2.isChecked())
                         {
-                            vincoli += vincolo2.getText() + ", ";
+                            vincoli += vincolo2.getText() + "\n";
                         }
                         if(vincolo3.isChecked()){
-                            vincoli += vincolo3.getText() + ", ";
+                            vincoli += vincolo3.getText() + "\n";
                         }
                         if(vincolo4.isChecked()){
-                            vincoli += vincolo4.getText() + ", ";
+                            vincoli += vincolo4.getText() + "\n";
                         }
                         if(vincolo5.isChecked()){
-                            vincoli += vincolo5.getText() + ", ";
+                            vincoli += vincolo5.getText() + "\n";
                         }
                         if(vincolo6.isChecked()){
-                            vincoli += vincolo6.getText() + ", ";
+                            vincoli += vincolo6.getText() + "\n";
                         }
                         if(vincolo7.isChecked()){
-                            vincoli += vincolo7.getText() + ", ";
+                            vincoli += vincolo7.getText() + "\n";
                         }
                         if(vincolo8.isChecked()){
-                            vincoli += vincolo8.getText() + ", ";
+                            vincoli += vincolo8.getText() + "\n";
                         }
-                        vincoli.substring(0, vincoli.length()-2);
-                        binding.nessunVincolo.setVisibility(View.INVISIBLE);
+                        vincoli = vincoli.substring(0, vincoli.length()-1);
                         Vincoli.setText(vincoli);
                         parentLayout.addView(Vincoli);
                         dialog2.dismiss();
@@ -214,12 +249,15 @@ public class TesiFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 EditText nome_tesi = binding.nomeTesi;
-                String Nome_tesi = nome_tesi.getText().toString();
                 TextView relatore = binding.relatorePrincipale;
-                String Relatore = relatore.getText().toString();
                 EditText descrizione = binding.descrizione;
+                String Nome_tesi = nome_tesi.getText().toString();
+                String Relatore = relatore.getText().toString();
                 String Descrizione = descrizione.getText().toString();
-
+                if(TextUtils.isEmpty(Nome_tesi) || TextUtils.isEmpty(Descrizione)){
+                    Toast.makeText(getContext(), "Riempire tutti i campi", Toast.LENGTH_SHORT).show();
+                }
+                else{
                 Map<String, Object> T_tesi = new HashMap<>();
                 T_tesi.put("nome_tesi", Nome_tesi);
                 T_tesi.put("descrizione", Descrizione);
@@ -230,7 +268,7 @@ public class TesiFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                   @Override
                                                   public void onSuccess(DocumentReference documentReference) {
-                                                      Toast.makeText(getContext(), "successfull", Toast.LENGTH_SHORT).show();
+                                                      Toast.makeText(getContext(), "tesi creata", Toast.LENGTH_SHORT).show();
                                                       navController.navigate(R.id.action_tesiFragmant_to_navigation_home);
                                                   }
                                               }
@@ -241,6 +279,7 @@ public class TesiFragment extends Fragment {
                             }
                         });
             }
+        }
         });
     }
 

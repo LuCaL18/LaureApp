@@ -1,33 +1,49 @@
 package com.uniba.mobile.cddgl.laureapp.ui.home;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference tesiRef = db.collection("tesi");
+
     private FragmentHomeBinding binding;
     private MenuProvider provider;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -38,7 +54,8 @@ public class HomeFragment extends Fragment {
 
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+        loadTesi();
+           return root;
     }
 
     @Override
@@ -52,29 +69,37 @@ public class HomeFragment extends Fragment {
             actionBar.setTitle(R.string.app_name_upperCase);
         }
 
-        provider = new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.clear();
-                menuInflater.inflate(R.menu.app_bar_home, menu);
-            }
+        TextView tesi = binding.mostraTesi;
+        tesi.setOnClickListener(new OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        navController.navigate(R.id.action_navigation_home_to_lista_tesi);
+                                    }
+                                });
 
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    //TODO: gestire barra per fragment come fatto qui
-                    case R.id.favorite: {
-                        return true;
+                provider = new MenuProvider() {
+                    @Override
+                    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                        menu.clear();
+                        menuInflater.inflate(R.menu.app_bar_home, menu);
                     }
-                    case R.id.search: {
-                        navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
-                    }
-                    default:
-                        return false;
-                }
-            }
 
-        };
+                    @Override
+                    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            //TODO: gestire barra per fragment come fatto qui
+                            case R.id.favorite: {
+                                return true;
+                            }
+                            case R.id.crea: {
+                                navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
+                            }
+                            default:
+                                return false;
+                        }
+                    }
+
+                };
 
         requireActivity().addMenuProvider(provider);
     }
@@ -86,4 +111,66 @@ public class HomeFragment extends Fragment {
         binding = null;
         provider = null;
     }
-}
+
+    private void loadTesi() {
+            tesiRef.whereEqualTo("relatore", "sabino di tria")
+                    .limit(3)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            int counter=0;
+                            CardView cardView;
+                            ImageView img;
+                            TextView Titolo;
+                            TextView Descrizione;
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                switch (counter) {
+                                    case 0:
+                                        cardView = binding.card1;
+                                        cardView.setVisibility(View.VISIBLE);
+                                        img = binding.img1;
+                                        Titolo = binding.NomeTesi1;
+                                        Descrizione = binding.DescrizioneTesi1;
+                                        break;
+                                    case 1:
+                                        cardView = binding.card2;
+                                        cardView.setVisibility(View.VISIBLE);
+                                        img = binding.img2;
+                                        Titolo = binding.NomeTesi2;
+                                        Descrizione = binding.DescrizioneTesi2;
+                                        break;
+                                    case 2:
+                                        cardView = binding.card3;
+                                        cardView.setVisibility(View.VISIBLE);
+                                        img = binding.img3;
+                                        Titolo = binding.NomeTesi3;
+                                        Descrizione = binding.DescrizioneTesi3;
+                                        break;
+                                    default:
+                                        cardView = binding.card1;
+                                        img = binding.img1;
+                                        Titolo = binding.NomeTesi1;
+                                        Descrizione = binding.DescrizioneTesi1;
+                                        break;
+                                }
+                                Tesi tesi = documentSnapshot.toObject(Tesi.class);
+                                tesi.setId_tesi(documentSnapshot.getId());
+
+                                String nome = tesi.getNome_tesi();
+                                String descrizione = tesi.getDescrizione();
+
+                                counter++;
+                                img.setImageResource(R.drawable.add);
+                                Titolo.setText(nome);
+                                Descrizione.setText(descrizione);
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(),"ERROR",Toast.LENGTH_SHORT);
+                        }
+                    });
+        }
+    }

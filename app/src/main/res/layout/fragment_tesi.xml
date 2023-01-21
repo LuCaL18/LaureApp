@@ -77,7 +77,7 @@
                 android:id="@+id/relatore_principale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Relatore principale"
+                android:text="sabino di tria"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/T_relatori_tesi"
@@ -98,7 +98,6 @@
                 android:text="DESCRIZIONE"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/scrollView3"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/primary_green"
@@ -125,7 +124,6 @@
                     android:text="@string/vincoli"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nome_tesi"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/primary_green"
@@ -150,17 +148,6 @@
                 android:orientation="vertical"
                 android:layout_marginStart="20dp"
                 />
-            <TextView
-                android:id="@+id/nessun_vincolo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="clicca sul + per inserire i vincoli"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/black" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -172,7 +159,6 @@
                     android:text="@string/task"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nome_tesi"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/primary_green"
@@ -190,18 +176,6 @@
                     android:contextClickable="true"
                     android:allowClickWhenDisabled="true"/>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/nessun_task"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="clicca sul + per inserire i task"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/black" />
-
         </LinearLayout>
     </ScrollView>
 
