@@ -39,5 +39,14 @@
 
     </androidx.cardview.widget.CardView>
 
+    <TextView
+        android:id="@+id/text_timestamp_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#C0C0C0"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/card_me_text_view"
+        app:layout_constraintEnd_toStartOf="@+id/card_me_text_view" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,10 +30,5 @@ public class Message {
     public long getTimestamp() {
         return timestamp;
     }
-
-    public String getDayMessage() {
-        DateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-        return dayFormat.format(this.timestamp);
-    }
 }
 

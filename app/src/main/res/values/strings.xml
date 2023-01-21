@@ -93,13 +93,13 @@
     <!--    MENU DRAWER-->
     <string name="logout">Logout</string>
     <string name="menu_gallery">Gallery</string>
+    <string name="chat_menu">Chat List</string>
 
     <!--    TITLE NAVIGATION BAR-->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_chat">Chat</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_profile">User profile</string>
 
 </resources>
