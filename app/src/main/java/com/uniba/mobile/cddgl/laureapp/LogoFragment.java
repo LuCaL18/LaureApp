@@ -20,8 +20,8 @@ import android.widget.ProgressBar;
  */
 public class LogoFragment extends Fragment {
 
-    private ProgressBar pgb;
-    private CountDownTimer mCountDownTimer;
+//    private ProgressBar pgb;
+//    private CountDownTimer mCountDownTimer;
 
     public LogoFragment() {
     }
@@ -39,40 +39,39 @@ public class LogoFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        pgb = view.findViewById(R.id.loader_logo);
-        progressBarManager();
+    public void onStart() {
+        super.onStart();
+        NavController navController = NavHostFragment.findNavController(LogoFragment.this);
+        navController.navigate(R.id.action_logoFragment_to_startFragment);
     }
 
-    private void progressBarManager() {
-        mCountDownTimer = new CountDownTimer(2500, 500) {
-
-            int i = 0;
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-                Log.v("Log_tag", "Tick of Progress" + i + millisUntilFinished);
-                i++;
-                pgb.setProgress((int) i * 100 / (2500 / 500));
-
-            }
-
-            @Override
-            public void onFinish() {
-                i++;
-                pgb.setProgress(100);
-                NavController navController = NavHostFragment.findNavController(LogoFragment.this);
-                navController.navigate(R.id.action_logoFragment_to_startFragment);
-            }
-        };
-        mCountDownTimer.start();
-    }
+    //    private void progressBarManager() {
+////        mCountDownTimer = new CountDownTimer(1000, 500) {
+////
+////            int i = 0;
+////
+////            @Override
+////            public void onTick(long millisUntilFinished) {
+//////                Log.v("Log_tag", "Tick of Progress" + i + millisUntilFinished);
+//////                i++;
+//////                pgb.setProgress((int) i * 100 / (1000 / 500));
+////
+////            }
+////
+////            @Override
+////            public void onFinish() {
+//////                i++;
+//////                pgb.setProgress(100);
+////
+////            }
+////        };
+////        mCountDownTimer.start();
+//
+//    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mCountDownTimer.cancel();
+//        mCountDownTimer.cancel();
     }
 }

@@ -1,6 +1,5 @@
 package com.uniba.mobile.cddgl.laureapp.ui.home;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +43,8 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private MenuProvider provider;
+    private final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -84,22 +85,23 @@ public class HomeFragment extends Fragment {
                         menuInflater.inflate(R.menu.app_bar_home, menu);
                     }
 
-                    @Override
-                    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            //TODO: gestire barra per fragment come fatto qui
-                            case R.id.favorite: {
-                                return true;
-                            }
-                            case R.id.crea: {
-                                navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
-                            }
-                            default:
-                                return false;
-                        }
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    //TODO: gestire barra per fragment come fatto qui
+                    case NOTIFICATION_APP_BAR: {
+                        navController.navigate(R.id.action_navigation_home_to_chatFragment);
+                        return true;
                     }
+                    case R.id.crea: {
+                        navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
+                    }
+                    default:
+                        return false;
+                }
+            }
 
-                };
+        };
 
         requireActivity().addMenuProvider(provider);
     }

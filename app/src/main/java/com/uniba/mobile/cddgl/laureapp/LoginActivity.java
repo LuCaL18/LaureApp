@@ -14,10 +14,11 @@ import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModelFactory;
 import com.uniba.mobile.cddgl.laureapp.databinding.ActivityLoginBinding;
 
+import java.io.Serializable;
+
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
-    private LoggedInUser loggedInUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,9 +28,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         LoginViewModel loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
-
-        this.loggedInUser = loginViewModel.getLoggedUser().getValue();
-
         loginViewModel.getLoggedUser().observe(this, new Observer<LoggedInUser>() {
 
             @Override
@@ -37,25 +35,21 @@ public class LoginActivity extends AppCompatActivity {
                 if (loggedInUser == null) {
                     return;
                 }
-                goToMainActivity();
+                goToMainActivity(loggedInUser);
             }
         });
     }
 
-    private void goToMainActivity() {
+    private void goToMainActivity(LoggedInUser loggedInUser) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(MainActivity.LOGGED_USER, (Serializable) loggedInUser);
+        intent.putExtras(bundle);
+
         startActivity(intent);
         finish();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (this.loggedInUser != null) {
-            goToMainActivity();
-        }
     }
 
     @Override
