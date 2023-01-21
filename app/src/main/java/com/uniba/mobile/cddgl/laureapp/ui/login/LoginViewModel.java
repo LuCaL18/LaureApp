@@ -21,6 +21,7 @@ import com.uniba.mobile.cddgl.laureapp.ui.login.registration.RegisterFormState;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,10 +37,6 @@ public class LoginViewModel extends ViewModel {
 
     LoginViewModel() {
         auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            this.loggedUser.setValue(new LoggedInUser(user.getEmail(), user.getDisplayName()));
-        }
     }
 
     public LiveData<LoginFormState> getLoginFormState() {
@@ -69,7 +66,15 @@ public class LoginViewModel extends ViewModel {
 
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
-                        loginResult.setValue(new LoginResult(new LoggedInUser(username, user.getDisplayName())));
+                        DatabaseReference database = FirebaseDatabase.getInstance().getReference("users");
+
+                        database.child(user.getUid()).get().addOnCompleteListener(task1 -> {
+                            if(task1.isSuccessful()) {
+                                loginResult.setValue(new LoginResult((LoggedInUser) task1.getResult().getValue(LoggedInUser.class)));
+                            } else {
+                                loginResult.setValue(new LoginResult(new LoggedInUser(user.getEmail(), user.getDisplayName())));
+                            }
+                        });
                     } else {
                         loginResult.setValue(new LoginResult(R.string.login_failed));
                     }
@@ -81,7 +86,7 @@ public class LoginViewModel extends ViewModel {
 
             if (task.isSuccessful()) {
                 isUserVerification.setValue(false);
-                currentLoggedUser = new LoggedInUser(username, name, surname, dob, bio, role);
+                currentLoggedUser = new LoggedInUser(auth.getCurrentUser().getUid(), username, name, surname, dob, bio, role);
             } else {
                 try {
                     throw task.getException();
@@ -171,7 +176,7 @@ public class LoginViewModel extends ViewModel {
             return false;
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         try {
             Date date = dateFormat.parse(dateString);
             return date.getTime() < new Date().getTime();

@@ -22,4 +22,8 @@
     <style name="Theme.LaureApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.LaureApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Widget.App.MaterialDivider" parent="Widget.MaterialComponents.MaterialDivider">
+        <item name="dividerColor">@color/primary_green</item>
+    </style>
 </resources>

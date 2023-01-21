@@ -22,6 +22,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentGalleryBinding;
 
@@ -63,33 +64,15 @@ public class GalleryFragment extends Fragment {
         toolbar = getActivity().findViewById(R.id.topAppBar);
 
         iconPre = toolbar.getNavigationIcon();
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
-
-        provider = new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case android.R.id.home:
-                        navController.popBackStack();
-                        return true;
-                }
-                return false;
-            }
-        };
-
-        requireActivity().addMenuProvider(provider);
+//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
+        navigationView.getMenu().findItem(R.id.nav_gallery).setChecked(false);
         navBar.setVisibility(View.VISIBLE);
-        requireActivity().removeMenuProvider(provider);
-        toolbar.setNavigationIcon(iconPre);
         navBar = null;
         binding = null;
         provider = null;

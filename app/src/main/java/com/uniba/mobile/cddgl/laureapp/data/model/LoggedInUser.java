@@ -2,11 +2,14 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 
+import java.io.Serializable;
+
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository
  */
-public class LoggedInUser {
+public class LoggedInUser implements Serializable {
 
+    private String id;
     private String email;
     private String displayName;
     private String name;
@@ -17,7 +20,11 @@ public class LoggedInUser {
     //private String dipartimento;
 
 
-    public LoggedInUser(String email, String name, String surname, String birthDay, String bio, RoleUser role) {
+    // NON CANCELLARE SERVE A FIREBASE
+    public LoggedInUser() {}
+
+    public LoggedInUser(String id, String email, String name, String surname, String birthDay, String bio, RoleUser role) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.surname = surname;
@@ -30,6 +37,25 @@ public class LoggedInUser {
     public LoggedInUser(String email, String displayName) {
         this.email = email;
         this.displayName = displayName;
+    }
+
+    public LoggedInUser(String id, String email, String displayName, String name, String surname, String birthDay, String bio, RoleUser role) {
+        this.id = id;
+        this.email = email;
+        this.displayName = displayName;
+        this.name = name;
+        this.surname = surname;
+        this.birthDay = birthDay;
+        this.bio = bio;
+        this.role = role;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEmail() {
