@@ -17,9 +17,9 @@
             android:icon="@android:drawable/ic_menu_sort_by_size"
             android:title="@string/lista_tesi" />
         <item
-            android:id="@+id/nav_tesi_preferite"
+            android:id="@+id/nav_classifica_tesi"
             android:icon="@drawable/ic_favorite_24dp"
-            android:title="@string/tesi_preferite" />
+            android:title="@string/classifica_tesi" />
         <item
             android:id="@+id/nav_chat"
             android:icon="@drawable/ic_baseline_chat_24dp"

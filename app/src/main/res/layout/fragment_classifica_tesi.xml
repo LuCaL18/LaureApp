@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.tesi.TesiPreferiteFragment">
+    tools:context=".ui.tesi.ClassificaTesiFragment">
 
     <ListView
         android:id="@+id/listatesi"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.051"
-        tools:listitem="@layout/lista_tesipreferite" />
+        tools:listitem="@layout/classifica_tesi" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
