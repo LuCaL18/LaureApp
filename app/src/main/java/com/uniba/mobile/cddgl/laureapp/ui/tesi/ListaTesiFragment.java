@@ -1,6 +1,5 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +29,7 @@ public class ListaTesiFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lista_tesi, container, false);
-        listView = (ListView) view.findViewById(R.id.listatesi);
+        listView = view.findViewById(R.id.listatesi);
         dataList = new ArrayList<>();
         adapter = new ListAdapterTesi(getActivity(), (DatabaseReference) dataList);
         listView.setAdapter(adapter);

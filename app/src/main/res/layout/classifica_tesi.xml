@@ -24,7 +24,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/nometesi"
+                    android:id="@+id/nometesi2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tesi"
@@ -33,7 +33,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/nomerelatore"
+                    android:id="@+id/nomerelatore2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -42,14 +42,14 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/visualizza"
+                android:id="@+id/visualizzaTesi2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@android:drawable/ic_menu_view"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
             <ImageButton
-                android:id="@+id/add"
+                android:id="@+id/deleteTesi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@android:drawable/ic_delete"

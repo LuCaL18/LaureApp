@@ -19,13 +19,13 @@ import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListAdapterTesi extends BaseAdapter {
+public class ClassificaTesiAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Tesi> mDataList;
     private DatabaseReference mDatabaseReference;
 
-    public ListAdapterTesi(Context context, DatabaseReference ref) {
+    public ClassificaTesiAdapter(Context context, DatabaseReference ref) {
         mContext = context;
         mDatabaseReference = ref;
         mDataList = new ArrayList<>();
@@ -63,28 +63,21 @@ public class ListAdapterTesi extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        ClassificaTesiAdapter.ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.lista_tesi, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.classifica_tesi, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.textView1 = convertView.findViewById(R.id.nometesi);
-            viewHolder.textView2 = convertView.findViewById(R.id.nomerelatore);
-            viewHolder.imageButton1 = convertView.findViewById(R.id.visualizzaTesi);
-            viewHolder.imageButton2 = convertView.findViewById(R.id.addTesi);
+            viewHolder.textView1 = convertView.findViewById(R.id.nometesi2);
+            viewHolder.textView2 = convertView.findViewById(R.id.nomerelatore2);
+            viewHolder.imageButton1 = convertView.findViewById(R.id.visualizzaTesi2);
+            viewHolder.imageButton2 = convertView.findViewById(R.id.deleteTesi);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ClassificaTesiAdapter.ViewHolder) convertView.getTag();
         }
         Tesi tesi = mDataList.get(position);
         viewHolder.textView1.setText(tesi.getNomeTesi());
         viewHolder.textView2.setText(tesi.getRelatore());
-        /* viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ClassificaTesiFragment listFragment2 = (ClassificaTesiFragment) getFragmentManager().findFragmentById(R.id.nav_classifica_tesi);
-                listFragment2.addObjectToList(objectList.get(mDataList.getSelectedItemPosition()));
-            }
-        }); */
         return convertView;
     }
 
@@ -94,5 +87,5 @@ public class ListAdapterTesi extends BaseAdapter {
         ImageButton imageButton1;
         ImageButton imageButton2;
     }
-}
 
+}

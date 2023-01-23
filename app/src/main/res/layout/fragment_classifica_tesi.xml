@@ -7,7 +7,7 @@
     tools:context=".ui.tesi.ClassificaTesiFragment">
 
     <ListView
-        android:id="@+id/listatesi"
+        android:id="@+id/classifica_tesi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="45dp"

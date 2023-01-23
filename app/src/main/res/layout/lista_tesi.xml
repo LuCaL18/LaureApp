@@ -24,7 +24,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/nometesi2"
+                    android:id="@+id/nometesi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tesi"
@@ -33,7 +33,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/nomerelatore2"
+                    android:id="@+id/nomerelatore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
