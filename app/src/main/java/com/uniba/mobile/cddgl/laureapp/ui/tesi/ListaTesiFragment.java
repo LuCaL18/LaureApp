@@ -31,7 +31,7 @@ public class ListaTesiFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_lista_tesi, container, false);
         listView = view.findViewById(R.id.listatesi);
         dataList = new ArrayList<>();
-        adapter = new ListAdapterTesi(getActivity(), (DatabaseReference) dataList);
+        adapter = new ListAdapterTesi(getActivity(), mDatabase);
         listView.setAdapter(adapter);
         mDatabase = FirebaseDatabase.getInstance().getReference("tesi");
         mDatabase.addValueEventListener(new ValueEventListener() {
