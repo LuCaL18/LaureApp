@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String LOGGED_USER = "logged_user";
     public static final int CHAT = R.id.nav_chat;
     public static final int LOGOUT =  R.id.logout;
+    public static final int NEW_TASK = R.id.nav_new_task;
+    public static final int CLASSIFICA_TESI = R.id.nav_classifica_tesi;
+    public static final int LISTA_TESI = R.id.nav_lista_tesi;
 
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
@@ -89,6 +92,18 @@ public class MainActivity extends AppCompatActivity {
                 switch(item.getItemId()) {
                     case R.id.nav_gallery:
                         navController.navigate(R.id.nav_gallery);
+                        isSelected = true;
+                        break;
+                    case NEW_TASK:
+                        navController.navigate(R.id.nav_new_task);
+                        isSelected = true;
+                        break;
+                    case CLASSIFICA_TESI:
+                        navController.navigate(R.id.nav_classifica_tesi);
+                        isSelected = true;
+                        break;
+                    case LISTA_TESI:
+                        navController.navigate(R.id.nav_lista_tesi);
                         isSelected = true;
                         break;
                     case CHAT:
