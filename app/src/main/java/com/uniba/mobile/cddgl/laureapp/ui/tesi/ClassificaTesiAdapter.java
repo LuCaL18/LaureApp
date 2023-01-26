@@ -9,10 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import androidx.annotation.Nullable;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
@@ -21,27 +24,27 @@ import java.util.List;
 
 public class ClassificaTesiAdapter extends BaseAdapter {
 
-    private Context mContext;
-    private List<Tesi> mDataList;
-    private DatabaseReference mDatabaseReference;
+    private final Context mContext;
+    private final List<Tesi> mDataList;
+    private CollectionReference mCollectionRef;
 
-    public ClassificaTesiAdapter(Context context, DatabaseReference ref) {
+    public ClassificaTesiAdapter(Context context, CollectionReference ref) {
         mContext = context;
-        mDatabaseReference = ref;
         mDataList = new ArrayList<>();
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+        mCollectionRef = ref;
+        mCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e("FirebaseListAdapter", "Listen failed.", e);
+                    return;
+                }
                 mDataList.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Tesi tesi = postSnapshot.getValue(Tesi.class);
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    Tesi tesi = doc.toObject(Tesi.class);
                     mDataList.add(tesi);
                 }
                 notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("FirebaseListAdapter", "The read failed: " + databaseError.getMessage());
             }
         });
     }
@@ -63,7 +66,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ClassificaTesiAdapter.ViewHolder viewHolder;
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.classifica_tesi, parent, false);
             viewHolder = new ViewHolder();
@@ -73,19 +76,30 @@ public class ClassificaTesiAdapter extends BaseAdapter {
             viewHolder.imageButton2 = convertView.findViewById(R.id.deleteTesi);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ClassificaTesiAdapter.ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         Tesi tesi = mDataList.get(position);
         viewHolder.textView1.setText(tesi.getNomeTesi());
         viewHolder.textView2.setText(tesi.getRelatore());
+        viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // handle click event for visualizzaTesi button
+            }
+        });
+        viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // handle click event for addTesi button
+            }
+        });
         return convertView;
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         TextView textView1;
         TextView textView2;
         ImageButton imageButton1;
         ImageButton imageButton2;
     }
-
 }
