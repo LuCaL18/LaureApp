@@ -9,10 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import androidx.annotation.Nullable;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
@@ -21,27 +24,27 @@ import java.util.List;
 
 public class ListAdapterTesi extends BaseAdapter {
 
-    private Context mContext;
-    private List<Tesi> mDataList;
-    private DatabaseReference mDatabaseReference;
+    private final Context mContext;
+    private final List<Tesi> mDataList;
+    private CollectionReference mCollectionRef;
 
-    public ListAdapterTesi(Context context, DatabaseReference ref) {
+    public ListAdapterTesi(Context context, CollectionReference ref) {
         mContext = context;
-        mDatabaseReference = ref;
         mDataList = new ArrayList<>();
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+        mCollectionRef = ref;
+        mCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e("FirebaseListAdapter", "Listen failed.", e);
+                    return;
+                }
                 mDataList.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Tesi tesi = postSnapshot.getValue(Tesi.class);
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    Tesi tesi = doc.toObject(Tesi.class);
                     mDataList.add(tesi);
                 }
                 notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("FirebaseListAdapter", "The read failed: " + databaseError.getMessage());
             }
         });
     }
@@ -78,21 +81,27 @@ public class ListAdapterTesi extends BaseAdapter {
         Tesi tesi = mDataList.get(position);
         viewHolder.textView1.setText(tesi.getNomeTesi());
         viewHolder.textView2.setText(tesi.getRelatore());
-        /* viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
+        viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                ClassificaTesiFragment listFragment2 = (ClassificaTesiFragment) getFragmentManager().findFragmentById(R.id.nav_classifica_tesi);
-                listFragment2.addObjectToList(objectList.get(mDataList.getSelectedItemPosition()));
+            public void onClick(View v) {
+                // handle click event for visualizzaTesi button
             }
-        }); */
+        });
+        viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // handle click event for addTesi button
+            }
+        });
         return convertView;
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         TextView textView1;
         TextView textView2;
         ImageButton imageButton1;
         ImageButton imageButton2;
     }
 }
+
 
