@@ -90,7 +90,7 @@ public class ListAdapterTesi extends BaseAdapter {
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // handle click event for addTesi button
+
             }
         });
         return convertView;

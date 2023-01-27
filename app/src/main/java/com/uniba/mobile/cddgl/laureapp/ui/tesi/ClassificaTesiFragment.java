@@ -34,7 +34,7 @@ public class ClassificaTesiFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_classifica_tesi, container, false);
         listView = view.findViewById(R.id.classifica_tesi);
         dataList = new ArrayList<>();
-        mCollection = FirebaseFirestore.getInstance().collection("tesi");
+        mCollection = FirebaseFirestore.getInstance().collection("tesi_classifica");
         adapter = new ClassificaTesiAdapter(getActivity(), mCollection);
         Log.d("ClassificaTesiFragment", "onCreateView() method called");
         listView.setAdapter(adapter);
