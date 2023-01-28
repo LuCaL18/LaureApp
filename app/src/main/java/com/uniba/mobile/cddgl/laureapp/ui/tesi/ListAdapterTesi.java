@@ -17,6 +17,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
@@ -90,7 +92,15 @@ public class ListAdapterTesi extends BaseAdapter {
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // recupera l'istanza della tesi selezionata
+                Tesi tesiSelezionata = mDataList.get(position);
+                // recupero l'istanza dell'utente loggato
+                LoggedInUser user;
+                String studentId = user.getId();
+                // crea un oggetto tesi_classifiche
+                ClassificaTesi tesiClassifiche = new ClassificaTesi(tesiSelezionata,studentId);
+                // aggiungi l'oggetto tesi_classifiche alla raccolta tesi_classifiche
+                mCollectionRef.add(tesiClassifiche);
             }
         });
         return convertView;
