@@ -18,6 +18,9 @@
     <string name="confirm">Confirm</string>
     <string name="send">Send</string>
     <string name="cancel">Cancel</string>
+    <string name="unknown_user">Unknown user</string>
+    <string name="yes_text">Yes</string>
+    <string name="no_text">No</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -70,7 +73,8 @@
     <!--    MENU DRAWER-->
     <string name="logout">Logout</string>
     <string name="menu_gallery">Gallery</string>
-    <string name="chat_menu">Chat List</string>
+    <string name="chat_menu">Chat</string>
+    <string name="ticket_menu">Ticket</string>
 
     <!--    TITLE NAVIGATION BAR-->
     <string name="title_home">Home</string>
@@ -78,5 +82,34 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_chat">Chat</string>
     <string name="user_profile">User profile</string>
+    <string name="title_tickets">Tickets List</string>
+    <string name="title_ticket">Ticket</string>
+
+    <!--    NOTIFICATIONS-->
+    <string name="title_message">New message from %s</string>
+    <string name="title_messages">New messages in chat %s</string>
+    <string name="body_messages">You have received more messages in the chat %s</string>
+    <string name="no_notifications">There are no notifications</string>
+    <string name="title_notification_ticket">Ticket on %s</string>
+    <string name="notification_body_open_ticket">%s opened a new ticket on %s</string>
+    <string name="notification_body_closed_ticket">%s closed a ticket on %s</string>
+    <string name="notification_ticket_request_exception">Unable to send request</string>
+    <string name="notification_ticket_response_exception">Unable to send response</string>
+
+    <!--    TICKET-->
+    <string name="no_tickets">There are no tickets</string>
+    <string name="closed_tickets">Closed</string>
+    <string name="open_tickets">Open</string>
+    <string name="title_dialog_ticket">Confirm Ticket</string>
+    <string name="message_dialog_ticket_request">Are you sure you want to send this request?</string>
+    <string name="message_dialog_ticket_response">Are you sure you want to send this response?</string>
+    <string name="email_student_title">Student: %s</string>
+    <string name="email_prof_title">Professor: %s</string>
+    <string name="hint_text_sender">Write your request here…</string>
+    <string name="hint_text_receiver">Write your response here…</string>
+
+
+    <!--    CONTENT DESCRIPTION-->
+    <string name="notification_icon">notification icon</string>
 
 </resources>

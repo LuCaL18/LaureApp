@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModelFactory;
@@ -35,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (loggedInUser == null) {
                     return;
                 }
+
+                fetchTokenFCM();
                 goToMainActivity(loggedInUser);
             }
         });
@@ -50,6 +54,14 @@ public class LoginActivity extends AppCompatActivity {
 
         startActivity(intent);
         finish();
+    }
+
+    private void fetchTokenFCM() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener((task -> {
+            if (!task.isSuccessful()) {
+                Log.w("Main Activity", "Fetching FCM registration token failed", task.getException());
+            }
+        }));
     }
 
     @Override

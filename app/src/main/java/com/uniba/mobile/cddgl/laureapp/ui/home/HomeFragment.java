@@ -2,9 +2,6 @@ package com.uniba.mobile.cddgl.laureapp.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -21,17 +17,18 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentHomeBinding;
+import com.uniba.mobile.cddgl.laureapp.ui.home.menu.HomeMenu;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    private MenuProvider provider;
-    private final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;
+    private HomeMenu provider;
+    public static final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;
+    private HomeViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -52,29 +49,15 @@ public class HomeFragment extends Fragment {
             actionBar.setTitle(R.string.app_name_upperCase);
         }
 
-        provider = new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                menu.clear();
-                menuInflater.inflate(R.menu.app_bar_home, menu);
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    //TODO: gestire barra per fragment come fatto qui
-                    case NOTIFICATION_APP_BAR: {
-                        navController.navigate(R.id.action_navigation_home_to_chatFragment);
-                        return true;
-                    }
-                    default:
-                        return false;
-                }
-            }
-
-        };
+        provider = new HomeMenu(navController);
 
         requireActivity().addMenuProvider(provider);
+
+        provider.getMenu().observe(getViewLifecycleOwner(), menu -> {
+            if(menu != null) {
+                homeViewModel.getCountNotification().observe(getViewLifecycleOwner(), integer -> provider.setBadgeIcon(integer));
+            }
+        });
     }
 
     @Override

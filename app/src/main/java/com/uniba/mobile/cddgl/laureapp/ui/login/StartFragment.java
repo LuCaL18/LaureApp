@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
 public class StartFragment extends Fragment {
@@ -53,7 +54,7 @@ public class StartFragment extends Fragment {
 
         signInButton.setOnClickListener(view1 -> navController.navigate(R.id.action_startFragment_to_signInFragment));
 
-        guestText.setOnClickListener(view1 -> loginViewModel.setLoggedUser(new LoggedInUser("ospite", "GUEST")));
+        guestText.setOnClickListener(view1 -> loginViewModel.setLoggedUser(new LoggedInUser("ospite", "GUEST", RoleUser.GUEST)));
     }
 
 

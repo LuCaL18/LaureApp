@@ -10,4 +10,7 @@
     <color name="primary_green">#139245</color>
     <color name="message_green">#09B174</color>
     <color name="grey_app">#707070</color>
+    <color name="dark_green">#31006400</color>
+    <color name="grey_divider">#DBDBDB</color>
+    <color name="grey_body">#858585</color>
 </resources>

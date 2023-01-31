@@ -5,10 +5,9 @@ import android.animation.ValueAnimator;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,14 +19,18 @@ import android.view.animation.LinearInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.Volley;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
+import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Message;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentChatBinding;
@@ -38,38 +41,46 @@ import com.uniba.mobile.cddgl.laureapp.ui.chat.viewHolder.SendMessageViewHolder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 
 public class ChatFragment extends Fragment {
 
+    private final static String CLASS_NAME = "ChatFragment";
+
     private FragmentChatBinding binding;
     private String chatId = "";
     private RecyclerView chatRecyclerView;
     private EditText messageEditText;
-    private BottomNavigationView navBar;
     private ImageView arrowNotification;
     private LinearLayoutManager linearLayoutManager;
-    private final Map<String, String> membersDisplayName = new HashMap<>();
+    private final Map<String, LoggedInUser> otherMembers = new HashMap<>();
+    private final List<BaseRequestNotification> notificationsList = new ArrayList<>();
     private ChatViewModel chatModel;
+    private LoggedInUser currentUser;
 
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> adapter;
 
-    public ChatFragment() {}
+    public ChatFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getParentFragment() != null) {
+        if (getParentFragment() != null) {
 
             chatModel = new ViewModelProvider(requireParentFragment()).get(ChatViewModel.class);
 
-            for (LoggedInUser member: chatModel.getMembers().getValue()) {
-                membersDisplayName.put(member.getId(), member.getDisplayName());
+            for (LoggedInUser member : chatModel.getMembers().getValue()) {
+
+                if(!member.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    otherMembers.put(member.getId(), member);
+                    notificationsList.add(new BaseRequestNotification(member.getId(), NotificationType.MESSAGE));
+                }
             }
             chatId = chatModel.getIdChat();
         }
@@ -81,8 +92,7 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentChatBinding.inflate(inflater, container, false);
 
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.INVISIBLE);
+        super.onViewCreated(binding.getRoot(), savedInstanceState);
 
         // Initialize the RecyclerView and set an adapter for displaying the chat messages
         chatRecyclerView = binding.chatRecyclerView;
@@ -130,6 +140,16 @@ public class ChatFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        currentUser = mainViewModel.getUser().getValue();
+
+        mainViewModel.getUser().observe(getViewLifecycleOwner(), loggedInUser -> currentUser = loggedInUser);
+    }
+
     private void setupAdapter() {
         // Query the Firebase database for the chat messages
         Query query = FirebaseDatabase.getInstance().getReference().child("messages").child(chatId).orderByChild("timestamp");
@@ -155,7 +175,7 @@ public class ChatFragment extends Fragment {
                 int viewType = getItemViewType(lastMessagePosition);
                 int lastVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-                if (lastVisibleItemPosition == (lastMessagePosition -1) || lastVisibleItemPosition == -1) {
+                if (lastVisibleItemPosition == (lastMessagePosition - 1) || lastVisibleItemPosition == -1) {
                     chatRecyclerView.scrollToPosition(lastMessagePosition);
                     return;
                 }
@@ -195,6 +215,7 @@ public class ChatFragment extends Fragment {
                 }
             }
 
+            @NonNull
             @Override
             public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 // Create a new instance of the ViewHolder, using the layout file for chat message items
@@ -221,14 +242,16 @@ public class ChatFragment extends Fragment {
 
                         return new ReceiveMessageHolder(view);
                     default:
-                        return null;
+                        view = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_message_me_date, parent, false);
+                        return new MessageViewHolder(view);
                 }
             }
 
             @Override
-            protected void onBindViewHolder(MessageViewHolder holder, int position, Message model) {
+            protected void onBindViewHolder(@NonNull MessageViewHolder holder, int position, Message model) {
                 // Bind the data for the message to the ViewHolder
-                holder.bind(model, getDisplayNameOfMember(model.getSenderId()), null);
+                holder.bind(model, getDisplayNameOfMember(model.getSenderId()), getPhotoUrlOfMember(model.getSenderId()));
             }
         };
         chatRecyclerView.setAdapter(adapter);
@@ -254,10 +277,59 @@ public class ChatFragment extends Fragment {
         Message message = new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(), messageText);
         // Add the message to the Firebase database
         FirebaseDatabase.getInstance().getReference().child("messages").child(chatId).push().setValue(message);
+
+        sendNotification(messageText);
     }
 
     private String getDisplayNameOfMember(String id) {
-        return membersDisplayName.getOrDefault(id, null);
+        try {
+            return otherMembers.getOrDefault(id, null).getDisplayName();
+        } catch (NullPointerException e) {
+            Log.d(CLASS_NAME, "Unable fetch display name of member " + id);
+            return null;
+        }
+    }
+
+    private String getPhotoUrlOfMember(String id) {
+        try {
+            return otherMembers.getOrDefault(id, null).getPhotoUrl();
+        } catch (NullPointerException e) {
+            Log.d(CLASS_NAME, "Unable fetch photo url of member " + id);
+            return null;
+        }
+    }
+
+    private List<String> getTokenOfMember() {
+
+        List<String> tokens = new ArrayList<>();
+        try {
+            for (String id : otherMembers.keySet()) {
+                tokens.add(otherMembers.get(id).getToken());
+            }
+        } catch (NullPointerException e) {
+            Log.e(CLASS_NAME, "Unable fetch tokens of member");
+        }
+        return tokens;
+    }
+
+    private void sendNotification(String message) {
+
+        for (BaseRequestNotification notification : notificationsList) {
+            String title = getString(R.string.title_message, currentUser.getDisplayName());
+            notification.setNotification(title, message);
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("receiveId", notification.getReceiveId());
+            data.put("type", notification.getType());
+            data.put("senderName", currentUser.getDisplayName());
+            data.put("body", message);
+            data.put("chatId", chatId);
+            data.put("nameChat", chatModel.getNameChat());
+            data.put("timestamp", System.currentTimeMillis());
+            notification.addData(data);
+
+            notification.sendRequest(Request.Method.POST, this.getContext());
+        }
     }
 
     @Override
@@ -270,16 +342,10 @@ public class ChatFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        navBar.setVisibility(View.VISIBLE);
         adapter.stopListening();
 
-        navBar = null;
         adapter = null;
         binding = null;
 
     }
 }
-
-
-

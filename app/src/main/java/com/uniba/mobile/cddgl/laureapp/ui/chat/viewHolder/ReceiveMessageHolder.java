@@ -7,13 +7,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Message;
 
 public class ReceiveMessageHolder extends MessageViewHolder {
 
-    private TextView displayNameTextView;
-    private ImageView userPhotoImageView;
+    private final TextView displayNameTextView;
+    private final ImageView userPhotoImageView;
 
     public ReceiveMessageHolder(@NonNull View itemView) {
         super(itemView);
@@ -39,8 +41,12 @@ public class ReceiveMessageHolder extends MessageViewHolder {
     }
 
     @Override
-    public void bind(Message message, @Nullable String displayName, @Nullable String photoProfile) {
+    public void bind(Message message, @NonNull String displayName, @Nullable String photoProfile) {
         super.bind(message, displayName, photoProfile);
         displayNameTextView.setText(displayName);
+
+        if(photoProfile != null) {
+            Glide.with(itemView).load(photoProfile).transform(new CircleCrop()).into(userPhotoImageView);
+        }
     }
 }

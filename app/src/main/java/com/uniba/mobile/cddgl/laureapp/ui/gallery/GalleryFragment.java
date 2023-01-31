@@ -59,8 +59,6 @@ public class GalleryFragment extends Fragment {
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.INVISIBLE);
 
-        NavController navController = NavHostFragment.findNavController(this);
-
         toolbar = getActivity().findViewById(R.id.topAppBar);
 
         iconPre = toolbar.getNavigationIcon();

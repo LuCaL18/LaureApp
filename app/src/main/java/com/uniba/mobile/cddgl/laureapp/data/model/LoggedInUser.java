@@ -17,11 +17,17 @@ public class LoggedInUser implements Serializable {
     private String birthDay;
     private String bio;
     private RoleUser role;
+    private String photoUrl;
+    private String token;
     //private String dipartimento;
 
 
     // NON CANCELLARE SERVE A FIREBASE
     public LoggedInUser() {}
+
+    public LoggedInUser(String id) {
+        this.id = id;
+    }
 
     public LoggedInUser(String id, String email, String name, String surname, String birthDay, String bio, RoleUser role) {
         this.id = id;
@@ -39,7 +45,13 @@ public class LoggedInUser implements Serializable {
         this.displayName = displayName;
     }
 
-    public LoggedInUser(String id, String email, String displayName, String name, String surname, String birthDay, String bio, RoleUser role) {
+    public LoggedInUser(String email, String displayName, RoleUser role) {
+        this.email = email;
+        this.displayName = displayName;
+        this.role = role;
+    }
+
+    public LoggedInUser(String id, String email, String displayName, String name, String surname, String birthDay, String bio, RoleUser role, String photoUrl, String token) {
         this.id = id;
         this.email = email;
         this.displayName = displayName;
@@ -48,6 +60,8 @@ public class LoggedInUser implements Serializable {
         this.birthDay = birthDay;
         this.bio = bio;
         this.role = role;
+        this.photoUrl = photoUrl;
+        this.token = token;
     }
 
     public String getId() {
@@ -108,6 +122,22 @@ public class LoggedInUser implements Serializable {
 
     public RoleUser getRole() {
         return role;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     //    public String getDipartimento() {

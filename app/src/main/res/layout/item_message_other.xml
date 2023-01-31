@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
     android:layout_marginTop="10dp">
 
     <ImageView
         android:id="@+id/image_gchat_profile_other"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:contentDescription="@string/user_profile"
+        app:srcCompat="@mipmap/ic_user"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,8 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/image_gchat_profile_other"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/image_gchat_profile_other"
+        app:layout_constraintStart_toEndOf="@+id/image_gchat_profile_other" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_gchat_message_other"

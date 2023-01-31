@@ -11,6 +11,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="iconTint">@color/grey_app</item>
+        <item name="android:colorMultiSelectHighlight">@color/dark_green</item>
+        <item name="colorPrimaryInverse">@color/grey_body</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -24,6 +26,6 @@
     <style name="Theme.LaureApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Widget.App.MaterialDivider" parent="Widget.MaterialComponents.MaterialDivider">
-        <item name="dividerColor">@color/primary_green</item>
+        <item name="dividerColor">@color/grey_divider</item>
     </style>
 </resources>

@@ -4,8 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -22,9 +20,8 @@ import java.util.ArrayList;
 
 public class ChatViewModel extends ViewModel {
 
-//    private final LiveData<LoggedInUser[]> membersLiveData = new MutableLiveData<>();
-    @Nullable
     private final MutableLiveData<LoggedInUser[]> members = new MutableLiveData<>();
+    private String nameChat;
 
     @Nullable
     private String idChat;
@@ -60,7 +57,8 @@ public class ChatViewModel extends ViewModel {
             return;
         }
 
-        for (String member : data.getMembers()) {
+        nameChat = data.getName();
+        for (String member : data.getMembers().keySet()) {
             DatabaseReference ref = database.getReference("users/" + member);
 
             ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -90,5 +88,9 @@ public class ChatViewModel extends ViewModel {
 
     public void setIdChat(String idChat) {
         this.idChat = idChat;
+    }
+
+    public String getNameChat() {
+        return nameChat;
     }
 }

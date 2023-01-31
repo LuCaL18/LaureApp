@@ -1,9 +1,5 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 public class Message {
     private String senderId;
     private String message;
