@@ -55,12 +55,13 @@ public class MainActivity extends AppCompatActivity {
 
             auth = FirebaseAuth.getInstance();
 
+            Intent intent = getIntent();
+            user = (LoggedInUser) intent.getSerializableExtra(LOGGED_USER);
+
             if (auth.getCurrentUser() == null && user == null) {
                 goToLoginActivity();
             }
 
-            Intent intent = getIntent();
-            user = (LoggedInUser) intent.getSerializableExtra(LOGGED_USER);
 
             setSupportActionBar(binding.appBarMain.topAppBar);
             initViewModel();
@@ -168,14 +169,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViewModel() {
-        ViewModelProvider modelProvider = new ViewModelProvider(this);
-        mainViewModel = modelProvider.get(MainViewModel.class);
+        try {
+            ViewModelProvider modelProvider = new ViewModelProvider(this);
+            mainViewModel = modelProvider.get(MainViewModel.class);
 
-        if (user != null) {
-            mainViewModel.init(user);
+            if (user != null) {
+                mainViewModel.init(user);
+                return;
+            }
+
+            mainViewModel.init(new LoggedInUser(auth.getCurrentUser().getUid()));
+        } catch (Exception e) {
+            Log.e("Main Activity", e.getMessage());
         }
 
-        mainViewModel.init(new LoggedInUser(auth.getCurrentUser().getUid()));
     }
 
     @Override
