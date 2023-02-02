@@ -9,9 +9,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -95,12 +101,30 @@ public class ListAdapterTesi extends BaseAdapter {
                 // recupera l'istanza della tesi selezionata
                 Tesi tesiSelezionata = mDataList.get(position);
                 // recupero l'istanza dell'utente loggato
-                LoggedInUser user;
-                String studentId = user.getId();
-                // crea un oggetto tesi_classifiche
-                ClassificaTesi tesiClassifiche = new ClassificaTesi(tesiSelezionata,studentId);
-                // aggiungi l'oggetto tesi_classifiche alla raccolta tesi_classifiche
-                mCollectionRef.add(tesiClassifiche);
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String studenteId = currentUser.getUid();
+                DocumentReference classificaTesiDoc = mCollectionRef.document(studenteId).collection("tesi_classifica").document(studenteId);
+                classificaTesiDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            ClassificaTesi tesiClassifiche;
+                            if (document.exists()) {
+                                tesiClassifiche = document.toObject(ClassificaTesi.class);
+                                List<Tesi> tesi = tesiClassifiche.getTesi();
+                                tesi.add(tesiSelezionata);
+                                tesiClassifiche.setTesi(tesi);
+                                classificaTesiDoc.set(tesiClassifiche);
+                            } else {
+                                List<Tesi> classifica = new ArrayList<>();
+                                classifica.add(tesiSelezionata);
+                                tesiClassifiche = new ClassificaTesi(classifica,studenteId);
+                                classificaTesiDoc.set(tesiClassifiche);
+                            }
+                        }
+                    }
+                });
             }
         });
         return convertView;

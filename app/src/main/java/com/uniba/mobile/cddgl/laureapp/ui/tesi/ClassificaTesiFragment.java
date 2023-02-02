@@ -21,11 +21,14 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClassificaTesiFragment extends Fragment {
     private ListView listView;
     private ClassificaTesiAdapter adapter;
+    private Map<String,List<Tesi>> classifica;
     private List<Tesi> dataList;
     private CollectionReference mCollection;
 
@@ -34,7 +37,8 @@ public class ClassificaTesiFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_classifica_tesi, container, false);
         listView = view.findViewById(R.id.classifica_tesi);
         dataList = new ArrayList<>();
-        mCollection = FirebaseFirestore.getInstance().collection("tesi_classifica");
+        classifica = new HashMap<>();
+        mCollection = FirebaseFirestore.getInstance().collection("tesi").document("nBaFQbLRbSWkyKIjlTZQGPGMQ072").collection("tesi_classifica");
         adapter = new ClassificaTesiAdapter(getActivity(), mCollection);
         Log.d("ClassificaTesiFragment", "onCreateView() method called");
         listView.setAdapter(adapter);
@@ -45,11 +49,12 @@ public class ClassificaTesiFragment extends Fragment {
                     Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                dataList.clear();
+                classifica.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Tesi tesi = doc.toObject(Tesi.class);
                     dataList.add(tesi);
                 }
+                classifica.put("classificaTesi",dataList);
                 Log.d("ClassificaTesiFragment", "onCreateView() method called");
                 adapter.notifyDataSetChanged();
             }

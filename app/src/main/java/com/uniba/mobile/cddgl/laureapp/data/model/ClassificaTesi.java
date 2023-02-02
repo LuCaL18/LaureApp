@@ -1,42 +1,29 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import java.util.List;
+
 public class ClassificaTesi {
+    private List<Tesi> tesi;
+    private String studenteId;
 
-    private Tesi[] classificaTesi;
-    private LoggedInUser user;
-    private String studentId;
-
-    public ClassificaTesi (Tesi[] classificaTesi, LoggedInUser user) {
-        this.classificaTesi = classificaTesi;
-        this.user = user;
+    public ClassificaTesi(List<Tesi> tesi, String studenteId) {
+        this.tesi = tesi;
+        this.studenteId = studenteId;
     }
 
-    public ClassificaTesi (Tesi[] classificaTesi, String studentId) {
-        this.classificaTesi = classificaTesi;
-        this.studentId = studentId;
+    public List<Tesi> getTesi() {
+        return tesi;
     }
 
-    public Tesi[] getClassificaTesi() {
-        return classificaTesi;
+    public void setTesi(List<Tesi> tesi) {
+        this.tesi = tesi;
     }
 
-    public void setClassificaTesi(Tesi[] classificaTesi) {
-        this.classificaTesi = classificaTesi;
+    public String getStudenteId() {
+        return studenteId;
     }
 
-    public LoggedInUser getUser() {
-        return user;
-    }
-
-    public void setUser(LoggedInUser user) {
-        this.user = user;
-    }
-
-    public void setStudentId(LoggedInUser loggedInUser) {
-        this.studentId = loggedInUser.getId();
-    }
-
-    public String getStudentId(LoggedInUser loggedInUser) {
-        return studentId;
+    public void setStudenteId(String studenteId) {
+        this.studenteId = studenteId;
     }
 }

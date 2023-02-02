@@ -20,19 +20,21 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClassificaTesiAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final List<Tesi> mDataList;
-    private CollectionReference mCollectionRef;
+    private final Map<String,List<Tesi>> classifica;
 
     public ClassificaTesiAdapter(Context context, CollectionReference ref) {
         mContext = context;
         mDataList = new ArrayList<>();
-        mCollectionRef = ref;
-        mCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        classifica = new HashMap<>();
+        ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
@@ -44,6 +46,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
                     Tesi tesi = doc.toObject(Tesi.class);
                     mDataList.add(tesi);
                 }
+                classifica.put("classificaTesi",mDataList);
                 notifyDataSetChanged();
             }
         });
