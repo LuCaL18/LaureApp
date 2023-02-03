@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -24,7 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
-import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
@@ -98,35 +99,52 @@ public class ListAdapterTesi extends BaseAdapter {
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // recupera l'istanza della tesi selezionata
+                // Recupera l'istanza della tesi selezionata
                 Tesi tesiSelezionata = mDataList.get(position);
-                // recupero l'istanza dell'utente loggato
+                // Recupera l'istanza dell'utente loggato
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String studenteId = currentUser.getUid();
                 DocumentReference classificaTesiDoc = mCollectionRef.document(studenteId).collection("tesi_classifica").document(studenteId);
-                classificaTesiDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            ClassificaTesi tesiClassifiche;
-                            if (document.exists()) {
-                                tesiClassifiche = document.toObject(ClassificaTesi.class);
-                                List<Tesi> tesi = tesiClassifiche.getTesi();
-                                tesi.add(tesiSelezionata);
-                                tesiClassifiche.setTesi(tesi);
-                                classificaTesiDoc.set(tesiClassifiche);
-                            } else {
-                                List<Tesi> classifica = new ArrayList<>();
-                                classifica.add(tesiSelezionata);
-                                tesiClassifiche = new ClassificaTesi(classifica,studenteId);
-                                classificaTesiDoc.set(tesiClassifiche);
+                mCollectionRef.document(studenteId).collection("tesi_classifica").document(studenteId)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                ClassificaTesi tesiClassificate;
+                                if (documentSnapshot.exists()) {
+                                    tesiClassificate = documentSnapshot.toObject(ClassificaTesi.class);
+                                    // Aggiungi la tesi selezionata alla classifica esistente
+                                    tesiClassificate.addTesi(tesiSelezionata);
+                                } else {
+                                    // Crea una nuova classifica per lo studente
+                                    List<Tesi> classifica = new ArrayList<>();
+                                    classifica.add(tesiSelezionata);
+                                    tesiClassificate = new ClassificaTesi(classifica, studenteId);
+                                }
+                                classificaTesiDoc.set(tesiClassificate)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "Classifica tesi aggiornata con successo");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Errore durante l'aggiornamento della classifica tesi", e);
+                                            }
+                                        });
                             }
-                        }
-                    }
-                });
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Errore durante il recupero della classifica tesi", e);
+                            }
+                        });
             }
         });
+
         return convertView;
     }
 
