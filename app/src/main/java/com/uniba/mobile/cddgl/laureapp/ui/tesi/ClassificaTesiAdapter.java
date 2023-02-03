@@ -28,7 +28,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final List<Tesi> mDataList;
-    private final Map<String,List<Tesi>> classifica;
+    private final Map<String, List<Tesi>> classifica;
 
     public ClassificaTesiAdapter(Context context, CollectionReference ref) {
         mContext = context;
@@ -46,7 +46,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
                     Tesi tesi = doc.toObject(Tesi.class);
                     mDataList.add(tesi);
                 }
-                classifica.put("classificaTesi",mDataList);
+                classifica.put("classificaTesi", mDataList);
                 notifyDataSetChanged();
             }
         });
@@ -82,20 +82,22 @@ public class ClassificaTesiAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         Tesi tesi = mDataList.get(position);
-        viewHolder.textView1.setText(tesi.getNomeTesi());
-        viewHolder.textView2.setText(tesi.getRelatore());
+        if (tesi != null && tesi.getNomeTesi() != null && tesi.getRelatore() != null) {
+            viewHolder.textView1.setText(tesi.getNomeTesi());
+            viewHolder.textView2.setText(tesi.getRelatore());
+        }
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // handle click event for visualizzaTesi button
+                // qui puoi inserire il codice per la visualizzazione della tesi
             }
         });
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // handle click event for addTesi button
+                // qui puoi inserire il codice per la cancellazione della tesi
             }
-        });
+            });
         return convertView;
     }
 
@@ -105,4 +107,5 @@ public class ClassificaTesiAdapter extends BaseAdapter {
         ImageButton imageButton1;
         ImageButton imageButton2;
     }
+
 }
