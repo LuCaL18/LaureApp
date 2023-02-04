@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -38,7 +40,9 @@ public class ClassificaTesiFragment extends Fragment {
         listView = view.findViewById(R.id.classifica_tesi);
         dataList = new ArrayList<>();
         classifica = new HashMap<>();
-        mCollection = FirebaseFirestore.getInstance().collection("tesi").document("nBaFQbLRbSWkyKIjlTZQGPGMQ072").collection("tesi_classifica");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String studenteId = currentUser.getUid();
+        mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
         adapter = new ClassificaTesiAdapter(getActivity(), mCollection);
         Log.d("ClassificaTesiFragment", "onCreateView() method called");
         listView.setAdapter(adapter);
