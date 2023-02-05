@@ -17,6 +17,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.Map;
 public class ClassificaTesiAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<Tesi> mDataList;
+    private List<Tesi> mDataList;
     private final Map<String, List<Tesi>> classifica;
 
     public ClassificaTesiAdapter(Context context, CollectionReference ref) {
@@ -43,8 +44,8 @@ public class ClassificaTesiAdapter extends BaseAdapter {
                 }
                 mDataList.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    Tesi tesi = doc.toObject(Tesi.class);
-                    mDataList.add(tesi);
+                    ClassificaTesi classificaTesi = doc.toObject(ClassificaTesi.class);
+                    mDataList = classificaTesi.getTesi();
                 }
                 classifica.put("classificaTesi", mDataList);
                 notifyDataSetChanged();

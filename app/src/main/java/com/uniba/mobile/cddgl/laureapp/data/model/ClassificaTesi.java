@@ -3,8 +3,9 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.List;
+import java.util.Map;
 
-public class ClassificaTesi {
+public class ClassificaTesi extends Tesi {
     private List<Tesi> tesi;
     private String studenteId;
 
@@ -37,6 +38,16 @@ public class ClassificaTesi {
 
     public void addTesi(Tesi tesi) {
         this.tesi.add(tesi);
+    }
+
+    @Override
+    public String getNomeTesi() {
+        return super.getNomeTesi();
+    }
+
+    @Override
+    public String getRelatore() {
+        return super.getRelatore();
     }
 }
 

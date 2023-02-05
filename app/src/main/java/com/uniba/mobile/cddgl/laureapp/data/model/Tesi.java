@@ -32,4 +32,12 @@ public class Tesi {
     public void setRelatore(String relatore) {
         this.relatore = relatore;
     }
+
+    public String getRelatore(String relatore) {
+        return relatore;
+    }
+
+    public String getNomeTesi(String nomeTesi) {
+        return nomeTesi;
+    }
 }
