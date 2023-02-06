@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,10 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -100,32 +100,18 @@ public class ClassificaTesiAdapter extends BaseAdapter {
                 // qui puoi inserire il codice per la visualizzazione della tesi
             }
         });
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String studenteId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference classificaRef = db.collection("tesi_classifiche").document(studenteId);
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                String studenteId = currentUser.getUid();
-                DocumentReference classificaTesiDoc = FirebaseFirestore.getInstance().collection("tesi_classifiche").document(studenteId);
-                Tesi tesiSelezionata = mDataList.get(position);
-                classificaTesiDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        ClassificaTesi tesiClassificate;
-                        if (documentSnapshot.exists()) {
-                            tesiClassificate = documentSnapshot.toObject(ClassificaTesi.class);
-                            tesiClassificate.removeTesi(tesiSelezionata);
-                            mDataList.remove(tesiSelezionata);
-                            classificaTesiDoc.set(tesiClassificate).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    notifyDataSetChanged();
-                                }
-                            });
-                        }
-                    }
-                });
+                Tesi tesi = mDataList.get(position);
+                mDataList.remove(tesi);
+                classificaRef.set(new ClassificaTesi(mDataList, studenteId));
             }
         });
+
         return convertView;
     }
 
