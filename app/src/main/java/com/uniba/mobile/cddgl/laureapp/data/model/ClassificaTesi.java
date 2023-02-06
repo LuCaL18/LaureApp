@@ -40,6 +40,10 @@ public class ClassificaTesi extends Tesi {
         this.tesi.add(tesi);
     }
 
+    public void removeTesi(Tesi tesiRemove) {
+        this.tesi.remove(tesiRemove);
+    }
+
     @Override
     public String getNomeTesi() {
         return super.getNomeTesi();
