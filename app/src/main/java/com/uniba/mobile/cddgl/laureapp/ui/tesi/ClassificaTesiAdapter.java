@@ -1,7 +1,5 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,6 +24,8 @@ import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,5 +119,11 @@ public class ClassificaTesiAdapter extends BaseAdapter {
         ImageButton imageButton1;
         ImageButton imageButton2;
     }
+
+    public void addTesi(List<Tesi> tesi) {
+        mDataList = tesi;
+        notifyDataSetChanged();
+    }
+
 
 }

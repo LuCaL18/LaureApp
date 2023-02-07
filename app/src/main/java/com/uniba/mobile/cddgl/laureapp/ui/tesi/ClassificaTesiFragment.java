@@ -5,7 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -21,8 +24,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ClassificaTesiFragment extends Fragment {
@@ -61,8 +69,74 @@ public class ClassificaTesiFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+        String[] opzioniOrdinamento = new String[]{"Tesi A-Z","Tesi Z-A","Relatore A-Z","Relatore Z-A"};
+        ArrayAdapter<String> adapterOrdinamento = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, opzioniOrdinamento);
+        adapterOrdinamento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner spinnerOrdinamento = view.findViewById(R.id.spinner_classificatesi);
+        spinnerOrdinamento.setAdapter(adapterOrdinamento);
+        spinnerOrdinamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (dataList == null) return;
+                List<Tesi> listaTesiOrdinata = new ArrayList<>(dataList.getTesi());
+                String opzioneSelezionata = parent.getItemAtPosition(position).toString();
+                switch (opzioneSelezionata) {
+                    case "Tesi A-Z":
+                        Collections.sort(listaTesiOrdinata, new Comparator<Tesi>() {
+                            @Override
+                            public int compare(Tesi t1, Tesi t2) {
+                                return t1.getNomeTesi().compareTo(t2.getNomeTesi());
+                            }
+                        });
+                        break;
+                    case "Tesi Z-A":
+                        Collections.sort(listaTesiOrdinata, new Comparator<Tesi>() {
+                            @Override
+                            public int compare(Tesi t1, Tesi t2) {
+                                return t2.getNomeTesi().compareTo(t1.getNomeTesi());
+                            }
+                        });
+                        break;
+                    case "Relatore A-Z":
+                        Collections.sort(listaTesiOrdinata, new Comparator<Tesi>() {
+                            @Override
+                            public int compare(Tesi t1, Tesi t2) {
+                                return t1.getRelatore().compareTo(t2.getRelatore());
+                            }
+                        });
+                        break;
+                    case "Relatore Z-A":
+                        Collections.sort(listaTesiOrdinata, new Comparator<Tesi>() {
+                            @Override
+                            public int compare(Tesi t1, Tesi t2) {
+                                return t2.getRelatore().compareTo(t1.getRelatore());
+                            }
+                        });
+                        break;
+                }
+                adapter.addTesi(listaTesiOrdinata);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        /* listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // punto 2: quando una tesi viene cliccata, aprire un'altra activity che visualizza maggiori informazioni sulla tesi selezionata
+            Tesi tesi = mDataList.get(position);
+            Intent intent = new Intent(getActivity(), DettagliTesiActivity.class);
+            intent.putExtra("tesi", tesi);
+            startActivity(intent);
+            }
+        });
+        */
         return view;
     }
+
 }
 
 
