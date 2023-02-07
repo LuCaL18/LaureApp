@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="classificatesi_array" />
+
+    <!--    SPINNER CLASSIFICA TESI -->
+    <resources>
+        <string-array name="classificatesi_array">
+            <item>Tesi A-Z</item>
+            <item>Tesi Z-A</item>
+            <item>Relatore A-Z</item>
+            <item>Relatore Z-A</item>
+        </string-array>
+    </resources>
+</resources>
