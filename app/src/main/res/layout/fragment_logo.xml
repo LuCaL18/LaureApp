@@ -19,18 +19,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/loader_logo"
-        android:layout_width="305dp"
-        android:layout_height="21dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:max="100"
+    <ProgressBar
+        android:id="@+id/loading_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLogo"
-        app:layout_constraintVertical_bias="0.551"
-        app:trackColor="#FEFEFE" />
+        app:layout_constraintTop_toBottomOf="@+id/textLogo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

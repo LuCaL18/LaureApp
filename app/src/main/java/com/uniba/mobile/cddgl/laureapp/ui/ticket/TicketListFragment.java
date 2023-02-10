@@ -1,6 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.ui.ticket;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,8 +164,12 @@ public class TicketListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        adapterClosed.stopListening();
-        adapterOpen.stopListening();
+        try {
+            adapterClosed.stopListening();
+            adapterOpen.stopListening();
+        } catch(Exception e) {
+            Log.w("TicketListFragment", e.getMessage());
+        }
     }
 
     @Override

@@ -4,7 +4,9 @@ import androidx.annotation.Nullable;
 
 import com.uniba.mobile.cddgl.laureapp.data.TicketState;
 
-public class Ticket {
+import java.io.Serializable;
+
+public class Ticket implements Serializable {
 
     private String idSender;
     private String idReceiver;
@@ -24,6 +26,14 @@ public class Ticket {
     private Long timestampReceiver;
 
     public Ticket() {
+    }
+
+    public Ticket(String idSender, String idReceiver, String idTesi, String nameTesi, TicketState state) {
+        this.idSender = idSender;
+        this.idReceiver = idReceiver;
+        this.nameTesi = nameTesi;
+        this.idTesi = idTesi;
+        this.state = state;
     }
 
     public Ticket(String id, String idSender, String idReceiver, String nameTesi, String idTesi, TicketState state) {
@@ -120,7 +130,7 @@ public class Ticket {
         this.timestampSender = timestampSender;
     }
 
-    public long getTimestampReceiver() {
+    public Long getTimestampReceiver() {
         return timestampReceiver;
     }
 

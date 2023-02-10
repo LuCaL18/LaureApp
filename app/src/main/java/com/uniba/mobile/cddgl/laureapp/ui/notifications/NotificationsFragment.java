@@ -24,9 +24,12 @@ import com.google.firebase.firestore.Query;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Notification;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentNotificationsBinding;
+import com.uniba.mobile.cddgl.laureapp.ui.bookings.BookingViewModel;
+import com.uniba.mobile.cddgl.laureapp.ui.bookings.interfaces.BookingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.ChatViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.adapters.NotificationAdapter;
+import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationBookingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationTicketItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketViewModel;
@@ -39,6 +42,7 @@ public class NotificationsFragment extends Fragment {
     private NotificationAdapter adapter;
     private ChatViewModel chatViewModel;
     private TicketViewModel ticketViewModel;
+    private BookingViewModel bookingViewModel;
     private RecyclerView notificationListRecyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -49,6 +53,7 @@ public class NotificationsFragment extends Fragment {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireParentFragment());
         chatViewModel = viewModelProvider.get(ChatViewModel.class);
         ticketViewModel = viewModelProvider.get(TicketViewModel.class);
+        bookingViewModel = viewModelProvider.get(BookingViewModel.class);
 
 
         navBar = getActivity().findViewById(R.id.nav_view);
@@ -84,8 +89,9 @@ public class NotificationsFragment extends Fragment {
 
         ChatItemClickCallback chatItemClickCallback = new NotificationChatItemClickCallback(chatViewModel);
         TicketItemClickCallback ticketItemClickCallback = new NotificationTicketItemClickCallback(ticketViewModel);
+        BookingItemClickCallback bookingItemClickCallback = new NotificationBookingItemClickCallback(bookingViewModel);
 
-        adapter = new NotificationAdapter(options, chatItemClickCallback, ticketItemClickCallback, textView, notificationListRecyclerView);
+        adapter = new NotificationAdapter(options, chatItemClickCallback, ticketItemClickCallback, bookingItemClickCallback, textView, notificationListRecyclerView);
 
         notificationListRecyclerView.setAdapter(adapter);
 
@@ -113,6 +119,15 @@ public class NotificationsFragment extends Fragment {
             NavController navController = NavHostFragment.findNavController(this);
             navController.navigate(R.id.action_navigation_notifications_to_ticketFragment);
 
+        });
+
+        bookingViewModel.getBooking().observe(getViewLifecycleOwner(), booking -> {
+            if(booking == null || bookingViewModel.isAlreadyRead()) {
+                return;
+            }
+
+            NavController navController = NavHostFragment.findNavController(this);
+            navController.navigate(R.id.action_navigation_notifications_to_bookingFragment);
         });
     }
 

@@ -17,6 +17,8 @@ public class MainViewModel extends ViewModel {
 
     private final MutableLiveData<LoggedInUser> user = new MutableLiveData<>();
     private String idUser;
+    private String fileToOpen;
+    private Long downloadReference;
     private final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
 
 
@@ -66,5 +68,21 @@ public class MainViewModel extends ViewModel {
 
     public String getIdUser() {
         return idUser;
+    }
+
+    public String getFileToOpen() {
+        return fileToOpen;
+    }
+
+    public void setFileToOpen(String fileToOpen) {
+        this.fileToOpen = fileToOpen;
+    }
+
+    public Long getDownloadReference() {
+        return downloadReference;
+    }
+
+    public void setDownloadReference(Long downloadReference) {
+        this.downloadReference = downloadReference;
     }
 }

@@ -13,9 +13,12 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 import com.uniba.mobile.cddgl.laureapp.data.model.Notification;
+import com.uniba.mobile.cddgl.laureapp.ui.bookings.interfaces.BookingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationBookingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationTicketItemClickCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.BookingNotificationViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.ChatNotificationViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.NotificationViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.TicketNotificationViewHolder;
@@ -25,20 +28,24 @@ public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, 
 
     private static final int VIEW_TYPE_CHAT_NOTIFICATION = 1;
     private static final int VIEW_TYPE_TICKET_NOTIFICATION = 2;
+    private static final int VIEW_TYPE_BOOKING_NOTIFICATION = 3;
 
     private final ChatItemClickCallback chatItemClickCallback;
     private final TicketItemClickCallback ticketItemClickCallback;
+    private final BookingItemClickCallback bookingItemClickCallback;
     private final TextView textView;
     private final RecyclerView notificationListRecyclerView;
 
     public NotificationAdapter(FirestoreRecyclerOptions<Notification> options,
                                ChatItemClickCallback chatItemClickCallback,
                                TicketItemClickCallback ticketItemClickCallback,
+                               BookingItemClickCallback bookingItemClickCallback,
                                TextView textView,
                                RecyclerView notificationListRecyclerView) {
         super(options);
         this.chatItemClickCallback = chatItemClickCallback;
         this.ticketItemClickCallback = ticketItemClickCallback;
+        this.bookingItemClickCallback = bookingItemClickCallback;
         this.textView = textView;
         this.notificationListRecyclerView = notificationListRecyclerView;
     }
@@ -60,11 +67,15 @@ public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, 
     public int getItemViewType(int position) {
         Notification notification = this.getItem(position);
 
-        if (notification.getType().equals(NotificationType.MESSAGE)) {
-            return VIEW_TYPE_CHAT_NOTIFICATION;
+        switch (notification.getType()) {
+            case MESSAGE:
+                return VIEW_TYPE_CHAT_NOTIFICATION;
+            case BOOKING:
+                return VIEW_TYPE_BOOKING_NOTIFICATION;
+            case TICKET:
+            default:
+                return VIEW_TYPE_TICKET_NOTIFICATION;
         }
-
-        return VIEW_TYPE_TICKET_NOTIFICATION;
     }
 
     @NonNull
@@ -73,11 +84,15 @@ public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_notification, parent, false);
 
-        if (viewType == VIEW_TYPE_CHAT_NOTIFICATION) {
-            return new ChatNotificationViewHolder(view, (NotificationChatItemClickCallback) chatItemClickCallback);
+        switch (viewType) {
+            case VIEW_TYPE_CHAT_NOTIFICATION:
+                return new ChatNotificationViewHolder(view, (NotificationChatItemClickCallback) chatItemClickCallback);
+            case VIEW_TYPE_BOOKING_NOTIFICATION:
+                return new BookingNotificationViewHolder(view, (NotificationBookingItemClickCallback) bookingItemClickCallback);
+            case VIEW_TYPE_TICKET_NOTIFICATION:
+            default:
+                return new TicketNotificationViewHolder(view, (NotificationTicketItemClickCallback) ticketItemClickCallback);
         }
-
-        return new TicketNotificationViewHolder(view, (NotificationTicketItemClickCallback) ticketItemClickCallback);
     }
 
     @Override

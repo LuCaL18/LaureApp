@@ -46,11 +46,14 @@ import java.util.regex.Pattern;
 
 public class TicketFragment extends Fragment {
 
+    public static final String TICKET_KEY = "new_ticket";
+
     private BottomNavigationView navBar;
     private Ticket ticket;
     private LoggedInUser user;
     private TicketViewModel ticketViewModel;
     private View root;
+    private Button sendButton;
 
     public TicketFragment() {
     }
@@ -65,10 +68,17 @@ public class TicketFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         user = mainViewModel.getUser().getValue();
 
-        ticket = ticketViewModel.getTicket().getValue();
-
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.INVISIBLE);
+
+        if(getArguments() != null) {
+            ticket = (Ticket) getArguments().getSerializable(TICKET_KEY);
+
+            return;
+        }
+
+        ticket = ticketViewModel.getTicket().getValue();
+
     }
 
     @Override
@@ -174,7 +184,7 @@ public class TicketFragment extends Fragment {
         senderTextView.setVisibility(View.VISIBLE);
 
         EditText receiverText = root.findViewById(R.id.text_receiver_ticket);
-        Button sendButton = root.findViewById(R.id.button_send);
+        sendButton = root.findViewById(R.id.button_send);
 
         if (user.getRole().equals(RoleUser.STUDENT)) {
             sendButton.setVisibility(View.GONE);
@@ -258,6 +268,8 @@ public class TicketFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        navBar.setVisibility(View.GONE);
+
         EditText senderText = root.findViewById(R.id.text_sender_ticket);
         if(senderText.getVisibility() == View.VISIBLE) {
             senderText.requestFocus();
@@ -318,6 +330,8 @@ public class TicketFragment extends Fragment {
                updates.put("id", ticket.getId());
                ticketsCollection.document(documentReference.getId()).update(updates);
 
+               sendButton.setVisibility(View.GONE);
+
                sendNotification(ticket.getIdReceiver());
            } else {
                showToastError(getString(R.string.notification_ticket_request_exception));
@@ -357,6 +371,7 @@ public class TicketFragment extends Fragment {
                 receiverTextView.setText(responseText);
                 receiverTextView.setVisibility(View.VISIBLE);
 
+                sendButton.setVisibility(View.GONE);
                 sendNotification(ticket.getIdSender());
             } else {
                 showToastError(getString(R.string.notification_ticket_response_exception));

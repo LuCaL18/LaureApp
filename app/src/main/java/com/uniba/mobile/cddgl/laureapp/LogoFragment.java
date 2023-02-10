@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -20,8 +21,7 @@ import android.widget.ProgressBar;
  */
 public class LogoFragment extends Fragment {
 
-//    private ProgressBar pgb;
-//    private CountDownTimer mCountDownTimer;
+    private ProgressBar progressBar;
 
     public LogoFragment() {
     }
@@ -35,43 +35,28 @@ public class LogoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_logo, container, false);
+        View view =  inflater.inflate(R.layout.fragment_logo, container, false);
+        progressBar = view.findViewById(R.id.loading_logo);
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        NavController navController = NavHostFragment.findNavController(LogoFragment.this);
-        navController.navigate(R.id.action_logoFragment_to_startFragment);
-    }
+        NavController navController = NavHostFragment.findNavController(this);
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
-    //    private void progressBarManager() {
-////        mCountDownTimer = new CountDownTimer(1000, 500) {
-////
-////            int i = 0;
-////
-////            @Override
-////            public void onTick(long millisUntilFinished) {
-//////                Log.v("Log_tag", "Tick of Progress" + i + millisUntilFinished);
-//////                i++;
-//////                pgb.setProgress((int) i * 100 / (1000 / 500));
-////
-////            }
-////
-////            @Override
-////            public void onFinish() {
-//////                i++;
-//////                pgb.setProgress(100);
-////
-////            }
-////        };
-////        mCountDownTimer.start();
-//
-//    }
+        mainViewModel.getUser().observe(getViewLifecycleOwner(), loggedInUser -> {
+            navController.navigate(R.id.action_logo_fragment_to_navigation_home);
+            progressBar.setVisibility(View.GONE);
+        });
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        mCountDownTimer.cancel();
     }
 }

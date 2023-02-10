@@ -21,6 +21,7 @@ import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
 public class StartFragment extends Fragment {
     private NavController navController;
+    private LoginViewModel loginViewModel;
 
     public StartFragment() {
         // Required empty public constructor
@@ -43,7 +44,6 @@ public class StartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         this.navController = NavHostFragment.findNavController(this);
-        LoginViewModel loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
 
 
         Button loginButton = view.findViewById(R.id.buttonLogin);
@@ -57,6 +57,11 @@ public class StartFragment extends Fragment {
         guestText.setOnClickListener(view1 -> loginViewModel.setLoggedUser(new LoggedInUser("ospite", "GUEST", RoleUser.GUEST)));
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
+    }
 
     @Override
     public void onDestroyView() {

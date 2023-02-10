@@ -12,9 +12,10 @@
         android:id="@+id/image_item_notifications"
         android:layout_width="49dp"
         android:layout_height="49dp"
+        android:padding="8dp"
         android:contentDescription="@string/notification_icon"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_ticket"
+        android:src="@drawable/ic_baseline_book_online_24"
         tools:layout_editor_absoluteX="0dp"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -22,7 +23,6 @@
         android:id="@+id/title_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:text="Titolo"
         android:textColor="?attr/colorOnSecondary"
@@ -38,7 +38,6 @@
         android:id="@+id/body_notification"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingBottom="5dp"
         android:text="Corpo del messaggio inviato"

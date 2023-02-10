@@ -1,14 +1,22 @@
 package com.uniba.mobile.cddgl.laureapp;
 
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -26,6 +34,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.databinding.ActivityMainBinding;
+import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,7 +44,12 @@ public class MainActivity extends AppCompatActivity {
     public static final String LOGGED_USER = "logged_user";
     public static final int CHAT = R.id.nav_chat;
     public static final int TICKET = R.id.nav_ticket;
+    public static final int BOOKING = R.id.nav_booking;
     public static final int LOGOUT = R.id.logout;
+
+
+    public static final int REQUEST_WRITE_STORAGE_PERMISSION = 1;
+    public static final int REQUEST_INTERNET_PERMISSION = 2;
 
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
@@ -41,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private MainViewModel mainViewModel;
     private FirebaseAuth auth;
+    private BroadcastReceiver downloadReceiver;
+    private ShareContent shareContent;
 
     @Nullable
     private LoggedInUser user;
@@ -102,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
                             navController.navigate(R.id.nav_ticket);
                             isSelected = true;
                             break;
+                        case BOOKING:
+                            navController.navigate(R.id.nav_bookingListFragment);
+                            isSelected = true;
+                            break;
                         case LOGOUT:
                             logout();
                             isSelected = true;
@@ -124,24 +146,64 @@ public class MainActivity extends AppCompatActivity {
                 ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_text_view)).setText(auth.getCurrentUser().getEmail());
             }
 
-            mainViewModel.getUser().observe(this, loggedInUser -> {
-                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.display_name_text_view)).setText(loggedInUser.getDisplayName());
-                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_text_view)).setText(loggedInUser.getEmail());
-
-                try {
-                    if (loggedInUser.getPhotoUrl() != null) {
-                        Glide.with(this).load(loggedInUser.getPhotoUrl()).transform(new CircleCrop()).into((ImageView) navigationView.findViewById(R.id.navigation_header_image_view));
-                    }
-                } catch (RuntimeException e) {
-                    Log.e("Main Activity", "Unable set image profile user");
-                }
-            });
-
         } catch (NullPointerException e) {
             Log.w("Main Activity", e.getMessage());
         }
 
+        shareContent = new ShareContent(getApplicationContext());
+
+        try {
+            downloadReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+
+                    if (mainViewModel.getDownloadReference() != null &&
+                            mainViewModel.getDownloadReference() == referenceId &&
+                            mainViewModel.getFileToOpen() != null) {
+
+                        Intent visualizeFile = shareContent.viewFileDownloaded(mainViewModel.getFileToOpen());
+                        startActivity(visualizeFile);
+
+                        mainViewModel.setFileToOpen(null);
+                        mainViewModel.setDownloadReference(null);
+                    }
+
+                }
+            };
+        } catch (Exception e) {
+            Log.e("Main Activity", e.getMessage());
+        }
+
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        mainViewModel.getUser().observe(this, loggedInUser -> {
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.display_name_text_view)).setText(loggedInUser.getDisplayName());
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_text_view)).setText(loggedInUser.getEmail());
+
+            try {
+                if (loggedInUser.getPhotoUrl() != null) {
+                    Glide.with(this).load(loggedInUser.getPhotoUrl()).transform(new CircleCrop()).into((ImageView) navigationView.findViewById(R.id.navigation_header_image_view));
+                }
+            } catch (RuntimeException e) {
+                Log.e("Main Activity", "Unable set image profile user");
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(downloadReceiver);
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -183,6 +245,10 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Main Activity", e.getMessage());
         }
 
+    }
+
+    public static File getExternalStorageDirectory(String directoryPictures) {
+        return getExternalStoragePublicDirectory(directoryPictures);
     }
 
     @Override

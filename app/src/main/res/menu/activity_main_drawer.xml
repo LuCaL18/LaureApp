@@ -17,6 +17,11 @@
             android:icon="@drawable/ic_baseline_report_24dp"
             android:title="@string/ticket_menu" />
         <item
+            android:id="@+id/nav_booking"
+            android:icon="@drawable/ic_baseline_book_online_24"
+            android:title="@string/menu_booking"
+            android:iconTint="?attr/iconTint"/>
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout_24"
             android:title="@string/logout" />
