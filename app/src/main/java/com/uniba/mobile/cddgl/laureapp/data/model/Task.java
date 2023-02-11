@@ -33,6 +33,11 @@ public class Task {
         return stato;
     }
 
+    public String getStato2(StatoTask stato) {
+        String stato2 = stato.toString();
+        return stato2;
+    }
+
     public void setStato(StatoTask stato) {
         this.stato = stato;
     }

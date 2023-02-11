@@ -2,6 +2,7 @@ package com.uniba.mobile.cddgl.laureapp.ui.task;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -101,15 +105,17 @@ public class ListaTaskAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Task task = mDataList.get(position);
-                Intent intent = new Intent(mContext, Task.class);
-                intent.putExtra("nometask", task.getNometask());
-                intent.putExtra("stato", task.getStato());
-                intent.putExtra("descrizione", task.getDescrizione());
-                intent.putExtra("scadenza", task.getScadenza());
-                mContext.startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString("nometask", task.getNometask());
+                bundle.putString("stato", task.getStato().toString());
+                bundle.putString("descrizione", task.getDescrizione());
+                bundle.putString("scadenza", task.getScadenza());
+                VisualizzaTask visualizzaTask = new VisualizzaTask();
+                visualizzaTask.setArguments(bundle);
+                FragmentManager fragmentManager = ((AppCompatActivity) mContext).getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.nav_lista_task, visualizzaTask).addToBackStack(null).commit();
             }
         });
-
         return convertView;
     }
 
