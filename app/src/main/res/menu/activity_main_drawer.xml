@@ -13,6 +13,10 @@
             android:icon="@android:drawable/ic_input_add"
             android:title="@string/new_task" />
         <item
+            android:id="@+id/nav_visualizza_task"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="@string/lista_task" />
+        <item
             android:id="@+id/nav_lista_tesi"
             android:icon="@android:drawable/ic_menu_sort_by_size"
             android:title="@string/lista_tesi" />

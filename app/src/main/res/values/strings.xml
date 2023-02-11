@@ -52,6 +52,7 @@
     <string name="stato">Stato</string>
     <string name="descrizione">Descrizione</string>
     <string name="scadenza">Scadenza</string>
+    <string name="lista_task">Lista Task</string>
 
     <!--    SHARE TESI-->
     <string name="share_classifica">Condividi classifica</string>

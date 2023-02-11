@@ -1,13 +1,30 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
-public class Task {
+import com.google.firebase.firestore.PropertyName;
 
+enum StatoTask {
+    NEW("Nuovo"),
+    RUNNING("In esecuzione"),
+    END("Finito");
+
+    private final String descrizione;
+
+    StatoTask(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+}
+
+public class Task {
     private String nometask;
-    private String stato;
+    private StatoTask stato;
     private String descrizione;
     private String scadenza;
 
-    public Task (String nometask, String stato, String descrizione, String scadenza) {
+    public Task (String nometask, StatoTask stato, String descrizione, String scadenza) {
         this.nometask = nometask;
         this.stato = stato;
         this.descrizione = descrizione;
@@ -18,19 +35,21 @@ public class Task {
 
     }
 
+    @PropertyName("nomeTask")
     public String getNometask() {
         return nometask;
     }
 
+    @PropertyName("nomeTask")
     public void setNometask(String nometask) {
         this.nometask = nometask;
     }
 
-    public String getStato() {
+    public StatoTask getStato() {
         return stato;
     }
 
-    public void setStato(String stato) {
+    public void setStato(StatoTask stato) {
         this.stato = stato;
     }
 
@@ -49,5 +68,5 @@ public class Task {
     public void setScadenza(String scadenza) {
         this.scadenza = scadenza;
     }
-
 }
+

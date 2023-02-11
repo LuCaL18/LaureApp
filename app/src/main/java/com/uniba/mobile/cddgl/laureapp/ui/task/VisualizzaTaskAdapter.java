@@ -1,66 +1,97 @@
 package com.uniba.mobile.cddgl.laureapp.ui.task;
 
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link VisualizzaTaskAdapter#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class VisualizzaTaskAdapter extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class VisualizzaTaskAdapter extends BaseAdapter {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private final Context mContext;
+    private final List<Task> mDataList;
+    private CollectionReference mCollectionRef;
 
-    public VisualizzaTaskAdapter() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment VisualizzaTaskAdapter.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static VisualizzaTaskAdapter newInstance(String param1, String param2) {
-        VisualizzaTaskAdapter fragment = new VisualizzaTaskAdapter();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public VisualizzaTaskAdapter(Context context, CollectionReference ref) {
+        mContext = context;
+        mDataList = new ArrayList<>();
+        mCollectionRef = ref;
+        mCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e("FirebaseListAdapter", "Listen failed.", e);
+                    return;
+                }
+                mDataList.clear();
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    Task task = doc.toObject(Task.class);
+                    mDataList.add(task);
+                }
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public int getCount() {
+        return mDataList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mDataList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        com.uniba.mobile.cddgl.laureapp.ui.task.VisualizzaTaskAdapter.ViewHolder viewHolder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.visualizza_task, parent, false);
+            viewHolder = new com.uniba.mobile.cddgl.laureapp.ui.task.VisualizzaTaskAdapter.ViewHolder();
+            viewHolder.textView1 = convertView.findViewById(R.id.nomeTask);
+            viewHolder.textView2 = convertView.findViewById(R.id.scadenzaTask);
+            viewHolder.imageButton1 = convertView.findViewById(R.id.visualizza_task1);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (com.uniba.mobile.cddgl.laureapp.ui.task.VisualizzaTaskAdapter.ViewHolder) convertView.getTag();
         }
+        Task task = mDataList.get(position);
+        viewHolder.textView1.setText(task.getNometask());
+        viewHolder.textView2.setText(task.getScadenza());
+        viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+            }
+        });
+        return convertView;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.visualizza_task, container, false);
+    private static class ViewHolder {
+        TextView textView1;
+        TextView textView2;
+        ImageButton imageButton1;
     }
 }

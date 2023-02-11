@@ -11,82 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="252dp"
         android:layout_marginBottom="15dp"
         android:text="Nome Task"
         android:textColor="@color/primary_green"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/nometask"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/stato_testo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="305dp"
-        android:layout_marginBottom="15dp"
-        android:text="Stato"
-        android:textColor="@color/primary_green"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/stato"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nometask" />
-
-    <TextView
-        android:id="@+id/descrizione_testo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="246dp"
-        android:layout_marginBottom="24dp"
-        android:text="Descrizione"
-        android:textColor="@color/primary_green"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/descrizione"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stato" />
-
-    <TextView
-        android:id="@+id/scadenza_testo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="265dp"
-        android:layout_marginBottom="18dp"
-        android:text="Scadenza"
-        android:textColor="@color/primary_green"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/scadenza"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descrizione" />
-
-    <Button
-        android:id="@+id/addtask_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="156dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="156dp"
-        android:layout_marginBottom="132dp"
-        android:text="ADD TASK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scadenza" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/barra1"
@@ -104,41 +35,48 @@
         android:id="@+id/nometask"
         android:layout_width="311dp"
         android:layout_height="48dp"
-        android:layout_marginStart="38dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="15dp"
         android:hint="nome task"
         app:layout_constraintBottom_toTopOf="@+id/stato_testo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.413"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nometask_testo" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/barra2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="91dp"
-        app:layout_constraintBottom_toTopOf="@+id/nometask_testo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/stato_testo"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="15dp"
+        android:text="Stato"
+        android:textColor="@color/primary_green"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/stato"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputEditText
+    <Spinner
         android:id="@+id/stato"
-        android:layout_width="311dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="38dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="8dp"
-        android:hint="stato"
+        android:layout_width="160dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="15dp"
+        android:entries="@array/stato_array"
         app:layout_constraintBottom_toTopOf="@+id/descrizione_testo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.413"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stato_testo" />
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/descrizione_testo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:layout_marginBottom="15dp"
+        android:text="Descrizione"
+        android:textColor="@color/primary_green"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/descrizione"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/barra3"
@@ -156,18 +94,27 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/descrizione"
-        android:layout_width="314dp"
-        android:layout_height="66dp"
+        android:layout_width="304dp"
+        android:layout_height="71dp"
         android:layout_marginStart="38dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="15dp"
         android:hint="descrizione"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toTopOf="@+id/scadenza_testo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descrizione_testo" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/scadenza_testo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:layout_marginBottom="15dp"
+        android:text="Scadenza"
+        android:textColor="@color/primary_green"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/scadenza"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/barra4"
@@ -176,25 +123,36 @@
         android:layout_marginBottom="80dp"
         app:layout_constraintBottom_toTopOf="@+id/nometask_testo"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/scadenza"
-        android:layout_width="311dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="38dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="44dp"
+        android:layout_width="305dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="15dp"
         android:hint="@string/scadenza"
         android:inputType="date"
         android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/addtask_button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/addtask_button"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="132dp"
+        android:layout_marginEnd="142dp"
+        android:layout_marginBottom="92dp"
+        android:text="ADD TASK"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.413"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scadenza_testo" />
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

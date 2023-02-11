@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--    SPINNER CLASSIFICA TESI -->
+<!--    SPINNER CLASSIFICA TESI // NEW TASK -->
 <resources>
     <string-array name="classificatesi_array">
         <item>Tesi A-Z</item>
@@ -7,5 +7,10 @@
         <item>Relatore A-Z</item>
         <item>Relatore Z-A</item>
         <item>Condividi</item>
+    </string-array>
+    <string-array name="stato_array">
+        <item>NEW</item>
+        <item>RUNNING</item>
+        <item>END</item>
     </string-array>
 </resources>
