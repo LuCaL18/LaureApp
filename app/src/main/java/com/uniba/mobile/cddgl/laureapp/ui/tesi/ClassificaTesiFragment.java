@@ -1,5 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -39,11 +41,14 @@ public class ClassificaTesiFragment extends Fragment {
     private Map<String,ClassificaTesi> classifica;
     private ClassificaTesi dataList;
     private CollectionReference mCollection;
+    private BottomNavigationView navBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_classifica_tesi, container, false);
         listView = view.findViewById(R.id.classifica_tesi);
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.INVISIBLE);
         classifica = new HashMap<>();
         dataList = null;
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -69,7 +74,7 @@ public class ClassificaTesiFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
-        String[] opzioniOrdinamento = new String[]{"Tesi A-Z","Tesi Z-A","Relatore A-Z","Relatore Z-A"};
+        String[] opzioniOrdinamento = new String[]{"MENU","Tesi A-Z","Tesi Z-A","Relatore A-Z","Relatore Z-A","Condividi"};
         ArrayAdapter<String> adapterOrdinamento = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, opzioniOrdinamento);
         adapterOrdinamento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner spinnerOrdinamento = view.findViewById(R.id.spinner_classificatesi);
@@ -113,6 +118,20 @@ public class ClassificaTesiFragment extends Fragment {
                             }
                         });
                         break;
+                    case "Condividi":
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("Ecco la mia classifica di tesi preferite: " + "\n");
+                        for (Tesi tesi : listaTesiOrdinata) {
+                            sb.append("Nome tesi: " + tesi.getNomeTesi() + "\n");
+                            sb.append("Professore: " + tesi.getRelatore() + "\n");
+                        }
+                        String message = sb.toString();
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_TEXT, message);
+                        intent.setType("text/plain");
+                        startActivity(Intent.createChooser(intent, "Condividi con:"));
+                        break;
                 }
                 adapter.addTesi(listaTesiOrdinata);
                 adapter.notifyDataSetChanged();
@@ -123,6 +142,7 @@ public class ClassificaTesiFragment extends Fragment {
 
             }
         });
+
         /* listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -135,6 +155,14 @@ public class ClassificaTesiFragment extends Fragment {
         });
         */
         return view;
+    }
+
+    private void shareClassifica() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Classifica Tesi");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Ecco la mia classifica di tesi: " + dataList.getTesi());
+        startActivity(Intent.createChooser(shareIntent, "Condividi la classifica tramite"));
     }
 
 }

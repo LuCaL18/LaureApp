@@ -83,7 +83,8 @@ public class ListAdapterTesi extends BaseAdapter {
             viewHolder.textView1 = convertView.findViewById(R.id.nometesi);
             viewHolder.textView2 = convertView.findViewById(R.id.nomerelatore);
             viewHolder.imageButton1 = convertView.findViewById(R.id.visualizzaTesi);
-            viewHolder.imageButton2 = convertView.findViewById(R.id.addTesi);
+            viewHolder.imageButton2 = convertView.findViewById(R.id.share_tesi);
+            viewHolder.imageButton3 = convertView.findViewById(R.id.addTesi);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -98,6 +99,12 @@ public class ListAdapterTesi extends BaseAdapter {
             }
         });
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //
+            }
+        });
+        viewHolder.imageButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -134,6 +141,7 @@ public class ListAdapterTesi extends BaseAdapter {
         TextView textView2;
         ImageButton imageButton1;
         ImageButton imageButton2;
+        ImageButton imageButton3;
     }
 }
 

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -28,11 +29,14 @@ public class ListaTesiFragment extends Fragment {
     private ListAdapterTesi adapter;
     private List<Tesi> dataList;
     private CollectionReference mCollection;
+    private BottomNavigationView navBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lista_tesi, container, false);
         listView = view.findViewById(R.id.listatesi);
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.INVISIBLE);
         dataList = new ArrayList<>();
         mCollection = FirebaseFirestore.getInstance().collection("tesi");
         adapter = new ListAdapterTesi(getActivity(), mCollection);

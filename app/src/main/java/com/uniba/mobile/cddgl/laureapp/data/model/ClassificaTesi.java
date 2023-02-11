@@ -2,6 +2,7 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -53,5 +54,10 @@ public class ClassificaTesi extends Tesi {
     public String getRelatore() {
         return super.getRelatore();
     }
+
+    public void stampaListaTesi() {
+        System.out.println("Nome: " + this.getNomeTesi() + "/nRelatore: " + this.getRelatore() + "/n");
+    }
+
 }
 

@@ -53,8 +53,9 @@
     <string name="descrizione">Descrizione</string>
     <string name="scadenza">Scadenza</string>
 
-    <!--    TESI PREFERITE FIELD-->
-
+    <!--    SHARE TESI-->
+    <string name="share_classifica">Condividi classifica</string>
+    <string name="share_tesi">Condividi tesi</string>
 
     <!--    ERROR USER-->
     <string name="invalid_username">Not a valid username</string>
@@ -101,5 +102,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_chat">Chat</string>
     <string name="user_profile">User profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

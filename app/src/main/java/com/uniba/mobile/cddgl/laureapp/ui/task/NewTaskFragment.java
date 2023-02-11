@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.R;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 public class NewTaskFragment extends Fragment {
 
+    private BottomNavigationView navBar;
     private FirebaseFirestore db;
     private EditText nometaskEditText,statoEditText,descrizioneEditText,scadenzaEditText;
     private Button addtaskButton;
@@ -48,6 +50,8 @@ public class NewTaskFragment extends Fragment {
     public View onCreateView (@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_task,container,false);
         db = FirebaseFirestore.getInstance();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.INVISIBLE);
         nometaskEditText = view.findViewById(R.id.nometask);
         statoEditText = view.findViewById(R.id.stato);
         descrizioneEditText = view.findViewById(R.id.descrizione);

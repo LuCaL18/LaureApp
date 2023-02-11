@@ -24,8 +24,6 @@ import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,5 +123,5 @@ public class ClassificaTesiAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-
 }
+
