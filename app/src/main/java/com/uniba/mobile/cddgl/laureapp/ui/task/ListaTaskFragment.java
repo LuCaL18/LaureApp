@@ -24,22 +24,22 @@ import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VisualizzaTaskFragment extends Fragment {
+public class ListaTaskFragment extends Fragment {
     private ListView listView;
-    private VisualizzaTaskAdapter adapter;
+    private ListaTaskAdapter adapter;
     private List<Task> dataList;
     private CollectionReference mCollection;
     private BottomNavigationView navBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_visualizza_task, container, false);
-        listView = view.findViewById(R.id.visualizza_task);
+        View view = inflater.inflate(R.layout.fragment_lista_task, container, false);
+        listView = view.findViewById(R.id.lista_task);
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.INVISIBLE);
         dataList = new ArrayList<>();
         mCollection = FirebaseFirestore.getInstance().collection("task");
-        adapter = new VisualizzaTaskAdapter(getActivity(), mCollection);
+        adapter = new ListaTaskAdapter(getActivity(), mCollection);
         Log.d("ListaTesiFragment", "onCreateView() method called");
         listView.setAdapter(adapter);
         mCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {

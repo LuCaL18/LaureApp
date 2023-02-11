@@ -32,7 +32,7 @@ public class NewTaskFragment extends Fragment {
 
     private BottomNavigationView navBar;
     private FirebaseFirestore db;
-    private EditText nometaskEditText,statoEditText,descrizioneEditText,scadenzaEditText;
+    private EditText nometaskEditText,statoTextView,descrizioneEditText,scadenzaEditText;
     private Button addtaskButton;
     private OnFragmentInteractionListener listener;
 

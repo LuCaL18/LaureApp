@@ -1,6 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.ui.task;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +22,17 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.StatoTask;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VisualizzaTaskAdapter extends BaseAdapter {
+public class ListaTaskAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final List<Task> mDataList;
     private CollectionReference mCollectionRef;
 
-    public VisualizzaTaskAdapter(Context context, CollectionReference ref) {
+    public ListaTaskAdapter(Context context, CollectionReference ref) {
         mContext = context;
         mDataList = new ArrayList<>();
         mCollectionRef = ref;
@@ -68,17 +70,17 @@ public class VisualizzaTaskAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        com.uniba.mobile.cddgl.laureapp.ui.task.VisualizzaTaskAdapter.ViewHolder viewHolder;
+        com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskAdapter.ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.visualizza_task, parent, false);
-            viewHolder = new com.uniba.mobile.cddgl.laureapp.ui.task.VisualizzaTaskAdapter.ViewHolder();
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.lista_task, parent, false);
+            viewHolder = new com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskAdapter.ViewHolder();
             viewHolder.textView1 = convertView.findViewById(R.id.nomeTask);
             viewHolder.textView2 = convertView.findViewById(R.id.scadenzaTask);
             viewHolder.imageButton1 = convertView.findViewById(R.id.visualizza_task1);
             viewHolder.progressBar = convertView.findViewById(R.id.progressBar);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (com.uniba.mobile.cddgl.laureapp.ui.task.VisualizzaTaskAdapter.ViewHolder) convertView.getTag();
+            viewHolder = (com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskAdapter.ViewHolder) convertView.getTag();
         }
         Task task = mDataList.get(position);
         viewHolder.textView1.setText(task.getNometask());
@@ -98,9 +100,16 @@ public class VisualizzaTaskAdapter extends BaseAdapter {
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //
+                Task task = mDataList.get(position);
+                Intent intent = new Intent(mContext, Task.class);
+                intent.putExtra("nometask", task.getNometask());
+                intent.putExtra("stato", task.getStato());
+                intent.putExtra("descrizione", task.getDescrizione());
+                intent.putExtra("scadenza", task.getScadenza());
+                mContext.startActivity(intent);
             }
         });
+
         return convertView;
     }
 
