@@ -20,7 +20,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.model.StatoTask;
+import com.uniba.mobile.cddgl.laureapp.data.TaskState;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 
 import java.util.ArrayList;
@@ -83,9 +83,9 @@ public class ListaTaskAdapter extends BaseAdapter {
             viewHolder = (com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskAdapter.ViewHolder) convertView.getTag();
         }
         Task task = mDataList.get(position);
-        viewHolder.textView1.setText(task.getNometask());
+        viewHolder.textView1.setText(task.getNomeTask());
         viewHolder.textView2.setText(task.getScadenza());
-        StatoTask taskState = task.getStato();
+        TaskState taskState = task.getStato();
         switch (taskState) {
             case NEW:
                 viewHolder.progressBar.setProgress(10);
@@ -93,8 +93,11 @@ public class ListaTaskAdapter extends BaseAdapter {
             case STARTED:
                 viewHolder.progressBar.setProgress(50);
                 break;
-            case END:
+            case COMPLETED:
                 viewHolder.progressBar.setProgress(100);
+                break;
+            case CLOSED:
+                viewHolder.progressBar.setProgress(0);
                 break;
         }
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +105,7 @@ public class ListaTaskAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Task task = mDataList.get(position);
                 Bundle bundle = new Bundle();
-                bundle.putString("nometask", task.getNometask());
+                bundle.putString("nometask", task.getNomeTask());
                 bundle.putString("stato", task.getStato().toString());
                 bundle.putString("descrizione", task.getDescrizione());
                 bundle.putString("scadenza", task.getScadenza());

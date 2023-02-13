@@ -11,10 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -91,7 +89,7 @@ public class ListAdapterTesi extends BaseAdapter {
         }
         Tesi tesi = mDataList.get(position);
         viewHolder.textView1.setText(tesi.getNomeTesi());
-        viewHolder.textView2.setText(tesi.getRelatore());
+        viewHolder.textView2.setText(tesi.getProfessor().getDisplayName());
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

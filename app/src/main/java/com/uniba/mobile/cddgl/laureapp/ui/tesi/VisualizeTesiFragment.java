@@ -44,7 +44,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -175,11 +174,11 @@ public class VisualizeTesiFragment extends Fragment {
         RecyclerView recyclerViewRelators = root.findViewById(R.id.recycler_relators);
         ImageView relatorsArrowCard = root.findViewById(R.id.arrow_image_card_relators);
 
-        RelatorsAdapter relatorsAdapter = new RelatorsAdapter(thesis.getRealatori());
+        RelatorsAdapter relatorsAdapter = new RelatorsAdapter(thesis.getRelatori());
         recyclerViewRelators.setAdapter(relatorsAdapter);
         recyclerViewRelators.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (thesis.getRealatori().isEmpty()) {
+        if (thesis.getRelatori().isEmpty()) {
             relatorsCard.setVisibility(View.GONE);
         }
 

@@ -15,7 +15,7 @@ public class Tesi implements Serializable, Cloneable {
     private String id;
     private String nomeTesi;
     private String imageTesi;
-    private List<PersonaTesi> realatori;
+    private List<PersonaTesi> relatori;
     private PersonaTesi professor;
     private String descrizione;
     private String ambito;
@@ -32,10 +32,10 @@ public class Tesi implements Serializable, Cloneable {
     public Tesi() {
     }
 
-    public Tesi(String nomeTesi, List<PersonaTesi> realatori, PersonaTesi professor, String descrizione, String ambito, String chiave, String skill, String tempistiche, String esami, String mediaVoto, List<String> documents, Boolean isAssigned, String note) {
+    public Tesi(String nomeTesi, List<PersonaTesi> relatori, PersonaTesi professor, String descrizione, String ambito, String chiave, String skill, String tempistiche, String esami, String mediaVoto, List<String> documents, Boolean isAssigned, String note) {
         this.id = UUID.randomUUID().toString();
         this.nomeTesi = nomeTesi;
-        this.realatori = realatori;
+        this.relatori = relatori;
         this.professor = professor;
         this.descrizione = descrizione;
         this.ambito = ambito;
@@ -65,12 +65,12 @@ public class Tesi implements Serializable, Cloneable {
         this.nomeTesi = nomeTesi;
     }
 
-    public List<PersonaTesi> getRealatori() {
-        return realatori;
+    public List<PersonaTesi> getRelatori() {
+        return relatori;
     }
 
-    public void setRealatori(List<PersonaTesi> realatori) {
-        this.realatori = realatori;
+    public void setRelatori(List<PersonaTesi> relatori) {
+        this.relatori = relatori;
     }
 
     public PersonaTesi getProfessor() {
@@ -183,7 +183,7 @@ public class Tesi implements Serializable, Cloneable {
                 "id='" + id + '\'' +
                 ", nomeTesi='" + nomeTesi + '\'' +
                 ", imageTesi='" + imageTesi + '\'' +
-                ", realatori=" + realatori +
+                ", realatori=" + relatori +
                 ", professor=" + professor +
                 ", descrizione='" + descrizione + '\'' +
                 ", ambito='" + ambito + '\'' +
