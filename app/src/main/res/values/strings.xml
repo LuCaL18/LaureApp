@@ -55,6 +55,17 @@
     <string name="role_professor">Professor</string>
     <string name="forgot_password"><u>Forgot password?</u></string>
 
+    <!--    TASK FIELD-->
+    <string name="nometask">Nome Task</string>
+    <string name="stato">Stato</string>
+    <string name="descrizione">Descrizione</string>
+    <string name="scadenza">Scadenza</string>
+    <string name="lista_task">Lista Task</string>
+
+    <!--    SHARE TESI-->
+    <string name="share_classifica">Condividi classifica</string>
+    <string name="share_tesi">Condividi tesi</string>
+
     <!--    ERROR USER-->
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
@@ -64,6 +75,13 @@
     <string name="invalid_bio">Biography must contain a maximum of 200 characters</string>
     <string name="invalid_confirm_password">Passwords do not match</string>
     <string name="invalid_filename">The file name may not contain special characters</string>
+
+    <!--    ERROR TASK-->
+    <string name="invalid_state">Not a valid state</string>
+    <string name="invalid_taskname">Not a valid name for a task</string>
+    <string name="invalid_task">Not a valid task</string>
+    <string name="invalid_description">Description must contain a maximum of 200 characters</string>
+    <string name="invalid_scadenza">Not a valid end date</string>
 
     <!--    FIREBASE EXCEPTION-->
     <string name="weak_password">Your password is too weak</string>
@@ -86,6 +104,13 @@
     <string name="vedi_tutte">Vedi tutte</string>
     <string name="task_creati">TASK CREATI</string>
     <string name="verifica_email">VERIFICA EMAIL</string>
+    <string name="new_task">New Task</string>
+    <string name="classifica_tesi">Classifica Tesi</string>
+    <string name="lista_tesi">Lista Tesi</string>
+    <string name="title_activity_new_task">NewTaskActivity</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_slideshow">Slideshow</string>
 
     <!--    FORGOT PASSWORD-->
     <string name="request_send_forgot_password">Are you sure you want to send a password reset request to this e-mail address:\n\n<b>%s</b></string>

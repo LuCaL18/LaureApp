@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -26,6 +25,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_WRITE_STORAGE_PERMISSION = 1;
     public static final int REQUEST_INTERNET_PERMISSION = 2;
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 3;
+    public static final int LISTA_TASK = R.id.nav_lista_task;
+    public static final int NEW_TASK = R.id.nav_new_task;
+    public static final int CLASSIFICA_TESI = R.id.nav_classifica_tesi;
+    public static final int LISTA_TESI = R.id.nav_lista_tesi;
 
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
@@ -112,7 +116,23 @@ public class MainActivity extends AppCompatActivity {
                             navController.navigate(R.id.nav_gallery);
                             isSelected = true;
                             break;
-                        case CHAT:
+                        case NEW_TASK:
+                        navController.navigate(R.id.nav_new_task);
+                        isSelected = true;
+                        break;
+                    case LISTA_TASK:
+                        navController.navigate(R.id.nav_lista_task);
+                        isSelected = true;
+                        break;
+                    case CLASSIFICA_TESI:
+                        navController.navigate(R.id.nav_classifica_tesi);
+                        isSelected = true;
+                        break;
+                    case LISTA_TESI:
+                        navController.navigate(R.id.nav_lista_tesi);
+                        isSelected = true;
+                        break;
+                    case CHAT:
                             navController.navigate(R.id.nav_chat_list_fragment);
                             isSelected = true;
                             break;
@@ -260,4 +280,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         binding = null;
     }
+
 }

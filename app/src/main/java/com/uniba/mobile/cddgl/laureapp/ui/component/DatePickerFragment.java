@@ -5,9 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.EditText;
-
 import androidx.fragment.app.DialogFragment;
-
 import com.uniba.mobile.cddgl.laureapp.R;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +16,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     private static final int FRAGMENT_REGISTRATION = R.layout.fragment_registration;
     private static final int FRAGMENT_RICEVIMENTO = R.layout.fragment_ricevimento;
+    private static final int FRAGMENT_NEWTASK = R.layout.fragment_new_task;
     private final int layout;
 
     public DatePickerFragment(int contentLayoutId) {
@@ -52,6 +51,9 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                 break;
             case FRAGMENT_RICEVIMENTO:
                 dateField = getParentFragment().getView().findViewById(R.id.dataE);
+                break;
+            case FRAGMENT_NEWTASK:
+                dateField = getParentFragment().getView().findViewById(R.id.scadenza);
                 break;
             default:
                 dateField = null;

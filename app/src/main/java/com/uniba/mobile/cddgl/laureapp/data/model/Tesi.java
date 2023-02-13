@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public class Tesi implements Serializable, Cloneable {
 
+    private List<Task> listTask;
     private String id;
     private String nomeTesi;
     private String imageTesi;
@@ -215,5 +216,13 @@ public class Tesi implements Serializable, Cloneable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public List<Task> getListTask() {
+        return listTask;
+    }
+
+    public void setListTask(List<Task> listTask) {
+        this.listTask = listTask;
     }
 }
