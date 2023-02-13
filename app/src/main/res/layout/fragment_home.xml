@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="?android:attr/actionBarSize"
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
@@ -15,9 +16,7 @@
         android:layout_marginStart="30dp"
         android:textStyle="bold"
         android:textColor="@color/primary_green"
-        android:textSize="25sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/mostra_tesi"
@@ -28,17 +27,13 @@
         android:text="@string/vedi_tutte"
         android:textStyle="bold"
         android:textColor="@color/primary_green"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/scrollView2" />
+        android:textSize="20sp" />
 
 
     <HorizontalScrollView
         android:id="@+id/scrollView2"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/text_home"
         android:layout_marginTop="15dp">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -195,8 +190,6 @@
         android:textStyle="bold"
         android:textColor="@color/primary_green"
         android:textSize="25sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scrollView2"
         />
 
     <TextView
