@@ -38,8 +38,13 @@
     <fragment
         android:id="@+id/nav_lista_task"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment"
-        android:label="@string/lista_task"
-        tools:layout="@layout/fragment_lista_task" />
+        android:label="ListaTask" >
+    </fragment>
+    <fragment
+        android:id="@+id/nav_visualizza_task"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.task.VisualizzaTask"
+        android:label="VisualizzaTask" >
+    </fragment>
     <fragment
         android:id="@+id/nav_lista_tesi"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.ListaTesiFragment"

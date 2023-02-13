@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.task.NewTaskFragment">
+    tools:context=".ui.task.VisualizzaTask">
 
     <TextView
         android:id="@+id/nome_task"
@@ -43,6 +43,8 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
+        tools:ignore="MissingConstraints"
+        android:visibility="visible"
         tools:layout_editor_absoluteX="55dp"
         tools:layout_editor_absoluteY="138dp" />
 
@@ -83,6 +85,8 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
+        tools:ignore="MissingConstraints"
+        android:visibility="visible"
         tools:layout_editor_absoluteX="55dp"
         tools:layout_editor_absoluteY="250dp" />
 
@@ -121,7 +125,9 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="55dp"
+        tools:ignore="MissingConstraints"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="58dp"
         tools:layout_editor_absoluteY="352dp" />
 
     <TextView
@@ -159,9 +165,10 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="574dp" />
+        tools:ignore="MissingConstraints"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="58dp"
+        tools:layout_editor_absoluteY="575dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

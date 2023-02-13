@@ -1,48 +1,33 @@
 package com.uniba.mobile.cddgl.laureapp;
 
-import android.app.MediaRouteButton;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.databinding.ActivityMainBinding;
-import com.uniba.mobile.cddgl.laureapp.ui.chat.ChatViewModel;
-import com.uniba.mobile.cddgl.laureapp.ui.chat.ChatViewModelFactory;
-import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModel;
-import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModelFactory;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String LOGGED_USER = "logged_user";
     public static final int CHAT = R.id.nav_chat;
     public static final int LOGOUT =  R.id.logout;
-    public static final int VISUALIZZA_TASK = R.id.nav_lista_task;
+    public static final int LISTA_TASK = R.id.nav_lista_task;
     public static final int NEW_TASK = R.id.nav_new_task;
     public static final int CLASSIFICA_TESI = R.id.nav_classifica_tesi;
     public static final int LISTA_TESI = R.id.nav_lista_tesi;
@@ -100,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         navController.navigate(R.id.nav_new_task);
                         isSelected = true;
                         break;
-                    case VISUALIZZA_TASK:
+                    case LISTA_TASK:
                         navController.navigate(R.id.nav_lista_task);
                         isSelected = true;
                         break;

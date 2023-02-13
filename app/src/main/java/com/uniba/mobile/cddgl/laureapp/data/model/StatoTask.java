@@ -2,7 +2,7 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 
 public enum StatoTask {
     NEW("Nuovo"),
-    RUNNING("In esecuzione"),
+    STARTED("In esecuzione"),
     END("Finito");
 
     private final String descrizione;
