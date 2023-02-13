@@ -22,6 +22,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
+import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,16 +41,7 @@ public class ShareContent {
         this.context = context;
     }
 
-    public Bitmap generateQRCode() {
-        // Get the data to be encoded in the QR code.
-        String title = "Thesis Title";
-        String description = "This is a description of the thesis.";
-        String link = "https://www.example.com";
-        StringBuilder data = new StringBuilder();
-        data.append("Title: ").append(title).append("\n")
-                .append("Description: ").append(description).append("\n")
-                .append("Link: ").append(link);
-
+    public Bitmap generateQRCode(String data) {
         // Use the ZXing library to generate the QR code.
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -85,14 +79,14 @@ public class ShareContent {
         return null;
     }
 
-    public Intent shareThesisData(String thesisTitle, String thesisDescription, String professorName) {
+    public Intent shareThesisData(Tesi tesi) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Thesis Data");
-        emailIntent.putExtra(Intent.EXTRA_TITLE, "TITOLO");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Thesis Title: " + thesisTitle + "\n" +
-                "Thesis Description: " + thesisDescription + "\n" +
-                "Professor Name: " + professorName);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.thesis_data));
+        emailIntent.putExtra(Intent.EXTRA_TITLE, context.getString(R.string.title).toUpperCase());
+        emailIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.data_shared_data,
+                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getProfessor().getDisplayName(), tesi.getTempistiche(),
+                tesi.getMediaVoto(), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
         return emailIntent;
     }
 
@@ -140,11 +134,11 @@ public class ShareContent {
         return intent;
     }
 
-    public Intent viewImageOnline(String filename, Uri fileUri) {
+    public Intent viewImageOnline(Uri fileUri) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
 
-        String mimeType = URLConnection.guessContentTypeFromName(filename);
+        String mimeType = "image/*";
         intent.setDataAndType(fileUri, mimeType);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 

@@ -48,9 +48,6 @@ public class ChatListFragment extends Fragment {
 
         callback = new ChatItemClickCallbackImpl(chatViewModel);
 
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.INVISIBLE);
-
         Query query = FirebaseDatabase.getInstance().getReference().child("chats");
         options = new FirebaseRecyclerOptions.Builder<ChatData>()
                 .setQuery(query, ChatData.class)
@@ -122,6 +119,14 @@ public class ChatListFragment extends Fragment {
             }
             navController.navigate(R.id.action_chatListFragment_to_chatFragment);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
     }
 
     @Override

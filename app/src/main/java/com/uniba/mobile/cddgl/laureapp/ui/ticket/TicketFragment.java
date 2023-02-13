@@ -47,6 +47,7 @@ import java.util.regex.Pattern;
 public class TicketFragment extends Fragment {
 
     public static final String TICKET_KEY = "new_ticket";
+    private static final String TICKET_SAVED_KEY = "ticket_saved";
 
     private BottomNavigationView navBar;
     private Ticket ticket;
@@ -68,11 +69,14 @@ public class TicketFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         user = mainViewModel.getUser().getValue();
 
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.INVISIBLE);
-
         if(getArguments() != null) {
             ticket = (Ticket) getArguments().getSerializable(TICKET_KEY);
+
+            return;
+        }
+
+        if(savedInstanceState != null && savedInstanceState.getSerializable(TICKET_SAVED_KEY) != null) {
+            ticket = (Ticket) savedInstanceState.getSerializable(TICKET_SAVED_KEY);
 
             return;
         }
@@ -268,6 +272,7 @@ public class TicketFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
 
         EditText senderText = root.findViewById(R.id.text_sender_ticket);
@@ -416,6 +421,12 @@ public class TicketFragment extends Fragment {
         if (getContext() != null && getContext().getApplicationContext() != null) {
             Toast.makeText(getContext().getApplicationContext(), error, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable(TICKET_SAVED_KEY, ticket);
     }
 
     @Override

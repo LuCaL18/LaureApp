@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 
 import java.io.IOException;
@@ -39,8 +40,10 @@ public class QRCodeDialogFragment extends DialogFragment {
     private ActivityResultLauncher<Intent> saveImageLauncher;
     private Bitmap qrCode;
     private ShareContent shareContent;
+    private final Tesi tesi;
 
-    public QRCodeDialogFragment() {
+    public QRCodeDialogFragment(Tesi tesi) {
+        this.tesi = tesi;
     }
 
     @Nullable
@@ -50,7 +53,9 @@ public class QRCodeDialogFragment extends DialogFragment {
         ImageView imageViewQRCode = view.findViewById(R.id.qr_code_image);
 
         shareContent = new ShareContent(getContext());
-        qrCode = shareContent.generateQRCode();
+        qrCode = shareContent.generateQRCode(getString(R.string.data_shared_data,
+                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getProfessor().getDisplayName(), tesi.getTempistiche(),
+                tesi.getMediaVoto(), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
 
         imageViewQRCode.setImageBitmap(qrCode);
 

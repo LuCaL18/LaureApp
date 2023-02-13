@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.Volley;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,6 +51,8 @@ import java.util.Map;
 public class ChatFragment extends Fragment {
 
     private final static String CLASS_NAME = "ChatFragment";
+    private final static String MEMBERS_KEY = "members";
+    private final static String CHAT_ID_KEY = "chat_id";
 
     private FragmentChatBinding binding;
     private String chatId = "";
@@ -61,6 +64,7 @@ public class ChatFragment extends Fragment {
     private final List<BaseRequestNotification> notificationsList = new ArrayList<>();
     private ChatViewModel chatModel;
     private LoggedInUser currentUser;
+    private BottomNavigationView navBar;
 
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> adapter;
 
@@ -72,6 +76,22 @@ public class ChatFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getParentFragment() != null) {
+
+            if(savedInstanceState != null && savedInstanceState.getSerializable(MEMBERS_KEY) != null) {
+                LoggedInUser[] loggedInUsers = (LoggedInUser[]) savedInstanceState.getSerializable(MEMBERS_KEY);
+
+                for (LoggedInUser member : loggedInUsers) {
+
+                    if(!member.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        otherMembers.put(member.getId(), member);
+                        notificationsList.add(new BaseRequestNotification(member.getId(), NotificationType.MESSAGE));
+                    }
+                }
+
+                chatId = savedInstanceState.getString(CHAT_ID_KEY);
+
+                return;
+            }
 
             chatModel = new ViewModelProvider(requireParentFragment()).get(ChatViewModel.class);
 
@@ -333,16 +353,35 @@ public class ChatFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable(MEMBERS_KEY, chatModel.getMembers().getValue());
+        savedInstanceState.putString(CHAT_ID_KEY, chatId);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
-        chatModel.setIdChat(null);
-        chatModel.getMembers().setValue(null);
+
+        if( chatModel != null) {
+            chatModel.setIdChat(null);
+            chatModel.getMembers().setValue(null);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         adapter.stopListening();
+        navBar.setVisibility(View.VISIBLE);
 
         adapter = null;
         binding = null;

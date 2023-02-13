@@ -56,9 +56,6 @@ public class NotificationsFragment extends Fragment {
         bookingViewModel = viewModelProvider.get(BookingViewModel.class);
 
 
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.GONE);
-
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -134,6 +131,8 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
         adapter.onAttachedToRecyclerView(notificationListRecyclerView);
     }
 

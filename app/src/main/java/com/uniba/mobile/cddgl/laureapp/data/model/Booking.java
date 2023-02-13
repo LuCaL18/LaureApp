@@ -3,12 +3,13 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 import com.uniba.mobile.cddgl.laureapp.data.BookingConstraints;
 import com.uniba.mobile.cddgl.laureapp.data.BookingState;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-public class Booking {
+public class Booking implements Serializable {
 
     private String id;
     private String studentId;

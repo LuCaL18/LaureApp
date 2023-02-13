@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/filename_document_text_view"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="16dp"
             android:maxWidth="270dp"
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:clickable="true"
-                android:padding="16dp"
+                android:paddingStart="10dp"
                 android:src="@drawable/ic_baseline_delete_24"
                 android:visibility="gone" />
 

@@ -5,7 +5,7 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="primary_green">#139245</color>
     <color name="message_green">#09B174</color>
@@ -13,4 +13,7 @@
     <color name="dark_green">#31006400</color>
     <color name="grey_divider">#DBDBDB</color>
     <color name="grey_body">#858585</color>
+    <color name="grey_graph">#7C7C7C</color>
+    <color name="blue_graph">#0666DA</color>
+    <color name="green_graph">#0C8F40</color>
 </resources>

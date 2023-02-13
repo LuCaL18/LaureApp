@@ -28,4 +28,7 @@
     <style name="Widget.App.MaterialDivider" parent="Widget.MaterialComponents.MaterialDivider">
         <item name="dividerColor">@color/grey_divider</item>
     </style>
+    
+    <color name="legend_text_color">@color/grey_app</color>
+    <color name="color_hole_graph">@color/white</color>
 </resources>

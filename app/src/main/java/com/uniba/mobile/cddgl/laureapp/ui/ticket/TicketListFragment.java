@@ -50,9 +50,6 @@ public class TicketListFragment extends Fragment {
 
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireParentFragment());
         ticketViewModel = viewModelProvider.get(TicketViewModel.class);
-
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -61,7 +58,6 @@ public class TicketListFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_ticket_list, container, false);
 
-        navBar.setVisibility(View.GONE);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         ticketListRecyclerView = root.findViewById(R.id.ticket_list_recycler_view);
@@ -158,6 +154,7 @@ public class TicketListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
     }
 

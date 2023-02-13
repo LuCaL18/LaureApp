@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
 
@@ -31,7 +33,17 @@ import java.util.Map;
 
 public class BookingDialogFragment extends DialogFragment {
 
-    private final String studentId, email, nameStudent, surnameStudent, professorId, idThesis, nameThesis;
+    private static final String STUDENT_KEY = "student_id";
+    private static final String EMAIL_KEY = "email_key";
+    private static final String NAME_STUDENT_KEY = "name_student";
+    private static final String SURNAME_STUDENT_KEY = "surname_student";
+    private static final String PROFESSOR_KEY = "professor_id";
+    private static final String THESIS_ID_KEY = "thesis_id";
+    private static final String THESIS_NAME_KEY = "thesis_name";
+
+    private String studentId, email, nameStudent, surnameStudent, professorId, idThesis, nameThesis;
+
+    public BookingDialogFragment() {}
 
     public BookingDialogFragment(String studentId, String emailStudent, String nameStudent, String surnameStudent, String professorId, String idThesis, String nameThesis) {
         this.studentId = studentId;
@@ -41,6 +53,21 @@ public class BookingDialogFragment extends DialogFragment {
         this.professorId = professorId;
         this.idThesis = idThesis;
         this.nameThesis = nameThesis;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            studentId = savedInstanceState.getString(STUDENT_KEY);
+            email = savedInstanceState.getString(EMAIL_KEY);
+            nameStudent = savedInstanceState.getString(NAME_STUDENT_KEY);
+            surnameStudent = savedInstanceState.getString(SURNAME_STUDENT_KEY);
+            professorId = savedInstanceState.getString(PROFESSOR_KEY);
+            idThesis = savedInstanceState.getString(THESIS_ID_KEY);
+            nameThesis = savedInstanceState.getString(THESIS_NAME_KEY);
+        }
     }
 
     @Override
@@ -155,5 +182,15 @@ public class BookingDialogFragment extends DialogFragment {
         }
     }
 
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(STUDENT_KEY, studentId);
+        savedInstanceState.putString(EMAIL_KEY, email);
+        savedInstanceState.putString(NAME_STUDENT_KEY, nameStudent);
+        savedInstanceState.putString(SURNAME_STUDENT_KEY, surnameStudent);
+        savedInstanceState.putString(THESIS_ID_KEY, idThesis);
+        savedInstanceState.putString(THESIS_NAME_KEY, nameThesis);
+        savedInstanceState.putString(PROFESSOR_KEY, professorId);
+    }
 }

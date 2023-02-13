@@ -50,6 +50,7 @@ import java.util.Map;
 public class BookingFragment extends Fragment {
 
     private static final int DELETE = R.id.delete_booking;
+    private static final String BOOKING_KEY = "booking";
 
     private BottomNavigationView navBar;
     private Booking booking;
@@ -72,7 +73,11 @@ public class BookingFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         user = mainViewModel.getUser().getValue();
 
-        navBar = getActivity().findViewById(R.id.nav_view);
+        if(savedInstanceState != null && savedInstanceState.getSerializable(BOOKING_KEY) != null) {
+            booking = (Booking) savedInstanceState.getSerializable(BOOKING_KEY);
+
+            return;
+        }
 
         booking = bookingViewModel.getBooking().getValue();
 
@@ -241,6 +246,8 @@ public class BookingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
     }
 
@@ -377,6 +384,12 @@ public class BookingFragment extends Fragment {
     private void addStudentToChat() {
         DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("chats").child(booking.getIdThesis());
         chatRef.child("members").child(booking.getStudentId()).setValue(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable(BOOKING_KEY, booking);
     }
 
     @Override

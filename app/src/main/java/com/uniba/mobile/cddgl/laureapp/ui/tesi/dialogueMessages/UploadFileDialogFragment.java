@@ -27,16 +27,33 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
 
 public class UploadFileDialogFragment extends DialogFragment {
 
-    private ActivityResultLauncher<Intent> pickFileLauncher;
-    private final String idThesis;
+    private static final String THESIS_UPLOAD = "thesis_upload";
 
-    public UploadFileDialogFragment(String idThesis) {
-        this.idThesis = idThesis;
+    private ActivityResultLauncher<Intent> pickFileLauncher;
+    private Tesi tesi;
+
+    public UploadFileDialogFragment() {}
+
+    public UploadFileDialogFragment(Tesi tesi) {
+        this.tesi = tesi;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null && savedInstanceState.getSerializable(THESIS_UPLOAD) != null) {
+            this.tesi = (Tesi) savedInstanceState.getSerializable(THESIS_UPLOAD);
+        }
+
+
     }
 
     @Nullable
@@ -114,7 +131,7 @@ public class UploadFileDialogFragment extends DialogFragment {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference documentRef = storageRef.child("documents/" + idThesis + "/" + title);
+        StorageReference documentRef = storageRef.child("documents/" + tesi.getId() + "/" + title);
 
         // Upload the file to Firebase Storage
         documentRef.putFile(fileUri)
@@ -122,6 +139,10 @@ public class UploadFileDialogFragment extends DialogFragment {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         showSaveToast(R.string.file_saved_with_success);
+
+                        VisualizeThesisViewModel thesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
+                        tesi.getDocuments().add(title);
+                        thesisViewModel.getThesis().setValue(tesi);
                         getDialog().dismiss();
                     }
                 })
@@ -147,5 +168,11 @@ public class UploadFileDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable(THESIS_UPLOAD, tesi);
     }
 }

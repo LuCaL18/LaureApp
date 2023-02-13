@@ -55,7 +55,6 @@ public class BookingListFragment extends Fragment {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireParentFragment());
         bookingViewModel = viewModelProvider.get(BookingViewModel.class);
 
-        navBar = getActivity().findViewById(R.id.nav_view);
     }
 
     @Override
@@ -161,6 +160,7 @@ public class BookingListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
     }
 

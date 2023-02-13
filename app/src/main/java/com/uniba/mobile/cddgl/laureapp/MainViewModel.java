@@ -25,6 +25,11 @@ public class MainViewModel extends ViewModel {
     public MainViewModel() {}
 
     public void init(LoggedInUser user) {
+        this.idUser = user.getId();
+
+        if(this.user.getValue() != null) {
+            return;
+        }
 
         if(user.getRole() == null) {
             this.fetchDataUser(user.getId());
@@ -32,7 +37,6 @@ public class MainViewModel extends ViewModel {
         }
 
         this.user.setValue(user);
-        this.idUser = user.getId();
     }
 
     public void fetchDataUser(String id) {

@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_WRITE_STORAGE_PERMISSION = 1;
     public static final int REQUEST_INTERNET_PERMISSION = 2;
+    public static final int REQUEST_READ_EXTERNAL_STORAGE = 3;
 
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;

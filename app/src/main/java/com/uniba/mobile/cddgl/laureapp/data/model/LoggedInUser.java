@@ -147,4 +147,20 @@ public class LoggedInUser implements Serializable {
 //    public void setDipartimento(String dipartimento) {
 //        this.dipartimento = dipartimento;
 //    }
+
+    @Override
+    public String toString() {
+        return "LoggedInUser{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", birthDay='" + birthDay + '\'' +
+                ", bio='" + bio + '\'' +
+                ", role=" + role +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", token='" + token + '\'' +
+                '}';
+    }
 }

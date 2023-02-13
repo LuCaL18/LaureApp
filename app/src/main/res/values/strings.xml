@@ -198,6 +198,22 @@
     <string name="booking_successfully_cancelled">Booking successfully deleted</string>
     <string name="unable_to_delete_the_booking">Unable to delete the booking</string>
     <string name="unable_to_add_student_to_the_chat_of_thesis">Unable to add student to the chat of thesis</string>
+    <string name="title_dialog_delete_document">Delete document</string>
+    <string name="message_dialog_delete_document">Are you sure you want to delete the document <b>%s</b></string>
+    <string name="thesis_data">Thesis Data</string>
+    <string name="data_shared_data">Thesis: <b>%s</b>\nDescription: %s\nProfessor: %s\nTimelines: %s\nAverage vote: %s\nNecessary exam: %s\nRequired skills: %s\nNotes: %s</string>
+    <string name="unable_save_changes">\"Unable to save changes \"</string>
+    <string name="changes_saved_successfully">changes saved successfully</string>
+    <string name="image_saved_successfully">Image saved successfully</string>
+    <string name="permission_is_required_to_upload_files_from_the_device">Permission is required to upload files from the device</string>
+    <string name="student">Student</string>
+    <string name="professor">Professor</string>
+    <string name="state_new">NEW</string>
+    <string name="started">STARTED</string>
+    <string name="completed">COMPLETED</string>
+    <string name="task">TASK</string>
+    <string name="there_are_no_assigned_tasks">There are no assigned tasks</string>
+    <string name="task_graph">Task: \n%s</string>
 
 
 </resources>

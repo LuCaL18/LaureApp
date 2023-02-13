@@ -8,23 +8,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewHolder.RelatorViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RelatorsAdapter extends RecyclerView.Adapter<RelatorViewHolder> {
-    private List<String> relators;
+    private List<PersonaTesi> relators;
 
     public RelatorsAdapter() {
         relators = new ArrayList<>();
     }
 
-    public RelatorsAdapter(List<String> relators) {
+    public RelatorsAdapter(List<PersonaTesi> relators) {
         this.relators = relators;
     }
 
-    public void setSpeakers(List<String> relators) {
+    public void setSpeakers(List<PersonaTesi> relators) {
         this.relators = relators;
         notifyDataSetChanged();
     }
@@ -39,7 +40,7 @@ public class RelatorsAdapter extends RecyclerView.Adapter<RelatorViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RelatorViewHolder holder, int position) {
-        String relator = relators.get(position);
+        PersonaTesi relator = relators.get(position);
         holder.bind(relator);
     }
 

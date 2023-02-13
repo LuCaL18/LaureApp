@@ -1,35 +1,56 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters;
 
 import android.app.DownloadManager;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.DownloadedFile;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewHolder.DocumentViewHolder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
-    private final List<String> documents;
+    private List<String> documents;
     private final java.lang.String idThesis;
     private final VisualizeThesisViewModel thesisModel;
+    private final boolean permissionDelete;
+    private final Context context;
 
-    public DocumentAdapter(List<String> documents, java.lang.String idThesis, VisualizeThesisViewModel model) {
+    public DocumentAdapter(Context context, List<String> documents, java.lang.String idThesis, VisualizeThesisViewModel model) {
+        this.context = context;
         this.documents = documents;
         this.thesisModel = model;
         this.idThesis = idThesis;
+        this.permissionDelete = false;
+    }
+
+    public DocumentAdapter(Context context, List<String> documents, java.lang.String idThesis, VisualizeThesisViewModel model, boolean permissionDelete) {
+        this.context = context;
+        this.documents = documents;
+        this.thesisModel = model;
+        this.idThesis = idThesis;
+        this.permissionDelete = permissionDelete;
     }
 
     @NonNull
@@ -50,6 +71,22 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
                 downloadFile(document);
             }
         });
+
+        if (permissionDelete) {
+            ImageView deleteImageView = holder.getDeleteButton();
+            deleteImageView.setVisibility(View.VISIBLE);
+
+            deleteImageView.setOnClickListener(view -> {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(context.getString(R.string.title_dialog_delete_document));
+                builder.setMessage(context.getString(R.string.message_dialog_delete_document, document));
+                builder.setPositiveButton(context.getString(R.string.yes_text), (dialog, which) -> deleteDocument(document, position));
+                builder.setNegativeButton(context.getString(R.string.no_text), null);
+                builder.create().show();
+            });
+        }
+
     }
 
     private void downloadFile(String filename) {
@@ -59,14 +96,14 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
         fileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     Uri uri = task.getResult();
 
                     DownloadManager.Request request = new DownloadManager.Request(uri);
                     request.setTitle(filename.split("\\.")[0]);
                     request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,filename);
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
 
                     thesisModel.getRequestDocument().setValue(new DownloadedFile(filename, request));
                     return;
@@ -82,4 +119,39 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
     public int getItemCount() {
         return documents.size();
     }
+
+    public void setDocuments(List<String> documents) {
+        this.documents = documents;
+        notifyDataSetChanged();
+    }
+
+    private void deleteDocument(String filename, int position) {
+        FirebaseStorage.getInstance().getReference().child("documents/" + idThesis + "/" + filename)
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        List<String> newList = documents;
+                        newList.remove(position);
+
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("documents", newList);
+
+                        FirebaseFirestore.getInstance().collection("tesi")
+                                .document(thesisModel.getThesis().getValue().getId())
+                                .update(updates).addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        this.setDocuments(newList);
+
+                                        Tesi tesi = thesisModel.getThesis().getValue();
+                                        tesi.setDocuments(newList);
+
+                                        thesisModel.getThesis().setValue(tesi);
+                                    }
+                                });
+                    }
+                });
+
+    }
+
 }
