@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_navigation"
+    app:startDestination="@id/startFragment">
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.login.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start">
+        <action
+            android:id="@+id/action_startFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.login.registration.RegistrationFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_signInFragment_to_confirmRegistrationFragment"
+            app:destination="@id/confirmRegistrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/confirmRegistrationFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.login.registration.ConfirmRegistrationFragment"
+        android:label="fragment_confirm_registration"
+        tools:layout="@layout/fragment_confirm_registration" />
+</navigation>

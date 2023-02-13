@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/favorite_thesis"
+        android:contentDescription="@string/content_description_favorite_thesis"
+        android:icon="@drawable/ic_baseline_favorite_border_24"
+        android:title="@string/favorite"
+        android:iconTint="?attr/iconTint"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/add_ticket_thesis"
+        android:contentDescription="@string/content_description_add_ticket_thesis"
+        android:icon="@drawable/ic_baseline_post_add_24"
+        android:title="@string/add_ticket"
+        android:iconTint="?attr/iconTint"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/share_thesis"
+        android:contentDescription="@string/content_description_share"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="@string/share"
+        android:iconTint="?attr/iconTint"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/qr_thesis"
+        android:contentDescription="@string/content_description_qr_code"
+        android:icon="@drawable/ic_baseline_qr_code_2_24"
+        android:title="@string/qr_code"
+        android:iconTint="?attr/iconTint"
+        app:showAsAction="ifRoom" />
+
+</menu>

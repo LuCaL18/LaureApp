@@ -8,8 +8,11 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_notifications"
+            app:destination="@id/navigation_notifications" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -21,5 +24,80 @@
         android:id="@+id/navigation_notifications"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications" >
+        <action
+            android:id="@+id/action_navigation_notifications_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_navigation_notifications_to_ticketFragment"
+            app:destination="@id/ticketFragment" />
+        <action
+            android:id="@+id/action_navigation_notifications_to_bookingFragment"
+            app:destination="@id/bookingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.chat.ChatFragment"
+        android:label="@string/title_chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/nav_chat_list_fragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.chat.ChatListFragment"
+        android:label="ChatListFragment" >
+        <action
+            android:id="@+id/action_chatListFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_ticket"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketListFragment"
+        android:label="@string/title_tickets"
+        tools:layout="@layout/fragment_ticket_list" >
+        <action
+            android:id="@+id/action_nav_ticket_to_ticketFragment"
+            app:destination="@id/ticketFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ticketFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment"
+        android:label="@string/title_ticket"
+        tools:layout="@layout/fragment_ticket" />
+    <fragment
+        android:id="@+id/visualizeTesiFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment"
+        android:label=""
+        tools:layout="@layout/fragment_visualize_tesi" >
+        <action
+            android:id="@+id/action_visualizeTesiFragment_to_ticketFragment"
+            app:destination="@id/ticketFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_bookingListFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.bookings.BookingListFragment"
+        android:label="@string/booking_list"
+        tools:layout="@layout/fragment_booking_list" >
+        <action
+            android:id="@+id/action_nav_bookingListFragment_to_bookingFragment"
+            app:destination="@id/bookingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookingFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.bookings.BookingFragment"
+        android:label="@string/booking" />
+    <fragment
+        android:id="@+id/logo_fragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.LogoFragment"
+        android:label="fragment_logo"
+        tools:layout="@layout/fragment_logo" >
+        <action
+            android:id="@+id/action_logo_fragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/logo_fragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?android:attr/actionBarSize"
+    tools:context=".ui.tesi.VisualizeTesiFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_thesis_image"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/no_image" />
+
+            <Button
+                android:id="@+id/edit_image_tesi_button"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/edit_image_button"
+                android:visibility="gone"
+                app:icon="@drawable/ic_baseline_design_services_24" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_thesis_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingTop="20dp"
+            android:paddingRight="16dp"
+            android:text="TITOLO TESI"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_thesis_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur"
+            android:textSize="16sp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_professor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_professor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/professor"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/arrow_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_card_prof_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_prof_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="16dp"
+                        android:padding="16dp"
+                        android:text="email.prof@gmail.com"
+                        android:textSize="14sp"
+                        app:drawableLeftCompat="@drawable/ic_baseline_email_24"
+                        app:drawableTint="?attr/iconTint" />
+
+                    <TextView
+                        android:id="@+id/tv_prof_display_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="16dp"
+                        android:padding="16dp"
+                        android:text="Giovanni Giorgio"
+                        android:textSize="14sp"
+                        app:drawableLeftCompat="@drawable/ic_baseline_person_24"
+                        app:drawableTint="?attr/iconTint" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_relators"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/title_relators"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/relators"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/arrow_image_card_relators"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_relators"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_constraints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/title_constraints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/constraints"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/arrow_image_card_constraints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_card_constraints_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/constraints_timeline_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:contentDescription="@string/edit"
+                            android:padding="16dp"
+                            android:src="@drawable/ic_baseline_access_time_24" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_constraint_timelines_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="16dp"
+                                android:paddingStart="6dp"
+                                android:text="@string/timelines"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_constraint_timelines"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="6dp"
+                                android:text="Giovanni Giorgio"
+                                android:textColor="?attr/colorPrimaryInverse"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/constraints_average_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:contentDescription="@string/edit"
+                            android:padding="16dp"
+                            android:src="@drawable/ic_baseline_poll_24" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_constraint_average_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="16dp"
+                                android:paddingStart="6dp"
+                                android:text="@string/average_votes"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_constraint_average"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="6dp"
+                                android:text="Giovanni Giorgio"
+                                android:textColor="?attr/colorPrimaryInverse"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/constraints_exam_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:contentDescription="@string/edit"
+                            android:padding="16dp"
+                            android:src="@drawable/ic_baseline_event_available_24" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_constraint_exam_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="16dp"
+                                android:paddingStart="6dp"
+                                android:text="@string/necessary_exams"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_constraint_exam"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="6dp"
+                                android:text="Giovanni Giorgio"
+                                android:textColor="?attr/colorPrimaryInverse"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/constraints_skills_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:contentDescription="@string/edit"
+                            android:padding="16dp"
+                            android:src="@drawable/ic_baseline_build_24" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_constraint_skills_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="16dp"
+                                android:paddingStart="6dp"
+                                android:text="@string/skills_and_competences"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_constraint_skills"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="6dp"
+                                android:text="Giovanni Giorgio"
+                                android:textColor="?attr/colorPrimaryInverse"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!--        lista vincoli-->
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_documents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_documents_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/documents"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                    <ImageView
+                        android:id="@+id/arrow_image_card_documents"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_documents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_notes_title"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/notes"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/arrow_image_card_notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+
+
+                    <ImageView
+                        android:id="@+id/edit_notes_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/edit"
+                        android:src="@drawable/ic_baseline_edit_note_24"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/save_notes_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/save"
+                        android:src="@drawable/ic_baseline_save_24"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_view_notes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="5dp"
+                        android:visibility="gone" />
+
+                    <EditText
+                        android:id="@+id/edit_text_notes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@null"
+                        android:hint="@string/hint_text_sender"
+                        android:inputType="textMultiLine"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_student"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/student"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/arrow_image_view_student"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_card_student_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_student_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="16dp"
+                        android:padding="16dp"
+                        android:text="email.prof@gmail.com"
+                        android:textSize="14sp"
+                        app:drawableLeftCompat="@drawable/ic_baseline_email_24"
+                        app:drawableTint="?attr/iconTint" />
+
+                    <TextView
+                        android:id="@+id/tv_student_display_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="16dp"
+                        android:padding="16dp"
+                        android:text="Giovanni Giorgio"
+                        android:textSize="14sp"
+                        app:drawableLeftCompat="@drawable/ic_baseline_person_24"
+                        app:drawableTint="?attr/iconTint" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <Button
+            android:id="@+id/btn_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/book_thesis_uppercase"
+            android:visibility="gone" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
