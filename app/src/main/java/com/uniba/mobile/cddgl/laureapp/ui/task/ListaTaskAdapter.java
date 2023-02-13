@@ -1,7 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.ui.task;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,7 +23,6 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.StatoTask;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,13 +90,13 @@ public class ListaTaskAdapter extends BaseAdapter {
             case NEW:
                 viewHolder.progressBar.setProgress(10);
                 break;
-            case RUNNING:
+            case STARTED:
                 viewHolder.progressBar.setProgress(50);
                 break;
             case END:
                 viewHolder.progressBar.setProgress(100);
                 break;
-        };
+        }
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,10 +106,7 @@ public class ListaTaskAdapter extends BaseAdapter {
                 bundle.putString("stato", task.getStato().toString());
                 bundle.putString("descrizione", task.getDescrizione());
                 bundle.putString("scadenza", task.getScadenza());
-                VisualizzaTask visualizzaTask = new VisualizzaTask();
-                visualizzaTask.setArguments(bundle);
-                FragmentManager fragmentManager = ((AppCompatActivity) mContext).getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.nav_lista_task, visualizzaTask).addToBackStack(null).commit();
+                Navigation.findNavController(v).navigate(R.id.nav_visualizza_task, bundle);
             }
         });
         return convertView;
