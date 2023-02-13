@@ -69,6 +69,23 @@
     <string name="weak_password">Your password is too weak</string>
     <string name="invalid_credentials">Your email is invalid or already in use</string>
     <string name="user_collision">User is already registered with this email</string>
+    <string name="nome_tesi">NOME TESI</string>
+    <string name="relatori">RELATORI</string>
+    <string name="vincoli">VINCOLI</string>
+    <string name="crea_tesi">Crea tesi</string>
+    <string name="popvincoli">Vincoli</string>
+    <string name="creare_task">Creare task</string>
+    <string name="accettare_tesisti">Accettare tesisti</string>
+    <string name="modificare_eliminare_task">Modificare ed \n eliminare task</string>
+    <string name="modificare_tesi">Modificare tesi</string>
+    <string name="cancella">CANCELLA</string>
+    <string name="aggiungi">AGGIUNGI</string>
+    <string name="email">EMAIL</string>
+    <string name="cognome">COGNOME</string>
+    <string name="nome">NOME</string>
+    <string name="vedi_tutte">Vedi tutte</string>
+    <string name="task_creati">TASK CREATI</string>
+    <string name="verifica_email">VERIFICA EMAIL</string>
 
     <!--    FORGOT PASSWORD-->
     <string name="request_send_forgot_password">Are you sure you want to send a password reset request to this e-mail address:\n\n<b>%s</b></string>
@@ -215,5 +232,23 @@
     <string name="there_are_no_assigned_tasks">There are no assigned tasks</string>
     <string name="task_graph">Task: \n%s</string>
 
+    <string name="tempistiche">TEMPISTICHE</string>
+    <string name="mesi_2"><![CDATA[<2 mesi]]></string>
+    <string name="mesi_3"><![CDATA[<3 mesi]]></string>
+    <string name="mesi_4"><![CDATA[<4 mesi]]></string>
+    <string name="piu_mesi"><![CDATA[>4 mesi]]></string>
+    <string name="salva">Salva</string>
+    <string name="meetings">Meetings</string>
 
+    <!-- SPINNER-->
+    <string-array name="ambiti">
+        <item>Informatica</item>
+        <item>Scienze biologiche</item>
+        <item>Astronomia</item>
+        <item>Arte</item>
+        <item>Medicina</item>
+        <item>Cultura</item>
+        <item>Finanza</item>
+        <item>Politica</item>
+    </string-array>
 </resources>

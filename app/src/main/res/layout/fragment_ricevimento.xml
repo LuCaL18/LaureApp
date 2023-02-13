@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".RicevimentoFragment">
+
+    <TextView
+        android:id="@+id/tesi"
+        android:text="nome tesi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_marginHorizontal="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/dataE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="50dp"
+        app:layout_constraintTop_toBottomOf="@id/tesi"
+        android:autofillHints="Data ricevimento"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:hint="Data ricevimento"
+        android:imeOptions="actionDone"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/riepilogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="50dp"
+        app:layout_constraintTop_toBottomOf="@id/dataE"
+        android:hint="Riepilogo"
+        android:textSize="20sp"/>
+
+    <LinearLayout
+        android:id="@+id/hTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/riepilogo">
+    <TextView
+        android:id="@+id/taskT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:text="Task"
+        android:textSize="20sp"/>
+
+    <ImageView
+        android:id= "@+id/taskI"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:layout_constraintTop_toTopOf="@+id/taskT"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/add"
+        android:clickable="true"
+        android:contextClickable="true"
+        android:allowClickWhenDisabled="true"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/taskL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/hTask"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"/>
+
+    <LinearLayout
+        android:id="@+id/hPartecipanti"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/taskL">
+        <TextView
+            android:id="@+id/partecipantiT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:text="Relatori partecipanti"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:id= "@+id/partecipantiI"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            app:layout_constraintTop_toTopOf="@+id/partecipantiT"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/add"
+            android:clickable="true"
+            android:contextClickable="true"
+            android:allowClickWhenDisabled="true"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/partecipantiL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/hPartecipanti"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"/>
+    <Button
+        android:id="@+id/salva"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:text="SALVA"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
