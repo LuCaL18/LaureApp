@@ -9,9 +9,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +24,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -40,7 +39,7 @@ public class HomeFragment extends Fragment {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference tesiRef = db.collection("tesi");
-
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private FragmentHomeBinding binding;
     private MenuProvider provider;
     private final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;
@@ -115,7 +114,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadTesi() {
-            tesiRef.whereEqualTo("relatore", "sabino di tria")
+            tesiRef.whereEqualTo("relatore", currentUser.getDisplayName())
                     .limit(3)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -150,7 +149,6 @@ public class HomeFragment extends Fragment {
                                         Descrizione = binding.DescrizioneTesi3;
                                         break;
                                     default:
-                                        cardView = binding.card1;
                                         img = binding.img1;
                                         Titolo = binding.NomeTesi1;
                                         Descrizione = binding.DescrizioneTesi1;

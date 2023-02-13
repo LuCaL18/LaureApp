@@ -63,4 +63,9 @@
             android:id="@+id/action_chatListFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/ricevimento"
+        android:name="com.uniba.mobile.cddgl.laureapp.RicevimentoFragment"
+        android:label="fragment_ricevimento"
+        tools:layout="@layout/fragment_ricevimento" />
 </navigation>

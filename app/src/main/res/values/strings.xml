@@ -98,5 +98,23 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_chat">Chat</string>
     <string name="user_profile">User profile</string>
+    <string name="tempistiche">TEMPISTICHE</string>
+    <string name="mesi_2"><![CDATA[<2 mesi]]></string>
+    <string name="mesi_3"><![CDATA[<3 mesi]]></string>
+    <string name="mesi_4"><![CDATA[<4 mesi]]></string>
+    <string name="piu_mesi"><![CDATA[>4 mesi]]></string>
+    <string name="salva">Salva</string>
+    <string name="meetings">Meetings</string>
 
+    <!-- SPINNER-->
+    <string-array name="ambiti">
+        <item>Informatica</item>
+        <item>Scienze biologiche</item>
+        <item>Astronomia</item>
+        <item>Arte</item>
+        <item>Medicina</item>
+        <item>Cultura</item>
+        <item>Finanza</item>
+        <item>Politica</item>
+    </string-array>
 </resources>

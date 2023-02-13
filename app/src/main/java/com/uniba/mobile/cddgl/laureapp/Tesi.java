@@ -1,13 +1,27 @@
 package com.uniba.mobile.cddgl.laureapp;
 
+import java.util.Map;
+
 public class Tesi {
     private String id_tesi;
     private String nome_tesi;
     private String descrizione;
     private String relatore;
-    //private String vincoli;
-    //private String relatori;
-    private String task;
+
+    private String skill;
+
+    private String tempistiche;
+
+    private String ambito;
+
+    private String chiave;
+
+    private Map<String, String> co_relatori;
+    private String task[];
+
+    private int media;
+
+    private String studente;
 
     public Tesi() {
 
@@ -45,11 +59,19 @@ public class Tesi {
         this.relatore = relatore;
     }
 
-    public String getTask() {
+    public Map<String, String> getCo_relatori() {
+        return co_relatori;
+    }
+
+    public void setCo_relatori(Map<String, String> co_relatori) {
+        this.co_relatori = co_relatori;
+    }
+
+    public String[] getTask() {
         return task;
     }
 
-    public void setTask(String task) {
+    public void setTask(String[] task) {
         this.task = task;
     }
 }
