@@ -1,59 +1,59 @@
 <resources>
     <string name="app_name">LaureApp</string>
     <string name="app_name_upperCase"><b>LAURE</b>APP</string>
-    <string name="content_description_notification">Show notifications</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="register">Register</string>
-    <string name="welcome">"Welcome! "</string>
-    <string name="login_failed">"Login failed"</string>
-    <string name="registration_failed">"Registration failed"</string>
+    <string name="content_description_notification">Mostra notifiiche</string>
+    <string name="action_sign_in">Registrazione</string>
+    <string name="action_sign_in_short">Registrazione</string>
+    <string name="register">Registrati</string>
+    <string name="welcome">"Benvenuto !"</string>
+    <string name="login_failed">"Login fallito"</string>
+    <string name="registration_failed">"Registrazione fallita"</string>
     <string name="login">login</string>
-    <string name="sign_up">Sign up</string>
-    <string name="login_guest"><u>Enter as guest</u></string>
-    <string name="favorite">Favourites</string>
-    <string name="content_description_favorite">Add to favourites</string>
-    <string name="search">Search</string>
-    <string name="content_description_search">Search request</string>
-    <string name="confirm">Confirm</string>
-    <string name="send">Send</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
-    <string name="unknown_user">Unknown user</string>
-    <string name="yes_text">Yes</string>
+    <string name="sign_up">Registrazione</string>
+    <string name="login_guest"><u>Entra come GUEST</u></string>
+    <string name="favorite">Preferiti</string>
+    <string name="content_description_favorite">Aggiungi ai preferiti</string>
+    <string name="search">Cerca</string>
+    <string name="content_description_search">Richiesta</string>
+    <string name="confirm">Conferma</string>
+    <string name="send">Invia</string>
+    <string name="cancel">Cancella</string>
+    <string name="save">Salva</string>
+    <string name="unknown_user">Utente sconosciuto</string>
+    <string name="yes_text">Si</string>
     <string name="no_text">No</string>
-    <string name="title">Title</string>
-    <string name="edit">Edit</string>
-    <string name="allow">Allow</string>
-    <string name="next">Continue</string>
+    <string name="title">Titolo</string>
+    <string name="edit">Modifica</string>
+    <string name="allow">Conferma</string>
+    <string name="next">Continua</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Apri</string>
+    <string name="navigation_drawer_close">Chiudi</string>
 
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
 
-    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_desc">Intestazione</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Impostazioni</string>
 
 
-    <string name="request_confirm_email_verified_title"><b>Confirm your email address</b></string>
-    <string name="request_confirm_email_verified">We sent a confirmation email to:\n\n<b>%s</b>\n\nCheck your email and click on the confirmation link to continue.</string>
-    <string name="resend_email"><b>Resend email</b></string>
+    <string name="request_confirm_email_verified_title"><b>Conferma il tuo indirizzo mail</b></string>
+    <string name="request_confirm_email_verified">Abbiamo inviato una mail di conferma a:\n\n<b>%s</b>\n\nControlla la tua mail e clicca sul link di conferma per continuare.</string>
+    <string name="resend_email"><b>Rimanda email</b></string>
 
     <!--    USER FIELDS-->
-    <string name="name">Name</string>
-    <string name="surname">Surname</string>
-    <string name="birth_day">Date of birth</string>
-    <string name="bio">Biography</string>
+    <string name="name">Nome</string>
+    <string name="surname">Cognome</string>
+    <string name="birth_day">Data di nascita</string>
+    <string name="bio">Biografia</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="confirm_password">Confirm password</string>
-    <string name="bioHint">Enter a description (maximum 200 characters)</string>
-    <string name="role_student">Student</string>
-    <string name="role_professor">Professor</string>
-    <string name="forgot_password"><u>Forgot password?</u></string>
+    <string name="confirm_password">Conferma password</string>
+    <string name="bioHint">Inserisci una descrizione (massimo 200 caratteri)</string>
+    <string name="role_student">Studente</string>
+    <string name="role_professor">Professore</string>
+    <string name="forgot_password"><u>Password dimenticata?</u></string>
 
     <!--    TASK FIELD-->
     <string name="nometask">Nome Task</string>
@@ -67,26 +67,26 @@
     <string name="share_tesi">Condividi tesi</string>
 
     <!--    ERROR USER-->
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="invalid_name">Not a valid name</string>
-    <string name="invalid_surname">Not a valid surname</string>
-    <string name="invalid_date">Not a valid date of birth</string>
-    <string name="invalid_bio">Biography must contain a maximum of 200 characters</string>
-    <string name="invalid_confirm_password">Passwords do not match</string>
-    <string name="invalid_filename">The file name may not contain special characters</string>
+    <string name="invalid_username">Username non valido</string>
+    <string name="invalid_password">la password deve essere di più di 5 caratteri</string>
+    <string name="invalid_name">Nome non valido</string>
+    <string name="invalid_surname">Cognome non valido</string>
+    <string name="invalid_date">Data di nascita non valida</string>
+    <string name="invalid_bio">La biografia può contenere al massimo 200 caratteri</string>
+    <string name="invalid_confirm_password">La passwords non corrisponde</string>
+    <string name="invalid_filename">Non può contenere caratteri speciali</string>
 
     <!--    ERROR TASK-->
-    <string name="invalid_state">Not a valid state</string>
-    <string name="invalid_taskname">Not a valid name for a task</string>
-    <string name="invalid_task">Not a valid task</string>
-    <string name="invalid_description">Description must contain a maximum of 200 characters</string>
-    <string name="invalid_scadenza">Not a valid end date</string>
+    <string name="invalid_state">Stato non valido</string>
+    <string name="invalid_taskname">Nome non valido per il task</string>
+    <string name="invalid_task">Task non valido</string>
+    <string name="invalid_description">La descrizione può contenere al massimo 200 caratteri</string>
+    <string name="invalid_scadenza">Data fine non valida</string>
 
     <!--    FIREBASE EXCEPTION-->
-    <string name="weak_password">Your password is too weak</string>
-    <string name="invalid_credentials">Your email is invalid or already in use</string>
-    <string name="user_collision">User is already registered with this email</string>
+    <string name="weak_password">Password debole</string>
+    <string name="invalid_credentials">Email non valida o già registrata</string>
+    <string name="user_collision">Utente già registrato con questa email</string>
     <string name="nome_tesi">NOME TESI</string>
     <string name="relatori">RELATORI</string>
     <string name="vincoli">VINCOLI</string>
@@ -110,151 +110,151 @@
     <string name="title_activity_new_task">NewTaskActivity</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_slideshow">Presentazione</string>
 
     <!--    FORGOT PASSWORD-->
-    <string name="request_send_forgot_password">Are you sure you want to send a password reset request to this e-mail address:\n\n<b>%s</b></string>
-    <string name="password_reset_sent">Password reset email sent</string>
-    <string name="dialog_password_reset_title">Confirm reset password</string>
-    <string name="error_message_password_reset">Unable send password reset request</string>
+    <string name="request_send_forgot_password">Sei sicuro di voler inviare una richiesta di reimpostazione della password a questo indirizzo e-mail?:\n\n<b>%s</b></string>
+    <string name="password_reset_sent">Email di reimpostazione password inviata</string>
+    <string name="dialog_password_reset_title">Conferma la reimpostazione della password</string>
+    <string name="error_message_password_reset">Impossibile inviare la richiesta di reimpostazione della password</string>
 
     <!--    MENU DRAWER-->
-    <string name="logout">Logout</string>
-    <string name="menu_gallery">Gallery</string>
+    <string name="logout">Esci</string>
+    <string name="menu_gallery">Galleria</string>
     <string name="chat_menu">Chat</string>
     <string name="ticket_menu">Ticket</string>
 
     <!--    TITLE NAVIGATION BAR-->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_notifications">Notifiche</string>
     <string name="title_chat">Chat</string>
-    <string name="user_profile">User profile</string>
-    <string name="title_tickets">Tickets List</string>
+    <string name="user_profile">User Profilo</string>
+    <string name="title_tickets">Lista Tickets</string>
     <string name="title_ticket">Ticket</string>
 
     <!--    NOTIFICATIONS-->
-    <string name="title_message">New message from %s</string>
-    <string name="title_messages">New messages in chat %s</string>
-    <string name="body_messages">You have received more messages in the chat %s</string>
-    <string name="no_notifications">There are no notifications</string>
-    <string name="title_notification_ticket">Ticket on %s</string>
-    <string name="notification_body_open_ticket">%s opened a new ticket on %s</string>
-    <string name="notification_body_closed_ticket">%s closed a ticket on %s</string>
-    <string name="notification_ticket_request_exception">Unable to send request</string>
-    <string name="notification_ticket_response_exception">Unable to send response</string>
-    <string name="notification_title_booking">Booking on %s</string>
-    <string name="notification_body_open_booking">Student %s made a booking to the thesis %s</string>
+    <string name="title_message">Nuovo messaggio da %s</string>
+    <string name="title_messages">Nuovi messaggi in chat %s</string>
+    <string name="body_messages">Hai ricevuto più messaggi nella chat %s</string>
+    <string name="no_notifications">TNon hai nuove notifiche</string>
+    <string name="title_notification_ticket">Ticket attivo %s</string>
+    <string name="notification_body_open_ticket">%s ha aperto un nuovo ticket il %s</string>
+    <string name="notification_body_closed_ticket">%s ha chiuso il ticket il %s</string>
+    <string name="notification_ticket_request_exception">Impossibile inviare la richiesta</string>
+    <string name="notification_ticket_response_exception">Impossibile inviare la risposta</string>
+    <string name="notification_title_booking">Prenotazione attiva%s</string>
+    <string name="notification_body_open_booking">Lo studente %s effettuato una prenotazione alla tesi %s</string>
 
     <!--    TICKET-->
-    <string name="no_tickets">There are no tickets</string>
-    <string name="closed_tickets">Closed</string>
-    <string name="open_tickets">Open</string>
-    <string name="title_dialog_ticket">Confirm Ticket</string>
-    <string name="message_dialog_ticket_request">Are you sure you want to send this request?</string>
-    <string name="message_dialog_ticket_response">Are you sure you want to send this response?</string>
-    <string name="email_student_title">Student: %s</string>
-    <string name="email_prof_title">Professor: %s</string>
-    <string name="hint_text_sender">Write your request here…</string>
-    <string name="hint_text_receiver">Write your response here…</string>
+    <string name="no_tickets">Non ci sono nuovi tickets</string>
+    <string name="closed_tickets">Chiuso</string>
+    <string name="open_tickets">Aperto</string>
+    <string name="title_dialog_ticket">Conferma Ticket</string>
+    <string name="message_dialog_ticket_request">Sei sicuro di voler inviare questa richiesta?</string>
+    <string name="message_dialog_ticket_response">Sei sicuro di voler inviare questa risposta?</string>
+    <string name="email_student_title">Studente: %s</string>
+    <string name="email_prof_title">Professore: %s</string>
+    <string name="hint_text_sender">Scrivi qui la tua richiesta…</string>
+    <string name="hint_text_receiver">Scrivi qui la tua risposta…</string>
 
 
     <!--    CONTENT DESCRIPTION-->
-    <string name="notification_icon">notification icon</string>
-    <string name="content_description_share">Click to share</string>
-    <string name="content_description_qr_code">Generate qr code</string>
-    <string name="content_description_favorite_thesis">Add thesis to favourites</string>
-    <string name="content_description_add_ticket_thesis">Click to create a new ticket</string>
+    <string name="notification_icon">Icona di notifica</string>
+    <string name="content_description_share">Clicca per condividere</string>
+    <string name="content_description_qr_code">Genera qr code</string>
+    <string name="content_description_favorite_thesis">Aggiungi tesi ai preferiti</string>
+    <string name="content_description_add_ticket_thesis">Clicca per creare un nuovo ticket</string>
 
     <!--    MENU-->
-    <string name="share">Share</string>
+    <string name="share">Condividi</string>
     <string name="qr_code">QR Code</string>
-    <string name="add_ticket">Add ticket</string>
+    <string name="add_ticket">Aggiungi ticket</string>
 
     <!--    THESIS-->
-    <string name="relators">Relators</string>
-    <string name="constraints">Constraints</string>
-    <string name="book_thesis_uppercase">BOOK THESIS</string>
-    <string name="book_thesis">Book thesis</string>
-    <string name="documents">Documents</string>
-    <string name="notes">Notes</string>
-    <string name="no_notes">There are no notes</string>
-    <string name="unable_to_save_changes">Unable to save changes</string>
-    <string name="share_data_with">Share thesis data via:</string>
+    <string name="relators">Relatori</string>
+    <string name="constraints">Vincoli</string>
+    <string name="book_thesis_uppercase">RACCOLTA TESI</string>
+    <string name="book_thesis">Raccolta tesi</string>
+    <string name="documents">Documenti</string>
+    <string name="notes">Note</string>
+    <string name="no_notes">Non ci sono note</string>
+    <string name="unable_to_save_changes">Impossibile salvare le modifiche</string>
+    <string name="share_data_with">Condividi i dati della tesi tramite:</string>
 
     <!--    FILE-->
-    <string name="filename">Filename</string>
-    <string name="file_saved_with_success">File saved successfully</string>
-    <string name="unable_saved_file">Unable to save the file</string>
-    <string name="file_saved_unauthorised">Permissions to save files not enabled</string>
-    <string name="unable_downloaded_file">Unable downloaded file</string>
-    <string name="unable_open_file">Unable to open file</string>
-    <string name="upload">Upload</string>
-    <string name="image_saved_in_gallery">Image saved in gallery</string>
-    <string name="cannot_image_saved_in_gallery">Cannot saved image in gallery</string>
-    <string name="error_upload">An error occurred during the upload</string>
+    <string name="filename">Nome del file</string>
+    <string name="file_saved_with_success">File salvato con successo</string>
+    <string name="unable_saved_file">Impossibile salvare il file</string>
+    <string name="file_saved_unauthorised">Autorizzazioni per il salvataggio dei file non abilitate</string>
+    <string name="unable_downloaded_file">Impossibile scaricare il file</string>
+    <string name="unable_open_file">Impossibile aprire il file</string>
+    <string name="upload">Caricamento</string>
+    <string name="image_saved_in_gallery">Immagine salvata in galleria</string>
+    <string name="cannot_image_saved_in_gallery">Impossibile salvare imamgine in galleria</string>
+    <string name="error_upload">Errore durante il caricamento</string>
 
     <!--    PERMISSION-->
-    <string name="internet_permission_required_cause">Internet permission is required to open web links</string>
-    <string name="write_external_permission_declined">Write external storage permission declined</string>
-    <string name="app_need_permission_to_save_qr_code">The app needs permission to save the QR code image</string>
-    <string name="request_permission_storage_gallery">This app needs access to the external storage to save images to the gallery. If you decline this permission, the app will not be able to save images to the gallery.</string>
-    <string name="storage_permission">Storage permission</string>
+    <string name="internet_permission_required_cause">Per aprire i collegamenti Web è necessaria autorizzazione Internet</string>
+    <string name="write_external_permission_declined">Autorizzazione scrittura archiviazione esterna rifiutata</string>
+    <string name="app_need_permission_to_save_qr_code">Richiesta autorizzazione per salvare immagine del codice QR</string>
+    <string name="request_permission_storage_gallery">Necessario accesso alla memoria esterna per salvare le immagini nella galleria. Se rifiuti questa autorizzazione, non sarà possibile salvare le immagini nella galleria.</string>
+    <string name="storage_permission">Permesso di archiviazione</string>
 
 
-    <string name="timelines">Timelines</string>
-    <string name="average_votes">Grade point average</string>
-    <string name="necessary_exams">Necessary exams</string>
-    <string name="skills_and_competences">Skills and competences</string>
-    <string name="booking">Booking</string>
-    <string name="write_here_your_motivation">Write here your motivation...</string>
-    <string name="motivation_for_unfulfilled_constraints">Motivation for unfulfilled constraints</string>
-    <string name="constraints_checks_the_constraints_satisfied">Checks the constraints satisfied</string>
-    <string name="booking_successfully_saved">Booking successfully saved</string>
-    <string name="impossible_to_save_the_booking">Impossible to save the booking</string>
-    <string name="refused">Refused</string>
-    <string name="accepted">Accepted</string>
-    <string name="there_are_no_bookings">There are no bookings</string>
-    <string name="booking_list">Booking list</string>
-    <string name="booking_accepted_by_professor">The booking was accepted by the professor</string>
-    <string name="booking_refused_by_professor">The booking was refused by the professor</string>
-    <string name="menu_booking">Booking</string>
-    <string name="opened">Opened</string>
-    <string name="reasons_for_unfulfilled_constraints">Reasons for unfulfilled constraints</string>
-    <string name="reject">Reject</string>
-    <string name="accept">Accept</string>
-    <string name="your_booking_has_been_refused">Your booking has been refused</string>
-    <string name="your_booking_has_been_accepted">Your booking has been accepted</string>
-    <string name="you_have_accepted_this_booking">You have accepted this booking</string>
-    <string name="you_have_refused_this_booking">You have refused this booking</string>
-    <string name="refuse_booking_dialog">Are you sure you want to refuse this booking</string>
-    <string name="accept_booking_dialog">Are you sure you want to accept this booking</string>
-    <string name="title_booking_dialog_confirm">Confirm response to booking</string>
-    <string name="response_sent_successfully">Response sent successfully</string>
-    <string name="unable_to_send_response">Unable to send response</string>
-    <string name="unable_to_assign_the_thesis">Unable to assign the thesis</string>
-    <string name="cancel_booking">Cancel booking</string>
-    <string name="delete">Delete</string>
-    <string name="delete_booking">Delete booking</string>
-    <string name="delete_booking_dialog_message">Are you sure you want to delete this booking</string>
-    <string name="booking_successfully_cancelled">Booking successfully deleted</string>
-    <string name="unable_to_delete_the_booking">Unable to delete the booking</string>
-    <string name="unable_to_add_student_to_the_chat_of_thesis">Unable to add student to the chat of thesis</string>
-    <string name="title_dialog_delete_document">Delete document</string>
-    <string name="message_dialog_delete_document">Are you sure you want to delete the document <b>%s</b></string>
-    <string name="thesis_data">Thesis Data</string>
-    <string name="data_shared_data">Thesis: <b>%s</b>\nDescription: %s\nProfessor: %s\nTimelines: %s\nAverage vote: %s\nNecessary exam: %s\nRequired skills: %s\nNotes: %s</string>
-    <string name="unable_save_changes">\"Unable to save changes \"</string>
-    <string name="changes_saved_successfully">changes saved successfully</string>
-    <string name="image_saved_successfully">Image saved successfully</string>
-    <string name="permission_is_required_to_upload_files_from_the_device">Permission is required to upload files from the device</string>
-    <string name="student">Student</string>
-    <string name="professor">Professor</string>
-    <string name="state_new">NEW</string>
+    <string name="timelines">Cronologia</string>
+    <string name="average_votes">Media dei voti</string>
+    <string name="necessary_exams">Esami necessari</string>
+    <string name="skills_and_competences">Abilità e competenze</string>
+    <string name="booking">Prenotazione</string>
+    <string name="write_here_your_motivation">Scrivi qui la tua motivazione...</string>
+    <string name="motivation_for_unfulfilled_constraints">Motivazione per vincoli non soddisfatti</string>
+    <string name="constraints_checks_the_constraints_satisfied">Controlla i vincoli soddisfatti</string>
+    <string name="booking_successfully_saved">Prenotazione salvata con successo</string>
+    <string name="impossible_to_save_the_booking">Impossibile salvare la prenotazione</string>
+    <string name="refused">Rifiutato</string>
+    <string name="accepted">Accettato</string>
+    <string name="there_are_no_bookings">Non ci sono prenotazioni</string>
+    <string name="booking_list">Elenco prenotazioni</string>
+    <string name="booking_accepted_by_professor">La prenotazione è stata accettata dal professore</string>
+    <string name="booking_refused_by_professor">La prenotazione è stata rifiutata dal professore</string>
+    <string name="menu_booking">Prenotazioni</string>
+    <string name="opened">Aperto</string>
+    <string name="reasons_for_unfulfilled_constraints">Motivi dei vincoli non rispettati</string>
+    <string name="reject">Rifiuta</string>
+    <string name="accept">Accetta</string>
+    <string name="your_booking_has_been_refused">La tua prenotazione è stata rifiutata</string>
+    <string name="your_booking_has_been_accepted">La tua prenotazione è stata accettata</string>
+    <string name="you_have_accepted_this_booking">Hai accettato questa prenotazione</string>
+    <string name="you_have_refused_this_booking">Hai rifiutato questa prenotazione</string>
+    <string name="refuse_booking_dialog">Sei sicuro di voler rifiutare questa prenotazione?</string>
+    <string name="accept_booking_dialog">Sei sicuro di voler accettare questa prenotazione?</string>
+    <string name="title_booking_dialog_confirm">Conferma risposta alla prenotazione</string>
+    <string name="response_sent_successfully">Risposta inviata con successo</string>
+    <string name="unable_to_send_response">Impossibile inviare la risposta</string>
+    <string name="unable_to_assign_the_thesis">Impossibile assegnare la tesi</string>
+    <string name="cancel_booking">Annulla prenotazione</string>
+    <string name="delete">Cancella</string>
+    <string name="delete_booking">Cancella prenotazione</string>
+    <string name="delete_booking_dialog_message">Sei sicuro di voler cancellare questa prenotazione ?</string>
+    <string name="booking_successfully_cancelled">Prenotazione cancellata con successo</string>
+    <string name="unable_to_delete_the_booking">Impossibile eliminare la prenotazione</string>
+    <string name="unable_to_add_student_to_the_chat_of_thesis">Impossibile aggiungere lo studente alla chat della tesi</string>
+    <string name="title_dialog_delete_document">Elimina documento</string>
+    <string name="message_dialog_delete_document">Sei sicuro di voler eliminare il documento? <b>%s</b></string>
+    <string name="thesis_data">Dati tesi</string>
+    <string name="data_shared_data">Tesi: <b>%s</b>\nDescrizione: %s\nProfessore: %s\nCronologia: %s\nMedia voti: %s\nEsami necessari: %s\nSkills richieste: %s\nNote: %s</string>
+    <string name="unable_save_changes">\"Impossibile salvare le modifiche \"</string>
+    <string name="changes_saved_successfully">Modifiche salvate con successo</string>
+    <string name="image_saved_successfully">Imamagine salvata con successo</string>
+    <string name="permission_is_required_to_upload_files_from_the_device">Necessaria autorizzazione per caricare i file dal dispositivo</string>
+    <string name="student">Studente</string>
+    <string name="professor">Professore</string>
+    <string name="state_new">NUOVO</string>
     <string name="started">STARTED</string>
     <string name="completed">COMPLETED</string>
     <string name="task">TASK</string>
-    <string name="there_are_no_assigned_tasks">There are no assigned tasks</string>
+    <string name="there_are_no_assigned_tasks">Non ci sono compiti assegnati</string>
     <string name="task_graph">Task: \n%s</string>
 
     <string name="tempistiche">TEMPISTICHE</string>
@@ -263,7 +263,7 @@
     <string name="mesi_4"><![CDATA[<4 mesi]]></string>
     <string name="piu_mesi"><![CDATA[>4 mesi]]></string>
     <string name="salva">Salva</string>
-    <string name="meetings">Meetings</string>
+    <string name="meetings">Ricevimenti</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">
