@@ -131,7 +131,7 @@ public class VisualizeTesiFragment extends Fragment {
         ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle(thesis.getNomeTesi());
+            actionBar.setTitle(thesis.getNome_tesi());
         }
 
         if (thesis.getImageTesi() != null) {
@@ -140,7 +140,7 @@ public class VisualizeTesiFragment extends Fragment {
         }
 
         TextView title = root.findViewById(R.id.tv_thesis_title);
-        title.setText(thesis.getNomeTesi());
+        title.setText(thesis.getNome_tesi());
 
         TextView description = root.findViewById(R.id.tv_thesis_desc);
         description.setText(thesis.getDescrizione());
@@ -174,11 +174,11 @@ public class VisualizeTesiFragment extends Fragment {
         RecyclerView recyclerViewRelators = root.findViewById(R.id.recycler_relators);
         ImageView relatorsArrowCard = root.findViewById(R.id.arrow_image_card_relators);
 
-        RelatorsAdapter relatorsAdapter = new RelatorsAdapter(thesis.getRelatori());
+        RelatorsAdapter relatorsAdapter = new RelatorsAdapter(thesis.getCo_relatori());
         recyclerViewRelators.setAdapter(relatorsAdapter);
         recyclerViewRelators.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (thesis.getRelatori().isEmpty()) {
+        if (thesis.getCo_relatori().isEmpty()) {
             relatorsCard.setVisibility(View.GONE);
         }
 
@@ -322,7 +322,7 @@ public class VisualizeTesiFragment extends Fragment {
             BookingDialogFragment bookingDialogFragment = new BookingDialogFragment(
                     mainViewModel.getIdUser(),
                     user.getEmail(), user.getName(), user.getSurname(),
-                    thesis.getProfessor().getId(), thesis.getId(), thesis.getNomeTesi()
+                    thesis.getProfessor().getId(), thesis.getId(), thesis.getNome_tesi()
             );
 
             bookingDialogFragment.show(getParentFragmentManager(), "BookingDialogFragment");
@@ -408,8 +408,8 @@ public class VisualizeTesiFragment extends Fragment {
                                 if (documentSnapshot.exists()) {
                                     TesiClassifica classification = documentSnapshot.toObject(TesiClassifica.class);
 
-                                    for (Tesi tesi : classification.getTesi()) {
-                                        if (tesi.getId().equals(thesis.getId())) {
+                                    for (String tesi : classification.getTesi()) {
+                                        if (tesi.equals(thesis.getId())) {
                                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                                             isFavourite = true;
                                             break;
@@ -439,7 +439,7 @@ public class VisualizeTesiFragment extends Fragment {
                             case VisualizeTesiFragment.FAVORITE_THESIS:
                                 return switchFavouriteThesis(menuItem);
                             case VisualizeTesiFragment.ADD_TICKET_THESIS:
-                                Ticket ticket = new Ticket(mainViewModel.getIdUser(), thesis.getProfessor().getId(), thesis.getId(), thesis.getNomeTesi(), TicketState.NEW);
+                                Ticket ticket = new Ticket(mainViewModel.getIdUser(), thesis.getProfessor().getId(), thesis.getId(), thesis.getNome_tesi(), TicketState.NEW);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(TicketFragment.TICKET_KEY, (Serializable) ticket);
                                 navController.navigate(R.id.action_visualizeTesiFragment_to_ticketFragment, bundle);
@@ -726,10 +726,10 @@ public class VisualizeTesiFragment extends Fragment {
 
                 int icon;
                 if (isFavourite) {
-                    List<Tesi> newList = new ArrayList<>();
+                    List<String> newList = new ArrayList<>();
 
-                    for (Tesi tesi : classification.getTesi()) {
-                        if (!tesi.equals(thesis)) {
+                    for (String tesi : classification.getTesi()) {
+                        if (!tesi.equals(thesis.getId())) {
                             newList.add(tesi);
                         }
                     }
@@ -738,8 +738,8 @@ public class VisualizeTesiFragment extends Fragment {
                     icon = R.drawable.ic_baseline_favorite_border_24;
                     isFavourite = false;
                 } else {
-                    List<Tesi> newList = classification.getTesi();
-                    newList.add(thesis);
+                    List<String> newList = classification.getTesi();
+                    newList.add(thesis.getId());
 
                     classification.setTesi(newList);
                     icon = R.drawable.ic_favorite_24dp;
@@ -757,6 +757,18 @@ public class VisualizeTesiFragment extends Fragment {
                         Log.e("VisualizeTesiFragment", task.getException().getMessage());
                     }
                 });
+            } else {
+                List<String> newTesiList = new ArrayList<>();
+                newTesiList.add(thesis.getId());
+                classificaDocument.set(new TesiClassifica(mainViewModel.getIdUser(), newTesiList))
+                        .addOnCompleteListener(task -> {
+                           if(task.isSuccessful()) {
+                               menuItem.setIcon(R.drawable.ic_favorite_24dp);
+                               isFavourite = true;
+                           } else {
+                               showSaveToast(R.string.unable_add_favorite);
+                           }
+                        });
             }
         });
         return true;

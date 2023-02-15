@@ -126,7 +126,7 @@
 
     <!--    TITLE NAVIGATION BAR-->
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_thesis_list">Thesis list</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_chat">Chat</string>
     <string name="user_profile">User profile</string>
@@ -264,6 +264,7 @@
     <string name="piu_mesi"><![CDATA[>4 mesi]]></string>
     <string name="salva">Salva</string>
     <string name="meetings">Meetings</string>
+    <string name="unable_add_favorite">Unable to add the thesis to the ranking</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">

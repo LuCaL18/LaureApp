@@ -1,7 +1,6 @@
-package com.uniba.mobile.cddgl.laureapp.ui.tesi;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,51 +8,24 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ClassificaTesiAdapter extends BaseAdapter {
 
     private final Context mContext;
     private List<Tesi> mDataList;
-    private final Map<String, List<Tesi>> classifica;
 
-    public ClassificaTesiAdapter(Context context, CollectionReference ref) {
+    public ClassificaTesiAdapter(Context context) {
         mContext = context;
         mDataList = new ArrayList<>();
-        classifica = new HashMap<>();
-        ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e("FirebaseListAdapter", "Listen failed.", e);
-                    return;
-                }
-                mDataList.clear();
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    ClassificaTesi classificaTesi = doc.toObject(ClassificaTesi.class);
-                    mDataList = classificaTesi.getTesi();
-                }
-                classifica.put("classificaTesi", mDataList);
-                notifyDataSetChanged();
-            }
-        });
     }
 
     @Override
@@ -74,31 +46,37 @@ public class ClassificaTesiAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
+
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.classifica_tesi, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.textView1 = convertView.findViewById(R.id.nometesi2);
-            viewHolder.textView2 = convertView.findViewById(R.id.nomerelatore2);
+            viewHolder.textView2 = convertView.findViewById(R.id.descrizione_tesi);
             viewHolder.imageButton1 = convertView.findViewById(R.id.visualizzaTesi2);
             viewHolder.imageButton2 = convertView.findViewById(R.id.deleteTesi);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
         Tesi tesi = mDataList.get(position);
-        if (tesi != null && tesi.getNomeTesi() != null && tesi.getProfessor() != null) {
-            viewHolder.textView1.setText(tesi.getNomeTesi());
-            viewHolder.textView2.setText(tesi.getProfessor().getDisplayName());
+
+        if (tesi != null && tesi.getNome_tesi() != null && tesi.getDescrizione() != null) {
+            viewHolder.textView1.setText(tesi.getNome_tesi());
+            viewHolder.textView2.setText(tesi.getDescrizione());
         }
+
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // qui puoi inserire il codice per la visualizzazione della tesi
             }
         });
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String studenteId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DocumentReference classificaRef = db.collection("tesi_classifiche").document(studenteId);
+
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,6 +85,9 @@ public class ClassificaTesiAdapter extends BaseAdapter {
                 classificaRef.set(new ClassificaTesi(mDataList, studenteId));
             }
         });
+
+        //make draggable view
+        convertView.setLongClickable(true);
 
         return convertView;
     }
@@ -118,10 +99,23 @@ public class ClassificaTesiAdapter extends BaseAdapter {
         ImageButton imageButton2;
     }
 
-    public void addTesi(List<Tesi> tesi) {
-        mDataList = tesi;
+    public void insertItem(int position, Tesi tesi) {
+        mDataList.add(position, tesi);
         notifyDataSetChanged();
     }
 
+    public void removeItem(Tesi tesi) {
+        mDataList.remove(tesi);
+        notifyDataSetChanged();
+    }
+
+    public void setmDataList(List<Tesi> mDataList) {
+        this.mDataList = mDataList;
+        notifyDataSetChanged();
+    }
+
+    public List<Tesi> getmDataList() {
+        return mDataList;
+    }
 }
 

@@ -45,15 +45,14 @@ public class MainActivity extends AppCompatActivity {
     public static final int BOOKING = R.id.nav_booking;
     public static final int LOGOUT = R.id.logout;
     public static final int MEETING = R.id.nav_meeting;
-
+    public static final int LISTA_TASK = R.id.nav_lista_task;
+    public static final int NEW_TASK = R.id.nav_new_task;
+    public static final int CLASSIFICA_TESI = R.id.nav_classifica_tesi;
+    public static final int LISTA_TESI = R.id.navigation_lista_tesi;
 
     public static final int REQUEST_WRITE_STORAGE_PERMISSION = 1;
     public static final int REQUEST_INTERNET_PERMISSION = 2;
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 3;
-    public static final int LISTA_TASK = R.id.nav_lista_task;
-    public static final int NEW_TASK = R.id.nav_new_task;
-    public static final int CLASSIFICA_TESI = R.id.nav_classifica_tesi;
-    public static final int LISTA_TESI = R.id.nav_lista_tesi;
 
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             // Passing each menu ID as a set of Ids because each
             // menu should be considered as top level destinations.
             appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_home,
-                    R.id.navigation_dashboard)
+                    R.id.navigation_lista_tesi)
                     .setOpenableLayout(drawer)
                     .build();
 
@@ -112,27 +111,19 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     boolean isSelected;
                     switch (item.getItemId()) {
-                        case R.id.nav_gallery:
-                            navController.navigate(R.id.nav_gallery);
+                        case NEW_TASK:
+                            navController.navigate(R.id.nav_new_task);
                             isSelected = true;
                             break;
-                        case NEW_TASK:
-                        navController.navigate(R.id.nav_new_task);
-                        isSelected = true;
-                        break;
-                    case LISTA_TASK:
-                        navController.navigate(R.id.nav_lista_task);
-                        isSelected = true;
-                        break;
-                    case CLASSIFICA_TESI:
-                        navController.navigate(R.id.nav_classifica_tesi);
-                        isSelected = true;
-                        break;
-                    case LISTA_TESI:
-                        navController.navigate(R.id.nav_lista_tesi);
-                        isSelected = true;
-                        break;
-                    case CHAT:
+                        case LISTA_TASK:
+                            navController.navigate(R.id.nav_lista_task);
+                            isSelected = true;
+                            break;
+                        case CLASSIFICA_TESI:
+                            navController.navigate(R.id.nav_classifica_tesi);
+                            isSelected = true;
+                            break;
+                        case CHAT:
                             navController.navigate(R.id.nav_chat_list_fragment);
                             isSelected = true;
                             break;
@@ -149,9 +140,9 @@ public class MainActivity extends AppCompatActivity {
                             isSelected = true;
                             break;
                         case MEETING:
-                        navController.navigate(R.id.ricevimento);
-                        isSelected = true;
-                        break;
+                            navController.navigate(R.id.ricevimento);
+                            isSelected = true;
+                            break;
                         default:
                             isSelected = false;
                     }

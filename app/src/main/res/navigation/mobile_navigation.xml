@@ -16,13 +16,6 @@
             android:id="@+id/action_navigation_home_to_tesiFragmant"
             app:destination="@id/tesiFragmant" />
     </fragment>
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.notifications.NotificationsFragment"
@@ -38,11 +31,6 @@
             android:id="@+id/action_navigation_notifications_to_bookingFragment"
             app:destination="@id/bookingFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
     <fragment
         android:id="@+id/tesiFragmant"
         android:name="com.uniba.mobile.cddgl.laureapp.TesiFragment"
@@ -68,10 +56,14 @@
         android:label="VisualizzaTask" >
     </fragment>
     <fragment
-        android:id="@+id/nav_lista_tesi"
+        android:id="@+id/navigation_lista_tesi"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.ListaTesiFragment"
         android:label="@string/lista_tesi"
-        tools:layout="@layout/fragment_lista_tesi" />
+        tools:layout="@layout/fragment_lista_tesi" >
+        <action
+            android:id="@+id/action_navigation_lista_tesi_to_visualizeTesiFragment"
+            app:destination="@id/visualizeTesiFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_classifica_tesi"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment"

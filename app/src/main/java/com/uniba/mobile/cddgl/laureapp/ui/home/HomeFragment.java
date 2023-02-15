@@ -51,6 +51,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     public static final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;
+    public static final int CREATE_TESI_APP_BAR = R.id.crea_tesi;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference tesiRef = db.collection("tesi");

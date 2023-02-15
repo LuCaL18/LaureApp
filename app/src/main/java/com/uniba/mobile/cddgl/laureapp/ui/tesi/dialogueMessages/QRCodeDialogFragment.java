@@ -54,7 +54,7 @@ public class QRCodeDialogFragment extends DialogFragment {
 
         shareContent = new ShareContent(getContext());
         qrCode = shareContent.generateQRCode(getString(R.string.data_shared_data,
-                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getProfessor().getDisplayName(), tesi.getTempistiche(),
+                tesi.getNome_tesi(), tesi.getDescrizione(), tesi.getProfessor().getDisplayName(), tesi.getTempistiche(),
                 tesi.getMediaVoto(), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
 
         imageViewQRCode.setImageBitmap(qrCode);

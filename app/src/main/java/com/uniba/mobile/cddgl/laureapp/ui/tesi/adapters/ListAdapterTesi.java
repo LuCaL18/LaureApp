@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp.ui.tesi;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters;
 
 import static android.content.ContentValues.TAG;
 
@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,38 +34,23 @@ import java.util.List;
 public class ListAdapterTesi extends BaseAdapter {
 
     private final Context mContext;
-    private final List<Tesi> mDataList;
-    private CollectionReference mCollectionRef;
+    private List<Tesi> tesiList;
+    private VisualizeThesisViewModel thesisViewModel;
 
-    public ListAdapterTesi(Context context, CollectionReference ref) {
+    public ListAdapterTesi(Context context, List<Tesi> tesiList, VisualizeThesisViewModel model) {
         mContext = context;
-        mDataList = new ArrayList<>();
-        mCollectionRef = ref;
-        mCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e("FirebaseListAdapter", "Listen failed.", e);
-                    return;
-                }
-                mDataList.clear();
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    Tesi tesi = doc.toObject(Tesi.class);
-                    mDataList.add(tesi);
-                }
-                notifyDataSetChanged();
-            }
-        });
+        this.tesiList = tesiList;
+        thesisViewModel = model;
     }
 
     @Override
     public int getCount() {
-        return mDataList.size();
+        return tesiList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mDataList.get(position);
+        return tesiList.get(position);
     }
 
     @Override
@@ -87,13 +73,13 @@ public class ListAdapterTesi extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        Tesi tesi = mDataList.get(position);
-        viewHolder.textView1.setText(tesi.getNomeTesi());
+        Tesi tesi = tesiList.get(position);
+        viewHolder.textView1.setText(tesi.getNome_tesi());
         viewHolder.textView2.setText(tesi.getProfessor().getDisplayName());
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //
+                thesisViewModel.getThesis().setValue(tesi);
             }
         });
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +94,7 @@ public class ListAdapterTesi extends BaseAdapter {
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String studenteId = currentUser.getUid();
                 DocumentReference classificaTesiDoc = FirebaseFirestore.getInstance().collection("tesi_classifiche").document(studenteId);
-                Tesi tesiSelezionata = mDataList.get(position);
+                Tesi tesiSelezionata = tesiList.get(position);
                 classificaTesiDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -132,6 +118,15 @@ public class ListAdapterTesi extends BaseAdapter {
             }
         });
         return convertView;
+    }
+
+    public List<Tesi> getTesiList() {
+        return tesiList;
+    }
+
+    public void setTesiList(List<Tesi> tesiList) {
+        this.tesiList = tesiList;
+        notifyDataSetChanged();
     }
 
     private static class ViewHolder {

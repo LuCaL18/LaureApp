@@ -6,12 +6,12 @@ import java.util.List;
 public class TesiClassifica implements Serializable {
 
     private String studentId;
-    private List<Tesi> tesi;
+    private List<String> tesi;
 
     public TesiClassifica() {
     }
 
-    public TesiClassifica(String studentId, List<Tesi> tesi) {
+    public TesiClassifica(String studentId, List<String> tesi) {
         this.studentId = studentId;
         this.tesi = tesi;
     }
@@ -24,11 +24,11 @@ public class TesiClassifica implements Serializable {
         this.studentId = studentId;
     }
 
-    public List<Tesi> getTesi() {
+    public List<String> getTesi() {
         return tesi;
     }
 
-    public void setTesi(List<Tesi> tesi) {
+    public void setTesi(List<String> tesi) {
         this.tesi = tesi;
     }
 
