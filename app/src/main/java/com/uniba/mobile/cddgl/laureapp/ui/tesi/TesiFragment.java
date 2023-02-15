@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
 import static java.lang.Integer.parseInt;
 
@@ -39,6 +39,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.model.Relatore;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentTesiBinding;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp;
+package com.uniba.mobile.cddgl.laureapp.data.model;
 
 import com.google.type.DateTime;
 

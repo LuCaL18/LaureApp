@@ -1,11 +1,8 @@
 package com.uniba.mobile.cddgl.laureapp.ui.home;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,9 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.core.content.ContextCompat;
 import androidx.cardview.widget.CardView;
-import androidx.core.view.MenuProvider;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -28,7 +24,6 @@ import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,8 +34,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.Tesi;
+import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentHomeBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.home.menu.HomeMenu;
 
@@ -59,7 +54,7 @@ public class HomeFragment extends Fragment {
     private HomeMenu provider;
     private HomeViewModel homeViewModel;
     private PieChart pieChart;
-
+    private TextView vediTutte;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -212,7 +207,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadTesi() {
-            tesiRef.whereEqualTo("relatore", currentUser.getDisplayName())
+            tesiRef.whereEqualTo("professor.email", currentUser.getEmail())
                     .limit(3)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -226,6 +221,16 @@ public class HomeFragment extends Fragment {
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 switch (counter) {
                                     case 0:
+                                        binding.scrollView2.setVisibility(View.VISIBLE);
+
+                                        vediTutte = binding.mostraTesi;
+                                        vediTutte.setVisibility(View.VISIBLE);
+                                        vediTutte.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                            /**collegamento a tutte le tesi*/
+                                            }
+                                        });
                                         cardView = binding.card1;
                                         cardView.setVisibility(View.VISIBLE);
                                         img = binding.img1;

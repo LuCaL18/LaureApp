@@ -45,7 +45,7 @@
         tools:layout="@layout/fragment_gallery" />
     <fragment
         android:id="@+id/tesiFragmant"
-        android:name="com.uniba.mobile.cddgl.laureapp.TesiFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.TesiFragment"
         android:label="@string/crea_tesi"
         tools:layout="@layout/fragment_tesi" >
         <action
@@ -117,4 +117,9 @@
         android:name="com.uniba.mobile.cddgl.laureapp.RicevimentoFragment"
         android:label="fragment_ricevimento"
         tools:layout="@layout/fragment_ricevimento" />
+    <fragment
+        android:id="@+id/calendario"
+        android:name="com.uniba.mobile.cddgl.laureapp.Calendario"
+        android:label="fragment_calendario"
+        tools:layout="@layout/fragment_calendario" />
 </navigation>

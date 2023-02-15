@@ -43,6 +43,9 @@ public class HomeMenu implements MenuProvider {
                 navController.navigate(R.id.visualizeTesiFragment);
                 return true;
             }
+            case R.id.crea: {
+                navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
+            }
             default:
                 return false;
         }
