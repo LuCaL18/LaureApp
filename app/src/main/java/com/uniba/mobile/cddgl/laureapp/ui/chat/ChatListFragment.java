@@ -17,14 +17,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.ChatData;
+import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.impl.ChatItemClickCallbackImpl;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.viewHolder.ChatViewHolder;
@@ -33,8 +38,8 @@ import java.util.ArrayList;
 
 public class ChatListFragment extends Fragment {
 
-    private FirebaseRecyclerOptions<ChatData> options;
-    private FirebaseRecyclerAdapter<ChatData, ChatViewHolder> adapter;
+    private FirestoreRecyclerOptions<ChatData> options;
+    private FirestoreRecyclerAdapter<ChatData, ChatViewHolder> adapter;
     private ChatViewModel chatViewModel;
     private ChatItemClickCallback callback;
     private BottomNavigationView navBar;
@@ -46,10 +51,12 @@ public class ChatListFragment extends Fragment {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireParentFragment());
         chatViewModel = viewModelProvider.get(ChatViewModel.class);
 
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
         callback = new ChatItemClickCallbackImpl(chatViewModel);
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("chats");
-        options = new FirebaseRecyclerOptions.Builder<ChatData>()
+        Query query = FirebaseFirestore.getInstance().collection("chats").whereArrayContains("members", mainViewModel.getIdUser());
+        options = new FirestoreRecyclerOptions.Builder<ChatData>()
                 .setQuery(query, ChatData.class)
                 .build();
     }
@@ -64,20 +71,7 @@ public class ChatListFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         chatListRecyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new FirebaseRecyclerAdapter<ChatData, ChatViewHolder>(options) {
-
-            private final ArrayList<ChatData> chatDataList = new ArrayList<>();
-
-            @Override
-            public void onDataChanged() {
-                super.onDataChanged();
-                ChatData data = this.getItem(this.getItemCount() -1);
-                String key = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                if(data.getMembers().containsKey(key)) {
-                    chatDataList.add(data);
-                }
-            }
+        adapter = new FirestoreRecyclerAdapter<ChatData, ChatViewHolder>(options) {
 
             @NonNull
             @Override
@@ -85,19 +79,11 @@ public class ChatListFragment extends Fragment {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_chat, parent, false);
 
-                if(chatDataList.size() == 0) {
-                    return new ChatViewHolder(view);
-                }
-
                 return new ChatViewHolder(view, callback);
             }
 
             @Override
             protected void onBindViewHolder(@NonNull ChatViewHolder holder, int position, @NonNull ChatData model) {
-                if(chatDataList.size() == 0 || !chatDataList.get(position).equals(model)) {
-                    return;
-                }
-
                 holder.bind(model);
             }
         };

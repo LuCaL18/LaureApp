@@ -1,11 +1,9 @@
 package com.uniba.mobile.cddgl.laureapp.ui.home;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.cardview.widget.CardView;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -25,41 +22,49 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
-import com.uniba.mobile.cddgl.laureapp.Tesi;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentHomeBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.home.menu.HomeMenu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment {
 
     public static final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;
     public static final int CREATE_TESI_APP_BAR = R.id.crea_tesi;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference tesiRef = db.collection("tesi");
-    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private FragmentHomeBinding binding;
     private HomeMenu provider;
     private HomeViewModel homeViewModel;
     private PieChart pieChart;
+    private MainViewModel mainViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -68,10 +73,20 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        loadTesi();
-           return root;
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
+        LoggedInUser currentUser = mainViewModel.getUser().getValue();
+        mainViewModel.getThesis().observe(getViewLifecycleOwner(), this::setCardThesis);
+
+        List<Task> tasks = mainViewModel.getTasks().getValue();
+        pieChart = root.findViewById(R.id.pie_chart);
+        manageViewGraphTask(tasks);
+
+
+        mainViewModel.readTask(currentUser.getRole(), currentUser.getId());
+        mainViewModel.loadTesi(currentUser.getRole());
+
+        return root;
     }
 
     @Override
@@ -85,9 +100,7 @@ public class HomeFragment extends Fragment {
             actionBar.setTitle(R.string.app_name_upperCase);
         }
 
-        homeViewModel.readTask();
-
-        provider = new HomeMenu(navController);
+        provider = new HomeMenu(navController, mainViewModel.getUser().getValue().getRole());
 
         requireActivity().addMenuProvider(provider);
 
@@ -97,31 +110,26 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        homeViewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> {
-            pieChart = view.findViewById(R.id.pie_chart);
-
-            if(tasks == null) {
-                pieChart.setVisibility(View.GONE);
-                return;
-            }
-
-            if(tasks.size() == 0) {
-                pieChart.setVisibility(View.GONE);
-
-                TextView noTaskAssignedTv = view.findViewById(R.id.text_no_task);
-                noTaskAssignedTv.setText(getString(R.string.there_are_no_assigned_tasks));
-                noTaskAssignedTv.setVisibility(View.VISIBLE);
-                return;
-            }
-
-            pieChart.setVisibility(View.VISIBLE);
-            setGraphTask();
-        });
-
-
+        mainViewModel.getTasks().observe(getViewLifecycleOwner(), this::manageViewGraphTask);
+        mainViewModel.getThesis().observe(getViewLifecycleOwner(), this::setCardThesis);
     }
 
-    private void setGraphTask() {
+    private void manageViewGraphTask(List<Task> tasks) {
+        if (tasks == null) {
+            pieChart.setVisibility(View.GONE);
+        } else if (tasks.size() == 0) {
+            pieChart.setVisibility(View.GONE);
+
+            TextView noTaskAssignedTv = binding.textNoTask;
+            noTaskAssignedTv.setText(getString(R.string.there_are_no_assigned_tasks));
+            noTaskAssignedTv.setVisibility(View.VISIBLE);
+        } else {
+            pieChart.setVisibility(View.VISIBLE);
+            setGraphTask(tasks);
+        }
+    }
+
+    private void setGraphTask(List<Task> taskList) {
         // Initialize the pie chart
         pieChart.getDescription().setEnabled(false);
         pieChart.setUsePercentValues(true);
@@ -129,7 +137,7 @@ public class HomeFragment extends Fragment {
         pieChart.setTransparentCircleRadius(0f);
         pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.color_hole_graph));
         pieChart.setCenterTextSize(15f);
-        pieChart.setCenterText(getString(R.string.task_graph, String.valueOf(homeViewModel.getTasks().getValue().size())));
+        pieChart.setCenterText(getString(R.string.task_graph, String.valueOf(taskList.size())));
         pieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.legend_text_color));
         pieChart.setDrawEntryLabels(false);
 
@@ -164,16 +172,16 @@ public class HomeFragment extends Fragment {
 
         int taskNew = 0, taskStarted = 0, taskCreated = 0;
 
-        for(Task task : homeViewModel.getTasks().getValue()) {
+        for (Task task : taskList) {
             switch (task.getStato()) {
                 case NEW:
-                    taskNew +=1;
+                    taskNew += 1;
                     break;
                 case STARTED:
-                    taskStarted +=1;
+                    taskStarted += 1;
                     break;
                 case COMPLETED:
-                    taskCreated +=1;
+                    taskCreated += 1;
             }
         }
 
@@ -191,6 +199,19 @@ public class HomeFragment extends Fragment {
         data.setValueTextSize(0f);
         pieChart.setData(data);
         pieChart.invalidate();
+
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                String numberTaskSelected = String.valueOf((int) e.getY());
+                pieChart.setCenterText(getString(R.string.task_graph, numberTaskSelected));
+            }
+
+            @Override
+            public void onNothingSelected() {
+                pieChart.setCenterText(getString(R.string.task_graph, String.valueOf(taskList.size())));
+            }
+        });
     }
 
     private List<LegendEntry> getLegendEntries(List<String> labels, List<Integer> colors) {
@@ -204,6 +225,55 @@ public class HomeFragment extends Fragment {
         return entries;
     }
 
+    private void setCardThesis(QuerySnapshot querySnapshot) {
+        int counter = 0;
+        CardView cardView;
+        ImageView img;
+        TextView Titolo;
+        TextView Descrizione;
+
+        for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+            switch (counter) {
+                case 0:
+                    cardView = binding.card1;
+                    cardView.setVisibility(View.VISIBLE);
+                    img = binding.img1;
+                    Titolo = binding.NomeTesi1;
+                    Descrizione = binding.DescrizioneTesi1;
+                    break;
+                case 1:
+                    cardView = binding.card2;
+                    cardView.setVisibility(View.VISIBLE);
+                    img = binding.img2;
+                    Titolo = binding.NomeTesi2;
+                    Descrizione = binding.DescrizioneTesi2;
+                    break;
+                case 2:
+                    cardView = binding.card3;
+                    cardView.setVisibility(View.VISIBLE);
+                    img = binding.img3;
+                    Titolo = binding.NomeTesi3;
+                    Descrizione = binding.DescrizioneTesi3;
+                    break;
+                default:
+                    img = binding.img1;
+                    Titolo = binding.NomeTesi1;
+                    Descrizione = binding.DescrizioneTesi1;
+                    break;
+            }
+            Tesi tesi = documentSnapshot.toObject(Tesi.class);
+            tesi.setId(documentSnapshot.getId());
+
+            String nome = tesi.getNomeTesi();
+            String descrizione = tesi.getDescrizione();
+
+            counter++;
+            img.setImageResource(R.drawable.add);
+            Titolo.setText(nome);
+            Descrizione.setText(descrizione);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -211,65 +281,4 @@ public class HomeFragment extends Fragment {
         binding = null;
         provider = null;
     }
-
-    private void loadTesi() {
-            tesiRef.whereEqualTo("relatore", currentUser.getDisplayName())
-                    .limit(3)
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            int counter=0;
-                            CardView cardView;
-                            ImageView img;
-                            TextView Titolo;
-                            TextView Descrizione;
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                switch (counter) {
-                                    case 0:
-                                        cardView = binding.card1;
-                                        cardView.setVisibility(View.VISIBLE);
-                                        img = binding.img1;
-                                        Titolo = binding.NomeTesi1;
-                                        Descrizione = binding.DescrizioneTesi1;
-                                        break;
-                                    case 1:
-                                        cardView = binding.card2;
-                                        cardView.setVisibility(View.VISIBLE);
-                                        img = binding.img2;
-                                        Titolo = binding.NomeTesi2;
-                                        Descrizione = binding.DescrizioneTesi2;
-                                        break;
-                                    case 2:
-                                        cardView = binding.card3;
-                                        cardView.setVisibility(View.VISIBLE);
-                                        img = binding.img3;
-                                        Titolo = binding.NomeTesi3;
-                                        Descrizione = binding.DescrizioneTesi3;
-                                        break;
-                                    default:
-                                        img = binding.img1;
-                                        Titolo = binding.NomeTesi1;
-                                        Descrizione = binding.DescrizioneTesi1;
-                                        break;
-                                }
-                                Tesi tesi = documentSnapshot.toObject(Tesi.class);
-                                tesi.setId_tesi(documentSnapshot.getId());
-
-                                String nome = tesi.getNome_tesi();
-                                String descrizione = tesi.getDescrizione();
-
-                                counter++;
-                                img.setImageResource(R.drawable.add);
-                                Titolo.setText(nome);
-                                Descrizione.setText(descrizione);
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getContext(),"ERROR",Toast.LENGTH_SHORT);
-                        }
-                    });
-        }
-    }
+}

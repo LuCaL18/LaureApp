@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/logo_fragment">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -49,6 +49,9 @@
         android:id="@+id/nav_lista_task"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment"
         android:label="ListaTask" >
+        <action
+            android:id="@+id/action_nav_lista_task_to_nav_new_task"
+            app:destination="@id/nav_new_task" />
     </fragment>
     <fragment
         android:id="@+id/nav_visualizza_task"
@@ -68,7 +71,11 @@
         android:id="@+id/nav_classifica_tesi"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment"
         android:label="@string/classifica_tesi"
-        tools:layout="@layout/fragment_classifica_tesi" />
+        tools:layout="@layout/fragment_classifica_tesi" >
+        <action
+            android:id="@+id/action_nav_classifica_tesi_to_visualizeTesiFragment"
+            app:destination="@id/visualizeTesiFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.chat.ChatFragment"
@@ -104,6 +111,9 @@
         <action
             android:id="@+id/action_visualizeTesiFragment_to_ticketFragment"
             app:destination="@id/ticketFragment" />
+        <action
+            android:id="@+id/action_visualizeTesiFragment_to_nav_lista_task"
+            app:destination="@id/nav_lista_task" />
     </fragment>
     <fragment
         android:id="@+id/nav_bookingListFragment"

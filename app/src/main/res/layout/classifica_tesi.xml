@@ -42,7 +42,7 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/visualizzaTesi2"
+                android:id="@+id/visualizza_Tesi_classifica"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@android:drawable/ic_menu_view"

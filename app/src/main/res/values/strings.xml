@@ -257,7 +257,7 @@
     <string name="there_are_no_assigned_tasks">There are no assigned tasks</string>
     <string name="task_graph">Task: \n%s</string>
 
-    <string name="tempistiche">TEMPISTICHE</string>
+    <string name="tempistiche">Timeline</string>
     <string name="mesi_2"><![CDATA[<2 mesi]]></string>
     <string name="mesi_3"><![CDATA[<3 mesi]]></string>
     <string name="mesi_4"><![CDATA[<4 mesi]]></string>
@@ -265,6 +265,26 @@
     <string name="salva">Salva</string>
     <string name="meetings">Meetings</string>
     <string name="unable_add_favorite">Unable to add the thesis to the ranking</string>
+    <string name="weeks">weeks</string>
+    <string name="add_task">Add task</string>
+    <string name="list_task">List tasks</string>
+    <string name="calendar">Calendar</string>
+    <string name="click_to_add_task">Click to add task</string>
+    <string name="click_to_list_task">Click to view list of tasks</string>
+    <string name="click_to_calendar_tesi">Click to view calendar</string>
+    <string name="verify_email">Verify email</string>
+    <string name="email_not_found">Email not found</string>
+    <string name="relator_already_inserted">Relator already inserted</string>
+    <string name="change_email">Change email</string>
+    <string name="no_permissions">no permissions</string>
+    <string name="title_dialog_delete_relator">Delete relator</string>
+    <string name="title_dialog_delete_student">Delete student</string>
+    <string name="message_dialog_delete_relator">Are you sure you want to delete the relator <b>%s</b></string>
+    <string name="message_dialog_delete_student">Are you sure you want to delete the student <b>%s</b></string>
+    <string name="required_skills_and_competences">Required skills and competences</string>
+    <string name="requested_grade_average">Requested grade average</string>
+    <string name="timeline_value_weeks">%s weeks</string>
+    <string name="es_programming_in_java">ES. Programming in java...</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">

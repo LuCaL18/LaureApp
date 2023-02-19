@@ -111,10 +111,6 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     boolean isSelected;
                     switch (item.getItemId()) {
-                        case NEW_TASK:
-                            navController.navigate(R.id.nav_new_task);
-                            isSelected = true;
-                            break;
                         case LISTA_TASK:
                             navController.navigate(R.id.nav_lista_task);
                             isSelected = true;

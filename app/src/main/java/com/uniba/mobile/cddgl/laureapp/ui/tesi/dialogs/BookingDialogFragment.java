@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogueMessages;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,9 +22,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.BookingConstraints;
-import com.uniba.mobile.cddgl.laureapp.data.BookingState;
 import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
-import com.uniba.mobile.cddgl.laureapp.data.TicketState;
 import com.uniba.mobile.cddgl.laureapp.data.model.Booking;
 import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
 

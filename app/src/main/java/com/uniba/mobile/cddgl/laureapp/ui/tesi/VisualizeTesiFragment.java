@@ -3,8 +3,11 @@ package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 import static android.app.Activity.RESULT_OK;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_INTERNET_PERMISSION;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_READ_EXTERNAL_STORAGE;
+import static com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment.LIST_TASK_PERMISSION_CREATE;
+import static com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment.LIST_TASK_TESI_KEY;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -48,8 +51,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -58,17 +64,21 @@ import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.DownloadedFile;
+import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.TicketState;
+import com.uniba.mobile.cddgl.laureapp.data.model.ChatData;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
 import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.DocumentAdapter;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.RelatorsAdapter;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogueMessages.BookingDialogFragment;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogueMessages.QRCodeDialogFragment;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogueMessages.UploadFileDialogFragment;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.BookingDialogFragment;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.CoRelatoreDialoog;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.ConstraintsDialog;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.QRCodeDialogFragment;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.UploadFileDialogFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 
@@ -86,6 +96,8 @@ public class VisualizeTesiFragment extends Fragment {
     private static final int QR_CODE_THESIS = R.id.qr_thesis;
     private static final int FAVORITE_THESIS = R.id.favorite_thesis;
     private static final int ADD_TICKET_THESIS = R.id.add_ticket_thesis;
+    private static final int LIST_TASK_THESIS = R.id.list_task;
+    private static final int CALENDAR_THESIS = R.id.tesi_calendar;
 
     private BottomNavigationView navBar;
     private MenuProvider providerMenu;
@@ -99,6 +111,8 @@ public class VisualizeTesiFragment extends Fragment {
     private ActivityResultLauncher<Intent> pickFileLauncher;
     private Menu menuTesi;
     private boolean isFavourite;
+    private RecyclerView recyclerViewRelators;
+    private RelatorsAdapter relatorsAdapter;
 
     public VisualizeTesiFragment() {
         // Required empty public constructor
@@ -128,19 +142,13 @@ public class VisualizeTesiFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_visualize_tesi, container, false);
 
-        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.setTitle(thesis.getNome_tesi());
-        }
-
         if (thesis.getImageTesi() != null) {
             ImageView imageTesi = root.findViewById(R.id.iv_thesis_image);
             Glide.with(this).load(thesis.getImageTesi()).into(imageTesi);
         }
 
         TextView title = root.findViewById(R.id.tv_thesis_title);
-        title.setText(thesis.getNome_tesi());
+        title.setText(thesis.getNomeTesi());
 
         TextView description = root.findViewById(R.id.tv_thesis_desc);
         description.setText(thesis.getDescrizione());
@@ -151,10 +159,10 @@ public class VisualizeTesiFragment extends Fragment {
         ImageView cvProfArrow = root.findViewById(R.id.arrow_image_view);
 
         TextView tvNameProfessor = root.findViewById(R.id.tv_prof_display_name);
-        tvNameProfessor.setText(thesis.getProfessor().getDisplayName());
+        tvNameProfessor.setText(thesis.getRelatore().getDisplayName());
 
         TextView tvEmailProfessor = root.findViewById(R.id.tv_prof_email);
-        tvEmailProfessor.setText(thesis.getProfessor().getEmail());
+        tvEmailProfessor.setText(thesis.getRelatore().getEmail());
 
         cardProfessor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,14 +179,14 @@ public class VisualizeTesiFragment extends Fragment {
 
         //SET CARD RELATORS
         MaterialCardView relatorsCard = root.findViewById(R.id.card_relators);
-        RecyclerView recyclerViewRelators = root.findViewById(R.id.recycler_relators);
+        recyclerViewRelators = root.findViewById(R.id.recycler_relators);
         ImageView relatorsArrowCard = root.findViewById(R.id.arrow_image_card_relators);
 
-        RelatorsAdapter relatorsAdapter = new RelatorsAdapter(thesis.getCo_relatori());
+        relatorsAdapter = new RelatorsAdapter(thesis.getCoRelatori(), false, this);
         recyclerViewRelators.setAdapter(relatorsAdapter);
         recyclerViewRelators.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (thesis.getCo_relatori().isEmpty()) {
+        if (thesis.getCoRelatori() == null || thesis.getCoRelatori().isEmpty()) {
             relatorsCard.setVisibility(View.GONE);
         }
 
@@ -203,13 +211,14 @@ public class VisualizeTesiFragment extends Fragment {
         LinearLayout constraintsInfoLl = root.findViewById(R.id.ll_card_constraints_info);
 
         TextView timelineTextView = root.findViewById(R.id.tv_constraint_timelines);
-        timelineTextView.setText(thesis.getTempistiche());
+        timelineTextView.setText(thesis.getTempistiche() + " " + getString(R.string.weeks));
 
         TextView averageTextView = root.findViewById(R.id.tv_constraint_average);
-        averageTextView.setText(thesis.getMediaVoto());
+        averageTextView.setText(String.valueOf(thesis.getMediaVoto()));
 
         TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
-        examTextView.setText(thesis.getEsami());
+        String esami = String.join(", ", thesis.getEsami());
+        examTextView.setText(esami);
 
         TextView skillsTextView = root.findViewById(R.id.tv_constraint_skills);
         skillsTextView.setText(thesis.getSkill());
@@ -238,7 +247,7 @@ public class VisualizeTesiFragment extends Fragment {
         recyclerViewDocuments.setAdapter(documentAdapter);
         recyclerViewDocuments.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (thesis.getDocuments().isEmpty()) {
+        if (thesis.getDocuments() == null || thesis.getDocuments().isEmpty()) {
             documentsCard.setVisibility(View.GONE);
         }
 
@@ -322,7 +331,7 @@ public class VisualizeTesiFragment extends Fragment {
             BookingDialogFragment bookingDialogFragment = new BookingDialogFragment(
                     mainViewModel.getIdUser(),
                     user.getEmail(), user.getName(), user.getSurname(),
-                    thesis.getProfessor().getId(), thesis.getId(), thesis.getNome_tesi()
+                    thesis.getRelatore().getId(), thesis.getId(), thesis.getNomeTesi()
             );
 
             bookingDialogFragment.show(getParentFragmentManager(), "BookingDialogFragment");
@@ -382,10 +391,17 @@ public class VisualizeTesiFragment extends Fragment {
                     return;
                 }
 
-                if (thesis.getProfessor().getId().equals(loggedInUser.getId())) {
+                int menuToVisualize = R.menu.app_bar_visualize_tesi;
+
+                if (thesis.getRelatore().getId().equals(loggedInUser.getId())) {
+
+                    menuToVisualize = R.menu.app_bar_visualize_thesis_prof;
 
                     setCardDocumentsCreator();
                     setNotesText();
+                    setCardCoRelatorsCreator();
+                    setCardConstraintsCreator();
+                    setCardStudentCreator();
 
                     Button editImage = root.findViewById(R.id.edit_image_tesi_button);
                     editImage.setVisibility(View.VISIBLE);
@@ -397,9 +413,9 @@ public class VisualizeTesiFragment extends Fragment {
                     //TODO: gestire anche modifica vincoli e modifica relatori
                 }
 
-                if (loggedInUser.getRole().equals(RoleUser.STUDENT)) {
+                if (loggedInUser.getRole().equals(RoleUser.STUDENT) && (thesis.getStudent() == null || !thesis.getStudent().getId().equals(loggedInUser.getId()))) {
 
-                    if (!thesis.getAssigned()) {
+                    if (!thesis.getIsAssigned()) {
                         root.findViewById(R.id.btn_book).setVisibility(View.VISIBLE);
                     }
 
@@ -417,19 +433,16 @@ public class VisualizeTesiFragment extends Fragment {
                                     }
                                 }
                             });
+                } else if (thesis.getStudent() != null && thesis.getStudent().getId().equals(loggedInUser.getId())) {
+                    menuToVisualize = R.menu.app_bar_visualize_thesis_prof;
                 }
 
+                int finalMenuToVisualize = menuToVisualize;
                 providerMenu = new MenuProvider() {
                     @Override
                     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                         menu.clear();
-
-                        if (mainViewModel.getUser().getValue().getRole().equals(RoleUser.STUDENT)) {
-                            menuInflater.inflate(R.menu.app_bar_visualize_tesi, menu);
-                        } else {
-                            menuInflater.inflate(R.menu.app_bar_visualize_thesis_prof, menu);
-                        }
-
+                        menuInflater.inflate(finalMenuToVisualize, menu);
                         menuTesi = menu;
                     }
 
@@ -439,7 +452,7 @@ public class VisualizeTesiFragment extends Fragment {
                             case VisualizeTesiFragment.FAVORITE_THESIS:
                                 return switchFavouriteThesis(menuItem);
                             case VisualizeTesiFragment.ADD_TICKET_THESIS:
-                                Ticket ticket = new Ticket(mainViewModel.getIdUser(), thesis.getProfessor().getId(), thesis.getId(), thesis.getNome_tesi(), TicketState.NEW);
+                                Ticket ticket = new Ticket(mainViewModel.getIdUser(), thesis.getRelatore().getId(), thesis.getId(), thesis.getNomeTesi(), TicketState.NEW);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(TicketFragment.TICKET_KEY, (Serializable) ticket);
                                 navController.navigate(R.id.action_visualizeTesiFragment_to_ticketFragment, bundle);
@@ -462,6 +475,19 @@ public class VisualizeTesiFragment extends Fragment {
                                 }
                                 dialogFragment.show(getParentFragmentManager(), "QRCodeDialogFragment");
                                 return true;
+                            case VisualizeTesiFragment.LIST_TASK_THESIS:
+                                Bundle bundleTask = new Bundle();
+                                bundleTask.putString(LIST_TASK_TESI_KEY, thesis.getId());
+
+                                boolean permissionCreateTask = (thesis.getRelatore().getId().equals(loggedInUser.getId()) ||
+                                        thesis.getCoRelatori().contains(new PersonaTesi(loggedInUser.getId())));
+                                bundleTask.putString(LIST_TASK_PERMISSION_CREATE, String.valueOf(permissionCreateTask));
+
+                                navController.navigate(R.id.action_visualizeTesiFragment_to_nav_lista_task, bundleTask);
+                                return true;
+                            case VisualizeTesiFragment.CALENDAR_THESIS:
+                                // TODO: collegamento con calendario
+                                return true;
                             default:
                                 return false;
                         }
@@ -469,23 +495,6 @@ public class VisualizeTesiFragment extends Fragment {
                 };
 
                 requireActivity().addMenuProvider(providerMenu);
-            }
-        });
-
-        thesisViewModel.getThesis().observe(getViewLifecycleOwner(), tesi -> {
-            if (tesi == null) {
-                return;
-            }
-
-            if (!tesi.getDocuments().equals(thesis.getDocuments())) {
-
-                thesis.setDocuments(tesi.getDocuments());
-                documentAdapter.setDocuments(thesis.getDocuments());
-
-                Map<String, Object> updates = new HashMap<>();
-
-                updates.put("documents", tesi.getDocuments());
-                updateDataThesis(updates);
             }
         });
 
@@ -504,6 +513,12 @@ public class VisualizeTesiFragment extends Fragment {
         super.onResume();
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
+
+        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle(thesis.getNomeTesi());
+        }
     }
 
     private void setCardDocumentsCreator() {
@@ -518,14 +533,16 @@ public class VisualizeTesiFragment extends Fragment {
         documentsArrowCard.setClickable(true);
 
         documentAdapter = null;
-        documentAdapter = new DocumentAdapter(getContext(), thesis.getDocuments(), thesis.getId(), thesisViewModel, true);
+        documentAdapter = new DocumentAdapter(this, thesis.getDocuments(), thesis.getId(), thesisViewModel, true);
         recyclerViewDocuments.setAdapter(documentAdapter);
         recyclerViewDocuments.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        VisualizeTesiFragment requestFragment = this;
 
         documentsArrowCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UploadFileDialogFragment uploadFileDialogFragment = new UploadFileDialogFragment(thesis);
+                UploadFileDialogFragment uploadFileDialogFragment = new UploadFileDialogFragment(thesis, requestFragment);
 
                 uploadFileDialogFragment.show(getParentFragmentManager(), "UploadFileDialogFragment");
             }
@@ -583,15 +600,13 @@ public class VisualizeTesiFragment extends Fragment {
             public void onClick(View v) {
                 String notes = editTextNotes.getText().toString();
                 Map<String, Object> updates = new HashMap<>();
-                updates.put("notes", notes);
-                firestore.collection("thesis").document(thesis.getId()).update(updates)
+                updates.put("note", notes);
+                firestore.collection("tesi").document(thesis.getId()).update(updates)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 textViewNotes.setText(notes);
                                 thesis.setNote(notes);
-
-                                thesisViewModel.getThesis().setValue(thesis);
                                 isEditing = false;
                                 textViewNotes.setVisibility(View.VISIBLE);
                                 editTextNotes.setVisibility(View.GONE);
@@ -701,7 +716,10 @@ public class VisualizeTesiFragment extends Fragment {
                             ImageView imageTesi = root.findViewById(R.id.iv_thesis_image);
                             Glide.with(getContext()).load(thesis.getImageTesi()).into(imageTesi);
 
-                            thesisViewModel.getThesis().setValue(thesis);
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("imageTesi", thesis.getImageTesi());
+
+                            updateDataThesis(updates);
                         });
 
                     }
@@ -762,16 +780,230 @@ public class VisualizeTesiFragment extends Fragment {
                 newTesiList.add(thesis.getId());
                 classificaDocument.set(new TesiClassifica(mainViewModel.getIdUser(), newTesiList))
                         .addOnCompleteListener(task -> {
-                           if(task.isSuccessful()) {
-                               menuItem.setIcon(R.drawable.ic_favorite_24dp);
-                               isFavourite = true;
-                           } else {
-                               showSaveToast(R.string.unable_add_favorite);
-                           }
+                            if (task.isSuccessful()) {
+                                menuItem.setIcon(R.drawable.ic_favorite_24dp);
+                                isFavourite = true;
+                            } else {
+                                showSaveToast(R.string.unable_add_favorite);
+                            }
                         });
             }
         });
         return true;
+    }
+
+    private void setCardCoRelatorsCreator() {
+        MaterialCardView relatorsCard = root.findViewById(R.id.card_relators);
+        relatorsCard.setVisibility(View.VISIBLE);
+
+        recyclerViewRelators.setVisibility(View.VISIBLE);
+
+        relatorsAdapter = null;
+        relatorsAdapter = new RelatorsAdapter(thesis.getCoRelatori(), true, this);
+        recyclerViewRelators.setAdapter(relatorsAdapter);
+
+        ImageView relatorsArrowCard = root.findViewById(R.id.arrow_image_card_relators);
+        relatorsArrowCard.setImageResource(R.drawable.ic_baseline_add_box_24);
+        relatorsArrowCard.setClickable(true);
+
+        VisualizeTesiFragment requireFragment = this;
+
+        relatorsArrowCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final View relatorePopup = getLayoutInflater().inflate(R.layout.popup_relatore, null);
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+                dialogBuilder.setView(relatorePopup);
+                AlertDialog dialog = dialogBuilder.create();
+
+                CoRelatoreDialoog coRelatoreDialoog = new CoRelatoreDialoog(dialog, relatorePopup, thesis.getCoRelatori(), requireFragment);
+                coRelatoreDialoog.show();
+            }
+        });
+
+
+    }
+
+    private void setCardConstraintsCreator() {
+        MaterialCardView constraintsCard = root.findViewById(R.id.card_constraints);
+
+        ImageView constraintsArrowCard = root.findViewById(R.id.arrow_image_card_constraints);
+        constraintsArrowCard.setImageResource(R.drawable.ic_baseline_edit_note_24);
+        constraintsArrowCard.setClickable(true);
+
+        LinearLayout constraintsInfoLl = root.findViewById(R.id.ll_card_constraints_info);
+        constraintsInfoLl.setVisibility(View.VISIBLE);
+
+        constraintsCard.setOnClickListener(view -> constraintsInfoLl.setVisibility(constraintsInfoLl.getVisibility() == View.GONE ? View.VISIBLE : View.GONE));
+
+        VisualizeTesiFragment requireFragment = this;
+
+        constraintsArrowCard.setOnClickListener(view -> {
+            final View vincoliPopup = getLayoutInflater().inflate(R.layout.popup_edit_constraints, null);
+
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+            dialogBuilder.setView(vincoliPopup);
+            AlertDialog dialog = dialogBuilder.create();
+
+            ConstraintsDialog constraintsDialog = new ConstraintsDialog(dialog, vincoliPopup, requireFragment, thesis);
+            constraintsDialog.show();
+        });
+    }
+
+    private void setCardStudentCreator() {
+        MaterialCardView cardStudent = root.findViewById(R.id.cv_student);
+
+        ImageView cvStudentArrow = root.findViewById(R.id.arrow_image_view_student);
+        cvStudentArrow.setImageResource(R.drawable.ic_baseline_delete_24);
+        cvStudentArrow.setClickable(true);
+
+        cvStudentArrow.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(getContext().getString(R.string.title_dialog_delete_student));
+            builder.setMessage(getContext().getString(R.string.message_dialog_delete_student, thesis.getStudent().getDisplayName()));
+            builder.setPositiveButton(getContext().getString(R.string.yes_text), (dialog, which) -> deleteStudent());
+            builder.setNegativeButton(getContext().getString(R.string.no_text), null);
+            builder.create().show();
+        });
+
+        LinearLayout cvStudentLayout = root.findViewById(R.id.ll_card_student_info);
+        cvStudentLayout.setVisibility(View.VISIBLE);
+
+        cardStudent.setOnClickListener(view -> cvStudentLayout.setVisibility(cvStudentLayout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE));
+    }
+
+    public void addCoRelator(PersonaTesi coRelator) {
+        thesis.getCoRelatori().add(coRelator);
+        relatorsAdapter.setRelators(thesis.getCoRelatori());
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("coRelatori", thesis.getCoRelatori());
+        updateDataThesis(updates);
+
+        DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(thesis.getId());
+
+        chatRef.get().addOnCompleteListener(taskChat -> {
+            if(taskChat.isSuccessful()) {
+                DocumentSnapshot result = taskChat.getResult();
+                ChatData chat = result.toObject(ChatData.class);
+
+                chat.getMembers().add(coRelator.getId());
+
+                Map<String, Object> updatesChat = new HashMap<>();
+                updatesChat.put("members", chat.getMembers());
+
+                chatRef.update(updatesChat);
+            }
+        });
+    }
+
+    public void removeCoRelator(PersonaTesi coRelator) {
+        thesis.getCoRelatori().remove(coRelator);
+        relatorsAdapter.setRelators(thesis.getCoRelatori());
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("coRelatori", thesis.getCoRelatori());
+        updateDataThesis(updates);
+
+        DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(thesis.getId());
+
+        chatRef.get().addOnCompleteListener(taskChat -> {
+            if(taskChat.isSuccessful()) {
+                DocumentSnapshot result = taskChat.getResult();
+                ChatData chat = result.toObject(ChatData.class);
+
+                chat.getMembers().remove(coRelator.getId());
+
+                Map<String, Object> updatesChat = new HashMap<>();
+                updatesChat.put("members", chat.getMembers());
+
+                chatRef.update(updatesChat);
+            }
+        });
+    }
+
+    public void addDocument(String document) {
+        thesis.getDocuments().add(document);
+        documentAdapter.setDocuments(thesis.getDocuments());
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("documents", thesis.getDocuments());
+
+        updateDataThesis(updates);
+    }
+
+    public void removeDocument(String document) {
+        thesis.getDocuments().remove(document);
+        documentAdapter.setDocuments(thesis.getDocuments());
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("documents", thesis.getDocuments());
+
+        updateDataThesis(updates);
+    }
+
+    public void updateConstraints(int tempistiche, float mediaVoto, List<String> esamiNecessari, String skills) {
+        thesis.setTempistiche(tempistiche);
+        TextView timelineTextView = root.findViewById(R.id.tv_constraint_timelines);
+        timelineTextView.setText(thesis.getTempistiche() + " " + getString(R.string.weeks));
+
+        thesis.setMediaVoto(mediaVoto);
+        TextView averageTextView = root.findViewById(R.id.tv_constraint_average);
+        averageTextView.setText(String.valueOf(thesis.getMediaVoto()));
+
+        thesis.setSkill(skills);
+        TextView skillsTextView = root.findViewById(R.id.tv_constraint_skills);
+        skillsTextView.setText(thesis.getSkill());
+
+        //TODO: aggiungere modifica esami
+//        thesis.setEsami(esamiNecessari);
+//        TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
+//        String esami = String.join(", ", thesis.getEsami());
+//        examTextView.setText(esami);
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("tempistiche", thesis.getTempistiche());
+        updates.put("mediaVoto", thesis.getMediaVoto());
+        updates.put("skill", thesis.getSkill());
+//        updates.put("tempistiche", thesis.getTempistiche());
+
+        updateDataThesis(updates);
+    }
+
+    private void deleteStudent() {
+        thesis.setIsAssigned(false);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference tesiReference = db.collection("tesi").document(thesis.getId());
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("student", null);
+        updates.put("isAssigned", false);
+
+        tesiReference.update(updates).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                MaterialCardView cardStudent = root.findViewById(R.id.cv_student);
+                cardStudent.setVisibility(View.GONE);
+
+                DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(thesis.getId());
+
+                chatRef.get().addOnCompleteListener(taskChat -> {
+                    if(taskChat.isSuccessful()) {
+                        DocumentSnapshot result = taskChat.getResult();
+                        ChatData chat = result.toObject(ChatData.class);
+
+                        chat.getMembers().remove(thesis.getStudent().getId());
+
+                        Map<String, Object> updatesChat = new HashMap<>();
+                        updatesChat.put("members", chat.getMembers());
+
+                        chatRef.update(updatesChat);
+                    }
+                });
+                thesis.setStudent(null);
+            }
+        });
     }
 
     @Override
@@ -781,12 +1013,26 @@ public class VisualizeTesiFragment extends Fragment {
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState != null && savedInstanceState.getSerializable(TESI_VISUALIZE) != null) {
+            thesis = (Tesi) savedInstanceState.getSerializable(TESI_VISUALIZE);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        thesisViewModel.getThesis().setValue(null);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         navBar.setVisibility(View.VISIBLE);
         requireActivity().removeMenuProvider(providerMenu);
         thesisViewModel.getThesis().removeObservers(getViewLifecycleOwner());
-        thesisViewModel.getThesis().setValue(null);
         navBar = null;
     }
 }

@@ -12,6 +12,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.data.model.ChatData;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
@@ -26,7 +29,7 @@ public class ChatViewModel extends ViewModel {
     @Nullable
     private String idChat;
 
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final FirebaseFirestore database = FirebaseFirestore.getInstance();
     private final ArrayList<LoggedInUser> membersTemp = new ArrayList<>();
 
     public ChatViewModel() {}
@@ -38,13 +41,13 @@ public class ChatViewModel extends ViewModel {
         }
         idChat = id;
 
-        DatabaseReference ref = database.getReference().child("chats").child(id);
-        ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        DocumentReference ref = database.collection("chats").document(id);
+        ref.get().addOnCompleteListener(new OnCompleteListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
+            public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
-                    DataSnapshot dataSnapshot = task.getResult();
-                    fetchData(dataSnapshot.getValue(ChatData.class));
+                    DocumentSnapshot result = (DocumentSnapshot) task.getResult();
+                    fetchData(result.toObject(ChatData.class));
                 }
             }
         });
@@ -58,15 +61,18 @@ public class ChatViewModel extends ViewModel {
         }
 
         nameChat = data.getName();
-        for (String member : data.getMembers().keySet()) {
-            DatabaseReference ref = database.getReference("users/" + member);
+        for (String member : data.getMembers()) {
+            DocumentReference ref = database.collection("users").document(member);
 
-            ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            ref.get().addOnCompleteListener(new OnCompleteListener() {
                 @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                public void onComplete(@NonNull Task task) {
                     if (task.isSuccessful()) {
-                        DataSnapshot dataSnapshot = task.getResult();
-                        membersTemp.add(dataSnapshot.getValue(LoggedInUser.class));
+                        DocumentSnapshot result = (DocumentSnapshot) task.getResult();
+
+                        if(result.exists()) {
+                            membersTemp.add(result.toObject(LoggedInUser.class));
+                        }
 
                         if(membersTemp.size() == data.getMembers().size()) {
                             members.setValue(membersTemp.toArray(new LoggedInUser[0]));

@@ -13,17 +13,19 @@ public class Task implements Serializable {
     private String nomeTask;
     private String scadenza;
     private TaskState stato;
+    private String idTesi;
 
     public Task() {
     }
 
-    public Task(String student, List<String> relators, String descrizione, String nomeTask, String scadenza, TaskState stato) {
+    public Task(String student, List<String> relators, String descrizione, String nomeTask, String scadenza, TaskState stato, String idTesi) {
         this.student = student;
         this.relators = relators;
         this.descrizione = descrizione;
         this.nomeTask = nomeTask;
         this.scadenza = scadenza;
         this.stato = stato;
+        this.idTesi = idTesi;
     }
 
     public String getStudent() {
@@ -72,5 +74,26 @@ public class Task implements Serializable {
 
     public void setStato(TaskState stato) {
         this.stato = stato;
+    }
+
+    public String getIdTesi() {
+        return idTesi;
+    }
+
+    public void setIdTesi(String idTesi) {
+        this.idTesi = idTesi;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "student='" + student + '\'' +
+                ", relators=" + relators +
+                ", descrizione='" + descrizione + '\'' +
+                ", nomeTask='" + nomeTask + '\'' +
+                ", scadenza='" + scadenza + '\'' +
+                ", stato=" + stato +
+                ", idTesi='" + idTesi + '\'' +
+                '}';
     }
 }

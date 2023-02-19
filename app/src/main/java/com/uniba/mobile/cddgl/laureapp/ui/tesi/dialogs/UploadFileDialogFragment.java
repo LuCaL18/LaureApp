@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogueMessages;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -27,9 +27,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
 
 public class UploadFileDialogFragment extends DialogFragment {
@@ -38,11 +38,13 @@ public class UploadFileDialogFragment extends DialogFragment {
 
     private ActivityResultLauncher<Intent> pickFileLauncher;
     private Tesi tesi;
+    private VisualizeTesiFragment tesiFragment;
 
     public UploadFileDialogFragment() {}
 
-    public UploadFileDialogFragment(Tesi tesi) {
+    public UploadFileDialogFragment(Tesi tesi, VisualizeTesiFragment tesiFragment) {
         this.tesi = tesi;
+        this.tesiFragment = tesiFragment;
     }
 
     @Override
@@ -140,9 +142,7 @@ public class UploadFileDialogFragment extends DialogFragment {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         showSaveToast(R.string.file_saved_with_success);
 
-                        VisualizeThesisViewModel thesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
-                        tesi.getDocuments().add(title);
-                        thesisViewModel.getThesis().setValue(tesi);
+                        tesiFragment.addDocument(title);
                         getDialog().dismiss();
                     }
                 })

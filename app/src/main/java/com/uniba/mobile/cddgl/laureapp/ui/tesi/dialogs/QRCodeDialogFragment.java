@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogueMessages;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs;
 
 import static android.app.Activity.RESULT_OK;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_WRITE_STORAGE_PERMISSION;
@@ -54,8 +54,9 @@ public class QRCodeDialogFragment extends DialogFragment {
 
         shareContent = new ShareContent(getContext());
         qrCode = shareContent.generateQRCode(getString(R.string.data_shared_data,
-                tesi.getNome_tesi(), tesi.getDescrizione(), tesi.getProfessor().getDisplayName(), tesi.getTempistiche(),
-                tesi.getMediaVoto(), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
+                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getRelatore().getDisplayName(),
+                tesi.getTempistiche() + " " + getString(R.string.weeks),
+                String.valueOf(tesi.getMediaVoto()), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
 
         imageViewQRCode.setImageBitmap(qrCode);
 

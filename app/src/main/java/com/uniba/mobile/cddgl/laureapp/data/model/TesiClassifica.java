@@ -32,6 +32,14 @@ public class TesiClassifica implements Serializable {
         this.tesi = tesi;
     }
 
+    public void addTesi(String idTesi) {
+        tesi.add(idTesi);
+    }
+
+    public void removeTesi(String idTesi) {
+        tesi.remove(idTesi);
+    }
+
     @Override
     public String toString() {
         return "TesiClassifica{" +

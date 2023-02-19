@@ -15,16 +15,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/text_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:layout_marginStart="30dp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_green"
-            android:textSize="25sp" />
-
-        <TextView
             android:id="@+id/mostra_tesi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,7 +111,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:textSize="25dp"
+                            android:textSize="25sp"
                             android:textStyle="bold"
                             android:textAlignment="center"
                             android:textColor="@color/white"
@@ -187,25 +177,13 @@
         </HorizontalScrollView>
 
         <TextView
-            android:id="@+id/task_creati"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/task_creati"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_green"
-            android:textSize="25sp"
-            />
-
-        <TextView
             android:id="@+id/text_task_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/task"
             android:textColor="?attr/colorPrimary"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView

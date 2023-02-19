@@ -30,14 +30,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.BookingConstraints;
 import com.uniba.mobile.cddgl.laureapp.data.BookingState;
 import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
+import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Booking;
+import com.uniba.mobile.cddgl.laureapp.data.model.ChatData;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
@@ -344,7 +348,7 @@ public class BookingFragment extends Fragment {
 
             Map<String, Object> updates = new HashMap<>();
             updates.put("isAssigned", true);
-            updates.put("student", booking.getStudentId());
+            updates.put("student", new PersonaTesi(booking.getStudentId(), booking.getNameStudent() + " " + booking.getSurnameStudent(), booking.getEmailStudent(), null));
 
             CollectionReference thesisCollection = FirebaseFirestore.getInstance().collection("tesi");
             thesisCollection.document(booking.getIdThesis()).update(updates).addOnCompleteListener(task -> {
@@ -382,8 +386,21 @@ public class BookingFragment extends Fragment {
     }
 
     private void addStudentToChat() {
-        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("chats").child(booking.getIdThesis());
-        chatRef.child("members").child(booking.getStudentId()).setValue(true);
+        DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(booking.getIdThesis());
+
+        chatRef.get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                DocumentSnapshot result = task.getResult();
+                ChatData chat = result.toObject(ChatData.class);
+
+                chat.getMembers().add(booking.getStudentId());
+
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("members", chat.getMembers());
+
+                chatRef.update(updates);
+            }
+        });
     }
 
     @Override

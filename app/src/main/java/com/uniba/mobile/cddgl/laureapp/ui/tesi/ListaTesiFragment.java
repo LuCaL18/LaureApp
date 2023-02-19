@@ -32,6 +32,7 @@ public class ListaTesiFragment extends Fragment {
     private ListAdapterTesi adapter;
     private List<Tesi> tesiList;
     private VisualizeThesisViewModel visualizeThesisViewModel;
+    private Query query;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,11 +43,11 @@ public class ListaTesiFragment extends Fragment {
 
         tesiList = new ArrayList<>();
 
-        adapter = new ListAdapterTesi(getActivity(), new ArrayList<>(), visualizeThesisViewModel);
+        adapter = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel);
         listView.setAdapter(adapter);
 
-        CollectionReference mCollection = (CollectionReference) FirebaseFirestore.getInstance().collection("tesi").orderBy("created_at", Query.Direction.DESCENDING);
-        mCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        query = FirebaseFirestore.getInstance().collection("tesi").orderBy("created_at", Query.Direction.DESCENDING);
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
@@ -77,6 +78,12 @@ public class ListaTesiFragment extends Fragment {
 
             navController.navigate(R.id.action_navigation_lista_tesi_to_visualizeTesiFragment);
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        query = null;
     }
 }
 

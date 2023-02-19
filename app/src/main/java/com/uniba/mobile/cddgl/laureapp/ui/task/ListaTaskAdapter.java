@@ -29,28 +29,11 @@ import java.util.List;
 public class ListaTaskAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final List<Task> mDataList;
-    private CollectionReference mCollectionRef;
+    private List<Task> mDataList;
 
-    public ListaTaskAdapter(Context context, CollectionReference ref) {
+    public ListaTaskAdapter(Context context, List<Task> list) {
         mContext = context;
-        mDataList = new ArrayList<>();
-        mCollectionRef = ref;
-        mCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e("FirebaseListAdapter", "Listen failed.", e);
-                    return;
-                }
-                mDataList.clear();
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    Task task = doc.toObject(Task.class);
-                    mDataList.add(task);
-                }
-                notifyDataSetChanged();
-            }
-        });
+        mDataList = list;
     }
 
     @Override
@@ -113,6 +96,15 @@ public class ListaTaskAdapter extends BaseAdapter {
             }
         });
         return convertView;
+    }
+
+    public List<Task> getmDataList() {
+        return mDataList;
+    }
+
+    public void setmDataList(List<Task> mDataList) {
+        this.mDataList = mDataList;
+        notifyDataSetChanged();
     }
 
     private static class ViewHolder {
