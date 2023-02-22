@@ -4,14 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,17 +21,12 @@ import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentHomeBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.home.menu.HomeMenu;
@@ -64,7 +56,7 @@ public class HomeFragment extends Fragment {
 
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        loadTesi();
+        // loadTesi();
            return root;
     }
 
@@ -206,8 +198,8 @@ public class HomeFragment extends Fragment {
         provider = null;
     }
 
-    private void loadTesi() {
-            tesiRef.whereEqualTo("professor.email", currentUser.getEmail())
+     /* private void loadTesi() {
+            tesiRef.whereEqualTo("relatore.email", currentUser.getEmail())
                     .limit(3)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -229,7 +221,7 @@ public class HomeFragment extends Fragment {
                                             @Override
                                             public void onClick(View v) {
                                             /**collegamento a tutte le tesi*/
-                                            }
+                                           /* }
                                         });
                                         cardView = binding.card1;
                                         cardView.setVisibility(View.VISIBLE);
@@ -275,5 +267,7 @@ public class HomeFragment extends Fragment {
                             Toast.makeText(getContext(),"ERROR",Toast.LENGTH_SHORT);
                         }
                     });
-        }
-    }
+    } */
+
+}
+

@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -19,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
@@ -39,6 +42,8 @@ public class ListaTesiFragment extends Fragment {
         navBar.setVisibility(View.INVISIBLE);
         dataList = new ArrayList<>();
         mCollection = FirebaseFirestore.getInstance().collection("tesi");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
         adapter = new ListAdapterTesi(getActivity(), mCollection);
         Log.d("ListaTesiFragment", "onCreateView() method called");
         listView.setAdapter(adapter);
@@ -52,7 +57,14 @@ public class ListaTesiFragment extends Fragment {
                 dataList.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Tesi tesi = doc.toObject(Tesi.class);
-                    dataList.add(tesi);
+                    List<PersonaTesi> coRelatoriList = tesi.getCoRelatori();
+                    for (PersonaTesi p : coRelatoriList) {
+                        if (p.getId().equals(userId)) {
+                            dataList.add(tesi);
+                        } else if (tesi.getRelatore().equals(userId)) {
+                            dataList.add(tesi);
+                        }
+                    }
                 }
                 Log.d("ListaTesiFragment", "onCreateView() method called");
                 adapter.notifyDataSetChanged();

@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_WRITE_STORAGE_PERMISSION;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,6 +47,7 @@ public class QRCodeDialogFragment extends DialogFragment {
         this.tesi = tesi;
     }
 
+    @SuppressLint("StringFormatMatches")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class QRCodeDialogFragment extends DialogFragment {
 
         shareContent = new ShareContent(getContext());
         qrCode = shareContent.generateQRCode(getString(R.string.data_shared_data,
-                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getProfessor().getDisplayName(), tesi.getTempistiche(),
+                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getRelatore().getDisplayName(), tesi.getTempistiche(),
                 tesi.getMediaVoto(), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
 
         imageViewQRCode.setImageBitmap(qrCode);

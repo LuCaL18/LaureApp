@@ -1,9 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
 import androidx.annotation.NonNull;
-
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -11,50 +9,63 @@ import java.util.UUID;
 
 public class Tesi implements Serializable, Cloneable {
 
-    private List<Task> listTask;
+    private List<String> listTask;
     private String id;
     private String nomeTesi;
     private String imageTesi;
-    private List<PersonaTesi> relatori;
-    private PersonaTesi professor;
+    private List<PersonaTesi> coRelatori;
+    private PersonaTesi relatore;
     private String descrizione;
-    private String ambito; //
-    private String chiave; //
+    private String ambito;
+    private List<String> chiavi;
     private String skill;
-    private String tempistiche; //
-    private String esami;
-    private int mediaVoto; //
+    private String tempistiche;
+    private List<String> esami;
+    private float mediaVoto;
     private List<String> documents;
     private PersonaTesi student;
     private Boolean isAssigned;
     private String note;
+    private long created_at;
 
-    public Tesi() {
-    }
+    public Tesi() {    }
 
-    public Tesi(String nomeTesi, List<PersonaTesi> relatori, PersonaTesi professor, String descrizione, String ambito, String chiave, String skill, String tempistiche, String esami, Integer mediaVoto, List<String> documents, Boolean isAssigned, String note) {
+    public Tesi(String nomeTesi, List<PersonaTesi> coRelatori, PersonaTesi relatore, String descrizione, String ambito, List<String> chiavi,
+                String skill, String tempistiche, List<String> esami, float mediaVoto,
+                List<String> documents, PersonaTesi student, String note) {
         this.id = UUID.randomUUID().toString();
         this.nomeTesi = nomeTesi;
-        this.relatori = relatori;
-        this.professor = professor;
+        this.coRelatori = coRelatori;
+        this.relatore = relatore;
         this.descrizione = descrizione;
         this.ambito = ambito;
-        this.chiave = chiave;
+        this.chiavi = chiavi;
         this.skill = skill;
         this.tempistiche = tempistiche;
         this.esami = esami;
         this.mediaVoto = mediaVoto;
         this.documents = documents;
-        this.isAssigned = isAssigned;
+        this.student = student;
         this.note = note;
+        isAssigned = false;
+        this.created_at = System.currentTimeMillis();
+
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public List<String> getListTask() {
+        return listTask;
+    }
+
+    public void setListTask(List<String> listTask) {
+        this.listTask = listTask;
     }
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNomeTesi() {
@@ -65,20 +76,28 @@ public class Tesi implements Serializable, Cloneable {
         this.nomeTesi = nomeTesi;
     }
 
-    public List<PersonaTesi> getRelatori() {
-        return relatori;
+    public String getImageTesi() {
+        return imageTesi;
     }
 
-    public void setRelatori(List<PersonaTesi> relatori) {
-        this.relatori = relatori;
+    public void setImageTesi(String imageTesi) {
+        this.imageTesi = imageTesi;
     }
 
-    public PersonaTesi getProfessor() {
-        return professor;
+    public List<PersonaTesi> getCoRelatori() {
+        return coRelatori;
     }
 
-    public void setProfessor(PersonaTesi professor) {
-        this.professor = professor;
+    public void setCoRelatori(List<PersonaTesi> coRelatori) {
+        this.coRelatori = coRelatori;
+    }
+
+    public PersonaTesi getRelatore() {
+        return relatore;
+    }
+
+    public void setRelatore(PersonaTesi relatore) {
+        this.relatore = relatore;
     }
 
     public String getDescrizione() {
@@ -97,12 +116,12 @@ public class Tesi implements Serializable, Cloneable {
         this.ambito = ambito;
     }
 
-    public String getChiave() {
-        return chiave;
+    public List<String> getChiavi() {
+        return chiavi;
     }
 
-    public void setChiave(String chiave) {
-        this.chiave = chiave;
+    public void setChiavi(List<String> chiavi) {
+        this.chiavi = chiavi;
     }
 
     public String getSkill() {
@@ -121,19 +140,19 @@ public class Tesi implements Serializable, Cloneable {
         this.tempistiche = tempistiche;
     }
 
-    public String getEsami() {
+    public List<String> getEsami() {
         return esami;
     }
 
-    public void setEsami(String esami) {
+    public void setEsami(List<String> esami) {
         this.esami = esami;
     }
 
-    public int getMediaVoto() {
+    public float getMediaVoto() {
         return mediaVoto;
     }
 
-    public void setMediaVoto(Integer mediaVoto) {
+    public void setMediaVoto(float mediaVoto) {
         this.mediaVoto = mediaVoto;
     }
 
@@ -169,34 +188,12 @@ public class Tesi implements Serializable, Cloneable {
         this.note = note;
     }
 
-    public String getImageTesi() {
-        return imageTesi;
+    public long getCreated_at() {
+        return created_at;
     }
 
-    public void setImageTesi(String imageTesi) {
-        this.imageTesi = imageTesi;
-    }
-
-    @Override
-    public String toString() {
-        return "Tesi{" +
-                "id='" + id + '\'' +
-                ", nomeTesi='" + nomeTesi + '\'' +
-                ", imageTesi='" + imageTesi + '\'' +
-                ", realatori=" + relatori +
-                ", professor=" + professor +
-                ", descrizione='" + descrizione + '\'' +
-                ", ambito='" + ambito + '\'' +
-                ", chiave='" + chiave + '\'' +
-                ", skill='" + skill + '\'' +
-                ", tempistiche='" + tempistiche + '\'' +
-                ", esami='" + esami + '\'' +
-                ", mediaVoto='" + mediaVoto + '\'' +
-                ", documents=" + documents +
-                ", student=" + student +
-                ", isAssigned=" + isAssigned +
-                ", note='" + note + '\'' +
-                '}';
+    public void setCreated_at(long created_at) {
+        this.created_at = created_at;
     }
 
     @NonNull
@@ -218,11 +215,4 @@ public class Tesi implements Serializable, Cloneable {
         return Objects.hash(id);
     }
 
-    public List<Task> getListTask() {
-        return listTask;
-    }
-
-    public void setListTask(List<Task> listTask) {
-        this.listTask = listTask;
-    }
 }

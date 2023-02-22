@@ -387,7 +387,7 @@ public class ClassificaTesiFragment extends Fragment {
                         Collections.sort(listaTesiOrdinata, new Comparator<Tesi>() {
                             @Override
                             public int compare(Tesi t1, Tesi t2) {
-                                return t1.getProfessor().getDisplayName().compareTo(t2.getProfessor().getDisplayName());
+                                return t1.getRelatore().getDisplayName().compareTo(t2.getRelatore().getDisplayName());
                             }
                         });
                         break;
@@ -395,7 +395,7 @@ public class ClassificaTesiFragment extends Fragment {
                         Collections.sort(listaTesiOrdinata, new Comparator<Tesi>() {
                             @Override
                             public int compare(Tesi t1, Tesi t2) {
-                                return t2.getProfessor().getDisplayName().compareTo(t1.getProfessor().getDisplayName());
+                                return t2.getRelatore().getDisplayName().compareTo(t1.getRelatore().getDisplayName());
                             }
                         });
                         break;
@@ -404,7 +404,7 @@ public class ClassificaTesiFragment extends Fragment {
                         sb.append("Ecco la mia classifica di tesi preferite: " + "\n");
                         for (Tesi tesi : listaTesiOrdinata) {
                             sb.append("Nome tesi: " + tesi.getNomeTesi() + "\n");
-                            sb.append("Professore: " + tesi.getProfessor().getDisplayName() + "\n");
+                            sb.append("Professore: " + tesi.getRelatore().getDisplayName() + "\n");
                         }
                         String message = sb.toString();
                         Intent intent = new Intent();
