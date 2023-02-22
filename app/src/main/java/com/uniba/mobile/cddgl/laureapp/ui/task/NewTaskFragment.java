@@ -46,6 +46,8 @@ public class NewTaskFragment extends Fragment {
     private EditText nometaskEditText,descrizioneEditText,scadenzaEditText;
     private Button addtaskButton;
     private CollectionReference tesiReference;
+    public List<Tesi> tesiBackup;
+    public List<PersonaTesi> personaBackup;
 
     public NewTaskFragment() {
         //
@@ -83,6 +85,8 @@ public class NewTaskFragment extends Fragment {
         // Seleziona le tesi in cui il campo relatore o correlatore corrisponde all'ID del relatore loggato
         List<String> tesiList = new ArrayList<>();
         List<Tesi> tesiList2 = new ArrayList<>();
+        tesiBackup = new ArrayList<>();
+        personaBackup = new ArrayList<>();
         tesiReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -98,12 +102,14 @@ public class NewTaskFragment extends Fragment {
                             if (p.getId().equals(relatoreId)) {
                                 tesiList.add(tesi.getNomeTesi());
                                 tesiList2.add(tesi);
+                                tesiBackup.add(tesi);
                             }
                         }
                     }
                     if (tesi.getRelatore().getId().equals(relatoreId)) {
                         tesiList.add(tesi.getNomeTesi());
                         tesiList2.add(tesi);
+                        tesiBackup.add(tesi);
                     }
                 }
                 Log.d("ListaTesiFragment", "onCreateView() method called");
@@ -118,6 +124,7 @@ public class NewTaskFragment extends Fragment {
                         String tesiNome = (String) parent.getItemAtPosition(position);
                         List<String> studentiList = new ArrayList<>();
                         List<PersonaTesi> studentiList2 = new ArrayList<>();
+                        personaBackup = studentiList2;
                         for (Tesi tesi : tesiList2) {
                             if (tesi.getNomeTesi().equals(tesiNome)) {
                                 // String tesiId = tesi.getId();
@@ -153,12 +160,28 @@ public class NewTaskFragment extends Fragment {
                     String descrizione = descrizioneEditText.getText().toString();
                     String scadenza = scadenzaEditText.getText().toString();
                     String stato = statoSpinner.getSelectedItem().toString();
+                    String tesi = tesiSpinner.getSelectedItem().toString();
+                    String studente = studenteSpinner.getSelectedItem().toString();
+                    String tesiId = null;
+                    String studenteId = null;
+                    for (Tesi t : tesiBackup) {
+                        if (t.getNomeTesi().equals(tesi)) {
+                            tesiId = t.getId();
+                        }
+                    }
+                    for (PersonaTesi p : personaBackup) {
+                        if (p.getDisplayName().equals(studente)) {
+                            studenteId = p.getId();
+                        }
+                    }
                     Map<String, Object> listaTask = new HashMap<>();
                     listaTask.put("nomeTask", nometask);
                     listaTask.put("stato", stato);
                     listaTask.put("descrizione", descrizione);
                     listaTask.put("scadenza", scadenza);
                     listaTask.put("relatore", relatoreId);
+                    listaTask.put("tesiId",tesiId);
+                    listaTask.put("studenteId",studenteId);
                     db.collection("task")
                             .add(listaTask)
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
