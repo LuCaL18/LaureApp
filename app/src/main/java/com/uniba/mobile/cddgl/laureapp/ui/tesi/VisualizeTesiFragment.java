@@ -470,6 +470,10 @@ public class VisualizeTesiFragment extends Fragment {
                         menu.clear();
                         menuInflater.inflate(finalMenuToVisualize, menu);
                         menuTesi = menu;
+
+                        if (isFavourite) {
+                            menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
+                        }
                     }
 
                     @Override
@@ -933,7 +937,7 @@ public class VisualizeTesiFragment extends Fragment {
         DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(thesis.getId());
 
         chatRef.get().addOnCompleteListener(taskChat -> {
-            if(taskChat.isSuccessful()) {
+            if (taskChat.isSuccessful()) {
                 DocumentSnapshot result = taskChat.getResult();
                 ChatData chat = result.toObject(ChatData.class);
 
@@ -958,7 +962,7 @@ public class VisualizeTesiFragment extends Fragment {
         DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(thesis.getId());
 
         chatRef.get().addOnCompleteListener(taskChat -> {
-            if(taskChat.isSuccessful()) {
+            if (taskChat.isSuccessful()) {
                 DocumentSnapshot result = taskChat.getResult();
                 ChatData chat = result.toObject(ChatData.class);
 
@@ -1055,7 +1059,7 @@ public class VisualizeTesiFragment extends Fragment {
                 DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(thesis.getId());
 
                 chatRef.get().addOnCompleteListener(taskChat -> {
-                    if(taskChat.isSuccessful()) {
+                    if (taskChat.isSuccessful()) {
                         DocumentSnapshot result = taskChat.getResult();
                         ChatData chat = result.toObject(ChatData.class);
 

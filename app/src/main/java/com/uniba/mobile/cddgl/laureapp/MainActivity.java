@@ -2,20 +2,28 @@ package com.uniba.mobile.cddgl.laureapp;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
@@ -53,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_WRITE_STORAGE_PERMISSION = 1;
     public static final int REQUEST_INTERNET_PERMISSION = 2;
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 3;
+    public static final int REQUEST_RECEIVE_PERMISSION = 4;
 
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
@@ -187,6 +196,47 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+        View view = super.onCreateView(name, context, attrs);
+
+        //only for the first time
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        boolean permissionRequestedBefore = sharedPref.getBoolean("permission_requested_before", false);
+            // Permission is not granted and has not been requested before
+            // Request the permission
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                if (!permissionRequestedBefore && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                            REQUEST_RECEIVE_PERMISSION);
+                }
+
+                // Store the flag indicating the permission has been requested
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("permission_requested_before", true);
+                editor.apply();
+
+            } else {
+                if (!permissionRequestedBefore && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NOTIFICATION_POLICY)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.ACCESS_NOTIFICATION_POLICY},
+                            REQUEST_RECEIVE_PERMISSION);
+                }
+
+                // Store the flag indicating the permission has been requested
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("permission_requested_before", true);
+                editor.apply();
+            }
+
+        return view;
     }
 
     @Override
