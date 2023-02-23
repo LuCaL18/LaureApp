@@ -11,8 +11,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
@@ -66,11 +67,11 @@ public class LoginViewModel extends ViewModel {
 
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
-                        DatabaseReference database = FirebaseDatabase.getInstance().getReference("users");
+                        CollectionReference database = FirebaseFirestore.getInstance().collection("users");
 
-                        database.child(user.getUid()).get().addOnCompleteListener(task1 -> {
+                        database.document(user.getUid()).get().addOnCompleteListener(task1 -> {
                             if(task1.isSuccessful()) {
-                                loginResult.setValue(new LoginResult((LoggedInUser) task1.getResult().getValue(LoggedInUser.class)));
+                                loginResult.setValue(new LoginResult((LoggedInUser) ((DocumentSnapshot) task1.getResult()).toObject(LoggedInUser.class)));
                             } else {
                                 loginResult.setValue(new LoginResult(new LoggedInUser(user.getEmail(), user.getDisplayName())));
                             }
@@ -134,10 +135,10 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void confirmRegistration(String id) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        CollectionReference myRef = database.collection("users");
 
-        myRef.child(id).setValue(currentLoggedUser).addOnCompleteListener(task -> {
+        myRef.document(id).set(currentLoggedUser).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 loginResult.setValue(new LoginResult(currentLoggedUser));
             } else {

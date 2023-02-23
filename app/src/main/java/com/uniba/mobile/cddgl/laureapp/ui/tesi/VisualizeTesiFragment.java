@@ -51,8 +51,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -78,6 +76,7 @@ import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.BookingDialogFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.CoRelatoreDialoog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.ConstraintsDialog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.QRCodeDialogFragment;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.SearchKeyDialog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.UploadFileDialogFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
@@ -323,6 +322,32 @@ public class VisualizeTesiFragment extends Fragment {
             cardStudent.setVisibility(View.GONE);
         }
 
+        //SET Card Key words
+        MaterialCardView cardSearchKey = root.findViewById(R.id.card_search_keys);
+        ImageView searchKeyArrowCard = root.findViewById(R.id.arrow_image_card_search_keys);
+        LinearLayout searchKeyInfoLl = root.findViewById(R.id.ll_card_search_keys_info);
+
+        TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
+        scopeTextView.setText(thesis.getAmbito());
+
+        TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
+        searchWordsTextView.setText(String.join(", ", thesis.getChiavi()));
+
+        cardSearchKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (searchKeyInfoLl.getVisibility() == View.GONE) {
+                    searchKeyInfoLl.setVisibility(View.VISIBLE);
+
+                    searchKeyArrowCard.setRotation(180);
+                    return;
+                }
+
+                searchKeyInfoLl.setVisibility(View.GONE);
+                searchKeyArrowCard.setRotation(0);
+            }
+        });
+
 
         Button bookThesis = root.findViewById(R.id.btn_book);
 
@@ -402,6 +427,7 @@ public class VisualizeTesiFragment extends Fragment {
                     setCardCoRelatorsCreator();
                     setCardConstraintsCreator();
                     setCardStudentCreator();
+                    setCardSearchKeysCreator();
 
                     Button editImage = root.findViewById(R.id.edit_image_tesi_button);
                     editImage.setVisibility(View.VISIBLE);
@@ -873,6 +899,29 @@ public class VisualizeTesiFragment extends Fragment {
         cardStudent.setOnClickListener(view -> cvStudentLayout.setVisibility(cvStudentLayout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE));
     }
 
+    private void setCardSearchKeysCreator() {
+        MaterialCardView cardSearchKey = root.findViewById(R.id.card_search_keys);
+        LinearLayout searchKeyInfoLl = root.findViewById(R.id.ll_card_search_keys_info);
+        searchKeyInfoLl.setVisibility(View.VISIBLE);
+        cardSearchKey.setOnClickListener(view -> searchKeyInfoLl.setVisibility(searchKeyInfoLl.getVisibility() == View.GONE ? View.VISIBLE : View.GONE));
+
+        ImageView searchKeyArrowCard = root.findViewById(R.id.arrow_image_card_search_keys);
+        searchKeyArrowCard.setImageResource(R.drawable.ic_baseline_edit_note_24);
+        searchKeyArrowCard.setClickable(true);
+
+        VisualizeTesiFragment requireFragment = this;
+        searchKeyArrowCard.setOnClickListener(view -> {
+            final View searchKeyPopup = getLayoutInflater().inflate(R.layout.popup_edit_search_key, null);
+
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+            dialogBuilder.setView(searchKeyPopup);
+            AlertDialog dialog = dialogBuilder.create();
+
+            SearchKeyDialog searchKeyDialog = new SearchKeyDialog(dialog, searchKeyPopup, requireFragment, thesis.getAmbito(), thesis.getChiavi());
+            searchKeyDialog.show();
+        });
+    }
+
     public void addCoRelator(PersonaTesi coRelator) {
         thesis.getCoRelatori().add(coRelator);
         relatorsAdapter.setRelators(thesis.getCoRelatori());
@@ -967,6 +1016,23 @@ public class VisualizeTesiFragment extends Fragment {
         updates.put("mediaVoto", thesis.getMediaVoto());
         updates.put("skill", thesis.getSkill());
 //        updates.put("tempistiche", thesis.getTempistiche());
+
+        updateDataThesis(updates);
+    }
+
+    public void updateSearchKey(String ambito, List<String> keyWords) {
+        thesis.setAmbito(ambito);
+        thesis.setChiavi(keyWords);
+
+        TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
+        scopeTextView.setText(thesis.getAmbito());
+
+        TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
+        searchWordsTextView.setText(String.join(", ", thesis.getChiavi()));
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("ambito", thesis.getAmbito());
+        updates.put("chiavi", thesis.getChiavi());
 
         updateDataThesis(updates);
     }

@@ -285,6 +285,14 @@
     <string name="requested_grade_average">Requested grade average</string>
     <string name="timeline_value_weeks">%s weeks</string>
     <string name="es_programming_in_java">ES. Programming in java...</string>
+    <string name="search_keys">Search keys</string>
+    <string name="scopes">Scopes</string>
+    <string name="search_words">Search words</string>
+    <string name="key_words">Key words</string>
+    <string name="add">Add</string>
+    <string name="scope">Scope</string>
+    <string name="keyword_entered">keyword entered</string>
+    <string name="existing_keyword">Existing keyword</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">

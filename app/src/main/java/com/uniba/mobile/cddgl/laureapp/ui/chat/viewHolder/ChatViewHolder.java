@@ -35,7 +35,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
         this.callback = callbackItem;
 
         itemView.setOnClickListener(view -> {
-            chatNameTextView.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.item_selected));
+//            chatNameTextView.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.item_selected));
             itemView.setSelected(true);
             callback.onChatClicked(chatId);
         });

@@ -11,22 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 import com.uniba.mobile.cddgl.laureapp.data.model.Notification;
 import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
-import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,12 +38,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void saveTokenUser(String token) {
         try {
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            DocumentReference userRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
             Map<String, Object> updates = new HashMap<>();
             updates.put("token", token);
 
-            userRef.updateChildren(updates)
+            userRef.update(updates)
                     .addOnSuccessListener(aVoid -> Log.i(CLASSNAME, "user updates"))
                     .addOnFailureListener(e -> Log.e(CLASSNAME, "Unable updates user"));
         } catch (NullPointerException e) {

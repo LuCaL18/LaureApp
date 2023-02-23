@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,7 +34,7 @@ public class MainViewModel extends ViewModel {
     private String idUser;
     private String fileToOpen;
     private Long downloadReference;
-    private final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final MutableLiveData<List<Task>> tasks = new MutableLiveData<>();
     private final MutableLiveData<QuerySnapshot> thesis = new MutableLiveData<>();
 
@@ -56,9 +57,9 @@ public class MainViewModel extends ViewModel {
     }
 
     public void fetchDataUser(String id) {
-        db.child("users").child(id).get().addOnCompleteListener(task -> {
+        db.collection("users").document(id).get().addOnCompleteListener(task -> {
            if(task.isSuccessful()) {
-               user.setValue(task.getResult().getValue(LoggedInUser.class));
+               user.setValue(((DocumentSnapshot) task.getResult()).toObject(LoggedInUser.class));
                idUser = id;
            }
         });
