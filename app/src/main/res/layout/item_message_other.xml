@@ -10,10 +10,11 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
         android:contentDescription="@string/user_profile"
-        app:srcCompat="@mipmap/ic_user"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_user" />
 
     <TextView
         android:id="@+id/text_gchat_user_other"

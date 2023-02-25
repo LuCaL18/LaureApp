@@ -23,20 +23,21 @@
 
     <TextView
         android:id="@+id/nome"
-        android:layout_width="304dp"
-        android:layout_height="74dp"
+        android:layout_width="347dp"
+        android:layout_height="99dp"
         android:layout_marginTop="8dp"
         android:hint="@string/nome"
         android:textAlignment="center"
         android:textSize="24sp"
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/image"
-        tools:layout_editor_absoluteX="47dp" />
+        tools:layout_editor_absoluteX="20dp"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="327dp"
-        android:layout_height="94dp"
+        android:layout_width="321dp"
+        android:layout_height="119dp"
         android:layout_marginTop="15dp"
         android:hint="@string/email"
         android:textAlignment="center"
@@ -67,11 +68,12 @@
         android:id="@+id/permesso2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="32dp"
         android:text="@string/accettare_tesisti"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tasti" />
+        app:layout_constraintTop_toBottomOf="@id/tasti"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="12dp"
+        />
 
     <CheckBox
         android:id="@+id/permesso3"
@@ -88,33 +90,33 @@
         android:id="@+id/permesso4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="12dp"
         android:text="@string/modificare_tesi"
         app:layout_constraintStart_toStartOf="@id/permesso2"
-        app:layout_constraintTop_toBottomOf="@id/permesso1" />
+        app:layout_constraintTop_toBottomOf="@id/permesso1"
+        android:layout_marginTop="15dp"
+        />
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="56dp"
         android:shadowColor="@color/primary_green"
-        android:text="@string/aggiungi"
-        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/permesso3"
+        android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/permesso3" />
+        android:layout_marginTop="20dp"
+        android:text="@string/aggiungi"
+        android:visibility="invisible"/>
 
     <Button
-        android:id="@+id/cancelButton"
+        android:theme="@style/Button.Red"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/cancella"
-        android:theme="@style/Button.Red"
+        android:id="@+id/cancelButton"
+        app:layout_constraintTop_toBottomOf="@id/permesso3"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/permesso3" />
+        android:layout_marginTop="20dp"
+        android:text="@string/cancella"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

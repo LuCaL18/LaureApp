@@ -17,23 +17,23 @@
 
         <Button
             android:id="@+id/share_button"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="5dp"
-            android:text="@string/share"
-            style="?attr/materialButtonOutlinedStyle"/>
+            android:text="@string/share" />
 
         <Button
             android:id="@+id/save_button"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="5dp"
-            android:text="@string/save"
-            style="?attr/materialButtonOutlinedStyle"/>
+            android:text="@string/save" />
     </RelativeLayout>
 
 </LinearLayout>

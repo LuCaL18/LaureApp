@@ -142,4 +142,15 @@
         android:name="com.uniba.mobile.cddgl.laureapp.RicevimentoFragment"
         android:label="fragment_ricevimento"
         tools:layout="@layout/fragment_ricevimento" />
+    <fragment
+        android:id="@+id/navigation_profilo"
+        android:name="com.uniba.mobile.cddgl.laureapp.profiloFragment"
+        android:label="Profilo"
+        tools:layout="@layout/fragment_profilo" />
+    <fragment
+        android:id="@+id/navigation_ModificaDati"
+        android:name="com.uniba.mobile.cddgl.laureapp.ModificaDatiFragment"
+        android:label="Modifica Dati"
+        tools:layout="@layout/fragment_modifica_dati" />
+
 </navigation>

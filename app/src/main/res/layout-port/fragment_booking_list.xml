@@ -48,7 +48,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/booking_list_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="623dp"
+        android:layout_height="627dp"
         android:background="@android:color/white"
         android:backgroundTint="?attr/colorOnPrimary"
         android:divider="@android:color/transparent"
