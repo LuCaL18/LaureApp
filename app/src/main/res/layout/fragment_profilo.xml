@@ -12,7 +12,7 @@
         android:id="@+id/textView"
         android:layout_width="320dp"
         android:layout_height="120dp"
-        android:text="Profilo"
+        android:text="testoo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
