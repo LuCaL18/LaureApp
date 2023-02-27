@@ -102,7 +102,7 @@ public class ClassificaTesiFragment extends Fragment {
                         // Salva la classifica tesi originaria
                         ClassificaTesi copia = dataList;
                         // Crea una lista di opzioni per il RadioGroup
-                        final String[] opzioni = {"< 2 mesi", "< 3 mesi", "< 4 mesi", "> 4 mesi"};
+                        final String[] opzioni = {"1 mese","2 mesi", "3 mesi", "4 mesi", "5 mesi","6 mesi"};
                         // Crea un nuovo RadioGroup
                         RadioGroup radioGroup = new RadioGroup(getActivity());
                         radioGroup.setOrientation(RadioGroup.VERTICAL);
@@ -134,24 +134,35 @@ public class ClassificaTesiFragment extends Fragment {
                                 List<Tesi> tesiFiltrate = new ArrayList<>();
                                 // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di tempistiche
                                 for (Tesi t : dataList.getTesi()) {
+                                    t.getTempistiche();
                                     switch (text) {
-                                        case "<2mesi":
-                                            if (t.getTempistiche() == "<2mesi") {
+                                        case "1 mese":
+                                            if (t.getTempistiche() == 1) {
                                                 tesiFiltrate.add(t);
                                             }
                                             break;
-                                        case "<3mesi":
-                                            if (t.getTempistiche() == "<3mesi") {
+                                        case "2 mesi":
+                                            if (t.getTempistiche() == 2) {
                                                 tesiFiltrate.add(t);
                                             }
                                             break;
-                                        case "<4mesi":
-                                            if (t.getTempistiche() == "<4mesi") {
+                                        case "3 mesi":
+                                            if (t.getTempistiche() == 3) {
                                                 tesiFiltrate.add(t);
                                             }
                                             break;
-                                        case ">4mesi":
-                                            if (t.getTempistiche() == ">4mesi") {
+                                        case "4 mesi":
+                                            if (t.getTempistiche() == 4) {
+                                                tesiFiltrate.add(t);
+                                            }
+                                            break;
+                                        case "5 mesi":
+                                            if (t.getTempistiche() == 5) {
+                                                tesiFiltrate.add(t);
+                                            }
+                                            break;
+                                        case "6 mesi":
+                                            if (t.getTempistiche() == 6) {
                                                 tesiFiltrate.add(t);
                                             }
                                             break;
@@ -192,7 +203,7 @@ public class ClassificaTesiFragment extends Fragment {
                                 List<Tesi> tesiFiltrate = new ArrayList<>();
                                 // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di ambito
                                 for (Tesi t : dataList.getTesi()) {
-                                    if (t.getAmbito().equalsIgnoreCase(text2)) {
+                                    if (t.getChiavi().contains(text2)) {
                                         tesiFiltrate.add(t);
                                     }
                                 }
@@ -349,6 +360,8 @@ public class ClassificaTesiFragment extends Fragment {
                                             if (t.getAmbito() == "Economia") {
                                                 tesiFiltrate.add(t);
                                             }
+                                            break;
+                                        default:
                                             break;
                                     }
                                 }

@@ -1,6 +1,5 @@
 package com.uniba.mobile.cddgl.laureapp.ui.task;
 
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;

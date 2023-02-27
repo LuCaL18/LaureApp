@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,17 +21,22 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListaTesiFragment extends Fragment {
+
     private ListView listView;
     private ListAdapterTesi adapter;
     private List<Tesi> dataList;
     private CollectionReference mCollection;
+    private CollectionReference mCollection2;
     private BottomNavigationView navBar;
+    private LoggedInUser userLogged = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,37 +46,63 @@ public class ListaTesiFragment extends Fragment {
         navBar.setVisibility(View.INVISIBLE);
         dataList = new ArrayList<>();
         mCollection = FirebaseFirestore.getInstance().collection("tesi");
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = currentUser.getUid();
         adapter = new ListAdapterTesi(getActivity(), mCollection);
         Log.d("ListaTesiFragment", "onCreateView() method called");
         listView.setAdapter(adapter);
+        mCollection2 = FirebaseFirestore.getInstance().collection("users");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
+        mCollection2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e("FirebaseListAdapter", "Listen failed.", e);
+                    return;
+                }
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    LoggedInUser user = doc.toObject(LoggedInUser.class);
+                    if (user.getId().equals(userId)) {
+                        userLogged = user;
+                        break;
+                    }
+                }
+            }
+        });
         mCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("FirebaseListAdapter", "Listen failed.", e);
                     return;
                 }
                 dataList.clear();
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    Tesi tesi = doc.toObject(Tesi.class);
-                    List<PersonaTesi> coRelatoriList = tesi.getCoRelatori();
-                    for (PersonaTesi p : coRelatoriList) {
-                        if (p.getId().equals(userId)) {
-                            dataList.add(tesi);
-                        } else if (tesi.getRelatore().equals(userId)) {
+                if (userLogged.getRole().equals(RoleUser.PROFESSOR)) {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Tesi tesi = doc.toObject(Tesi.class);
+                        List<PersonaTesi> coRelatore = tesi.getCoRelatori();
+                        if (coRelatore.isEmpty()) {
+                            for (PersonaTesi p : coRelatore) {
+                                if (p.getId().equals(userLogged.getId())) {
+                                    dataList.add(tesi);
+                                }
+                            }
+                        }
+                        if (tesi.getRelatore().getId().equals(userLogged.getId())) {
                             dataList.add(tesi);
                         }
                     }
                 }
-                Log.d("ListaTesiFragment", "onCreateView() method called");
+                if (userLogged.getRole().equals(RoleUser.STUDENT)) {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Tesi tesi = doc.toObject(Tesi.class);
+                        if (tesi.getStudent() == null) {
+                            dataList.add(tesi);
+                        }
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
         });
         return view;
     }
 }
-
-
-

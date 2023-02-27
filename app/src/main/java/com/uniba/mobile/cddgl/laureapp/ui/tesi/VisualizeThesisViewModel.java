@@ -30,7 +30,7 @@ public class VisualizeThesisViewModel extends ViewModel {
                 new PersonaTesi("DsZ6p1vN56SccxJlbLIOxJ9Lntx2", "Jesuis Professor", "ilmeglio@gmail.com"),
                 "Questa è una descrizione bella lunga della tesu per chè non sono cosa scriver e okkokokok",
                 "informatica", null, "devi saper accendere il computer",
-                "4 mesi", null,
+                4, null,
                 30, documents, null, "https://www.example.com");
         tesi.setId("123456");
 

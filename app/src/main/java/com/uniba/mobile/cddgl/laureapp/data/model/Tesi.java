@@ -19,7 +19,7 @@ public class Tesi implements Serializable, Cloneable {
     private String ambito;
     private List<String> chiavi;
     private String skill;
-    private String tempistiche;
+    private int tempistiche;
     private List<String> esami;
     private float mediaVoto;
     private List<String> documents;
@@ -31,7 +31,7 @@ public class Tesi implements Serializable, Cloneable {
     public Tesi() {    }
 
     public Tesi(String nomeTesi, List<PersonaTesi> coRelatori, PersonaTesi relatore, String descrizione, String ambito, List<String> chiavi,
-                String skill, String tempistiche, List<String> esami, float mediaVoto,
+                String skill, int tempistiche, List<String> esami, float mediaVoto,
                 List<String> documents, PersonaTesi student, String note) {
         this.id = UUID.randomUUID().toString();
         this.nomeTesi = nomeTesi;
@@ -132,11 +132,11 @@ public class Tesi implements Serializable, Cloneable {
         this.skill = skill;
     }
 
-    public String getTempistiche() {
+    public int getTempistiche() {
         return tempistiche;
     }
 
-    public void setTempistiche(String tempistiche) {
+    public void setTempistiche(int tempistiche) {
         this.tempistiche = tempistiche;
     }
 

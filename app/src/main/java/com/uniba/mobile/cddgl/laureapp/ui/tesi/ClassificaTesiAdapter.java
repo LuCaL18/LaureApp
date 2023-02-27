@@ -33,7 +33,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
     private final Context mContext;
     private List<Tesi> mDataList;
     private List<Tesi> filteredData;
-    private final Map<String, List<Tesi>> classifica;
+    private Map<String, List<Tesi>> classifica;
 
     public ClassificaTesiAdapter(Context context, CollectionReference ref) {
         mContext = context;

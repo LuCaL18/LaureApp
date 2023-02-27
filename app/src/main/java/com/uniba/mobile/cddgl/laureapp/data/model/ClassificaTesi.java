@@ -5,6 +5,7 @@ import com.google.firebase.firestore.PropertyName;
 import java.util.List;
 
 public class ClassificaTesi {
+
     private List<Tesi> tesi;
     private String studenteId;
 
