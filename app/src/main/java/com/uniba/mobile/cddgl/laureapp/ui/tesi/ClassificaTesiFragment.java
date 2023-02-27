@@ -107,9 +107,9 @@ public class ClassificaTesiFragment extends Fragment {
                         RadioGroup radioGroup = new RadioGroup(getActivity());
                         radioGroup.setOrientation(RadioGroup.VERTICAL);
                         // Cicla attraverso le opzioni e crea un nuovo RadioButton per ciascuna di esse
-                        for (int i = 0; i < opzioni.length; i++) {
+                        for (String opzione : opzioni) {
                             RadioButton radioButton = new RadioButton(getActivity());
-                            radioButton.setText(opzioni[i]);
+                            radioButton.setText(opzione);
                             radioGroup.addView(radioButton);
                         }
                         // Aggiungi il RadioGroup al LinearLayout del dialog
@@ -128,44 +128,15 @@ public class ClassificaTesiFragment extends Fragment {
                                 int radioButtonID = radioGroup.getCheckedRadioButtonId();
                                 View radioButton = radioGroup.findViewById(radioButtonID);
                                 int index = radioGroup.indexOfChild(radioButton);
-                                String text = opzioni[index];
+                                String selectedOption = opzioni[index];
                                 // Qui devi implementare il filtro per le tempistiche utilizzando il testo inserito dall'utente
                                 // e aggiornare la lista delle tesi visualizzate di conseguenza
                                 List<Tesi> tesiFiltrate = new ArrayList<>();
                                 // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di tempistiche
-                                for (Tesi t : dataList.getTesi()) {
-                                    t.getTempistiche();
-                                    switch (text) {
-                                        case "1 mese":
-                                            if (t.getTempistiche() == 1) {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "2 mesi":
-                                            if (t.getTempistiche() == 2) {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "3 mesi":
-                                            if (t.getTempistiche() == 3) {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "4 mesi":
-                                            if (t.getTempistiche() == 4) {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "5 mesi":
-                                            if (t.getTempistiche() == 5) {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "6 mesi":
-                                            if (t.getTempistiche() == 6) {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
+                                for (Tesi t : copia.getTesi()) {
+                                    int tempistiche = t.getTempistiche();
+                                    if (selectedOption.startsWith(String.valueOf(tempistiche))) {
+                                        tesiFiltrate.add(t);
                                     }
                                 }
                                 // Aggiorna la lista delle tesi visualizzate con quelle filtrate
@@ -181,29 +152,45 @@ public class ClassificaTesiFragment extends Fragment {
                         });
                         // Visualizza il dialog
                         builder.show();
-                        dataList.equals(copia);
                         break;
-                    case "Chiave":
-                        // Salva classifica tesi originaria //
+                    case "Ambito":
+                        // Salva la classifica tesi originaria
                         ClassificaTesi copia2 = dataList;
-                        // Codice da inserire nel metodo onClick per l'ambito
-                        final EditText input2 = new EditText(getActivity());
+                        // Crea una lista di opzioni per il RadioGroup
+                        final String[] opzioni2 = {"Ingegneria","Informatica","Economia","Medicina","Psicologia","Lettere","Architettura","Biologia","Giurisprudenza"};
+                        // Crea un nuovo RadioGroup
+                        RadioGroup radioGroup2 = new RadioGroup(getActivity());
+                        radioGroup2.setOrientation(RadioGroup.VERTICAL);
+                        // Cicla attraverso le opzioni e crea un nuovo RadioButton per ciascuna di esse
+                        for (String opzione : opzioni2) {
+                            RadioButton radioButton2 = new RadioButton(getActivity());
+                            radioButton2.setText(opzione);
+                            radioGroup2.addView(radioButton2);
+                        }
+                        // Aggiungi il RadioGroup al LinearLayout del dialog
+                        LinearLayout layout2 = new LinearLayout(getActivity());
+                        layout2.setOrientation(LinearLayout.VERTICAL);
+                        layout2.addView(radioGroup2);
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                        builder2.setTitle("Filtra per chiave");
-                        builder2.setMessage("Inserisci il campo di ricerca per la chiave:");
-                        // Aggiungi il campo di testo personalizzato all'interno del dialog
-                        builder2.setView(input2);
+                        builder2.setTitle("Filtra per tempistiche");
+                        builder2.setMessage("Seleziona una delle seguenti opzioni:");
+                        // Aggiungi il layout personalizzato al dialog
+                        builder2.setView(layout2);
                         // Aggiungi il pulsante "OK" al dialog
                         builder2.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String text2 = input2.getText().toString();
-                                // Qui devi implementare il filtro per l'ambito utilizzando il testo inserito dall'utente
+                                int radioButtonID = radioGroup2.getCheckedRadioButtonId();
+                                View radioButton = radioGroup2.findViewById(radioButtonID);
+                                int index = radioGroup2.indexOfChild(radioButton);
+                                String selectedOption = opzioni2[index];
+                                // Qui devi implementare il filtro per le tempistiche utilizzando il testo inserito dall'utente
                                 // e aggiornare la lista delle tesi visualizzate di conseguenza
                                 List<Tesi> tesiFiltrate = new ArrayList<>();
-                                // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di ambito
-                                for (Tesi t : dataList.getTesi()) {
-                                    if (t.getChiavi().contains(text2)) {
+                                // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di tempistiche
+                                for (Tesi t : copia2.getTesi()) {
+                                    String ambito = t.getAmbito();
+                                    if (selectedOption.startsWith(String.valueOf(ambito))) {
                                         tesiFiltrate.add(t);
                                     }
                                 }
@@ -220,7 +207,45 @@ public class ClassificaTesiFragment extends Fragment {
                         });
                         // Visualizza il dialog
                         builder2.show();
-                        dataList.equals(copia2);
+                        break;
+                    case "Chiave":
+                        // Salva classifica tesi originaria //
+                        ClassificaTesi copia3 = dataList;
+                        // Codice da inserire nel metodo onClick per l'ambito
+                        final EditText input3 = new EditText(getActivity());
+                        AlertDialog.Builder builder3 = new AlertDialog.Builder(getActivity());
+                        builder3.setTitle("Filtra per chiave");
+                        builder3.setMessage("Inserisci il campo di ricerca per la chiave:");
+                        // Aggiungi il campo di testo personalizzato all'interno del dialog
+                        builder3.setView(input3);
+                        // Aggiungi il pulsante "OK" al dialog
+                        builder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String text3 = input3.getText().toString();
+                                // Qui devi implementare il filtro per l'ambito utilizzando il testo inserito dall'utente
+                                // e aggiornare la lista delle tesi visualizzate di conseguenza
+                                List<Tesi> tesiFiltrate = new ArrayList<>();
+                                // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di ambito
+                                for (Tesi t : dataList.getTesi()) {
+                                    if (t.getChiavi().contains(text3)) {
+                                        tesiFiltrate.add(t);
+                                    }
+                                }
+                                // Aggiorna la lista delle tesi visualizzate con quelle filtrate
+                                adapter.updateList(tesiFiltrate);
+                            }
+                        });
+                        // Aggiungi il pulsante "Annulla" al dialog
+                        builder3.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        // Visualizza il dialog
+                        builder3.show();
+                        dataList.equals(copia3);
                         break;
                     case "Media Voto":
                         // Salva la classifica tesi originaria
@@ -231,10 +256,10 @@ public class ClassificaTesiFragment extends Fragment {
                         // Inizializza la seekbar
                         final TextView textView4 = dialogView4.findViewById(R.id.seekbar_value);
                         final SeekBar seekBar4 = dialogView4.findViewById(R.id.seekbar);
-                        seekBar4.setMax(12);
+                        seekBar4.setMax(24);
                         seekBar4.setMin(0);
                         seekBar4.setProgress(0);
-                        textView4.setText(String.valueOf((seekBar4.getProgress() + 18) / 2.0f));
+                        textView4.setText(String.valueOf((seekBar4.getProgress() * 0.5f) + 18.0f));
                         // Crea il dialog
                         AlertDialog.Builder builder4 = new AlertDialog.Builder(getActivity());
                         builder4.setTitle("Filtra per media voto");
@@ -243,7 +268,7 @@ public class ClassificaTesiFragment extends Fragment {
                         builder4.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                int voto = (seekBar4.getProgress() + 18);
+                                float voto = (seekBar4.getProgress() * 0.5f) + 18.0f;
                                 // Qui devi implementare il filtro per il media voto utilizzando la seekbar
                                 // e aggiornare la lista delle tesi visualizzate di conseguenza
                                 List<Tesi> tesiFiltrate = new ArrayList<>();
@@ -268,7 +293,7 @@ public class ClassificaTesiFragment extends Fragment {
                         seekBar4.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                             @Override
                             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                textView4.setText(String.valueOf((progress + 18) / 2.0f));
+                                textView4.setText(String.valueOf((progress * 0.5f) + 18.0f));
                             }
                             @Override
                             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -278,107 +303,6 @@ public class ClassificaTesiFragment extends Fragment {
                         // Visualizza il dialog
                         builder4.show();
                         dataList.equals(copia4);
-                        break;
-                    case "Ambito":
-                        // Salva la classifica tesi originaria
-                        ClassificaTesi copia5 = dataList;
-                        // Crea una lista di opzioni per il RadioGroup
-                        final String[] opzioni2 = {"Economia","Psicologia","Giurisprudenza","Informatica","Biologia","Lettere","Ingegneria","Medicina"};
-                        // Crea un nuovo RadioGroup
-                        RadioGroup radioGroup2 = new RadioGroup(getActivity());
-                        radioGroup2.setOrientation(RadioGroup.VERTICAL);
-                        // Cicla attraverso le opzioni e crea un nuovo RadioButton per ciascuna di esse
-                        for (int i = 0; i < opzioni2.length; i++) {
-                            RadioButton radioButton2 = new RadioButton(getActivity());
-                            radioButton2.setText(opzioni2[i]);
-                            radioGroup2.addView(radioButton2);
-                        }
-                        // Aggiungi il RadioGroup al LinearLayout del dialog
-                        LinearLayout layout5 = new LinearLayout(getActivity());
-                        layout5.setOrientation(LinearLayout.VERTICAL);
-                        layout5.addView(radioGroup2);
-                        AlertDialog.Builder builder5 = new AlertDialog.Builder(getActivity());
-                        builder5.setTitle("Filtra per ambito");
-                        builder5.setMessage("Seleziona una delle seguenti opzioni:");
-                        // Aggiungi il layout personalizzato al dialog
-                        builder5.setView(layout5);
-                        // Aggiungi il pulsante "OK" al dialog
-                        builder5.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                int radioButtonID = radioGroup2.getCheckedRadioButtonId();
-                                View radioButton = radioGroup2.findViewById(radioButtonID);
-                                int index = radioGroup2.indexOfChild(radioButton);
-                                String text5 = opzioni2[index];
-                                // Qui devi implementare il filtro per le tempistiche utilizzando il testo inserito dall'utente
-                                // e aggiornare la lista delle tesi visualizzate di conseguenza
-                                List<Tesi> tesiFiltrate = new ArrayList<>();
-                                // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di tempistiche
-                                for (Tesi t : dataList.getTesi()) {
-                                    switch (text5) {
-                                        case "Informatica":
-                                            if (t.getAmbito() == "Informatica") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "Chimica":
-                                            if (t.getAmbito() == "Chimica") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "Medicina":
-                                            if (t.getAmbito() == "Medicina") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "Ingegneria":
-                                            if (t.getAmbito() == "Ingegneria") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "Biologia":
-                                            if (t.getAmbito() == "Biologia") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "Lettere":
-                                            if (t.getAmbito() == "Lettere") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "Psicologia":
-                                            if (t.getAmbito() == "Psicologia") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "Giurisprudenza":
-                                            if (t.getAmbito() == "Giurisprudenza") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        case "Economia":
-                                            if (t.getAmbito() == "Economia") {
-                                                tesiFiltrate.add(t);
-                                            }
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                // Aggiorna la lista delle tesi visualizzate con quelle filtrate
-                                adapter.updateList(tesiFiltrate);
-                            }
-                        });
-                        // Aggiungi il pulsante "Annulla" al dialog
-                        builder5.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        // Visualizza il dialog
-                        builder5.show();
-                        dataList.equals(copia5);
                         break;
                     case "Tesi A-Z":
                         Collections.sort(listaTesiOrdinata, new Comparator<Tesi>() {
