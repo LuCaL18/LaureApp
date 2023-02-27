@@ -253,7 +253,7 @@
     <string name="state_new">NEW</string>
     <string name="started">STARTED</string>
     <string name="completed">COMPLETED</string>
-    <string name="task">TASK</string>
+    <string name="task">Task</string>
     <string name="there_are_no_assigned_tasks">There are no assigned tasks</string>
     <string name="task_graph">Task: \n%s</string>
 
@@ -293,6 +293,14 @@
     <string name="scope">Scope</string>
     <string name="keyword_entered">keyword entered</string>
     <string name="existing_keyword">Existing keyword</string>
+    <string name="latest_entries">Latest entries</string>
+    <string name="there_are_no_theses_inserted">There are no theses inserted</string>
+    <string name="your_theses">Your theses</string>
+    <string name="for_your_scope">For your scope</string>
+    <string name="there_are_no_theses_for_your_scopes">There are no theses for your scopes</string>
+    <string name="select_your_scopes">Select your scopes</string>
+    <string name="chat_list">Chat list</string>
+    <string name="search_hint">Search for a thesis by title</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">

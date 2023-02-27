@@ -3,6 +3,7 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository
@@ -19,7 +20,7 @@ public class LoggedInUser implements Serializable {
     private RoleUser role;
     private String photoUrl;
     private String token;
-    //private String dipartimento;
+    private List<String> ambiti;
 
 
     // NON CANCELLARE SERVE A FIREBASE
@@ -29,7 +30,7 @@ public class LoggedInUser implements Serializable {
         this.id = id;
     }
 
-    public LoggedInUser(String id, String email, String name, String surname, String birthDay, String bio, RoleUser role) {
+    public LoggedInUser(String id, String email, String name, String surname, String birthDay, String bio, RoleUser role, List<String> ambiti) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -38,6 +39,7 @@ public class LoggedInUser implements Serializable {
         this.bio = bio;
         this.role = role;
         this.displayName = name + ' ' + surname;
+        this.ambiti = ambiti;
     }
 
     public LoggedInUser(String email, String displayName) {
@@ -124,6 +126,10 @@ public class LoggedInUser implements Serializable {
         return role;
     }
 
+    public void setRole(RoleUser role) {
+        this.role = role;
+    }
+
     public String getPhotoUrl() {
         return photoUrl;
     }
@@ -140,13 +146,13 @@ public class LoggedInUser implements Serializable {
         this.token = token;
     }
 
-    //    public String getDipartimento() {
-//        return dipartimento;
-//    }
-//
-//    public void setDipartimento(String dipartimento) {
-//        this.dipartimento = dipartimento;
-//    }
+    public List<String> getAmbiti() {
+        return ambiti;
+    }
+
+    public void setAmbiti(List<String> ambiti) {
+        this.ambiti = ambiti;
+    }
 
     @Override
     public String toString() {
@@ -161,6 +167,7 @@ public class LoggedInUser implements Serializable {
                 ", role=" + role +
                 ", photoUrl='" + photoUrl + '\'' +
                 ", token='" + token + '\'' +
+                ", ambiti=" + ambiti +
                 '}';
     }
 }

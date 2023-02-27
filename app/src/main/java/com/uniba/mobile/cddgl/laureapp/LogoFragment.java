@@ -9,14 +9,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 /**
  * Fragment per la visualizzazione del logo.
@@ -63,12 +63,13 @@ public class LogoFragment extends Fragment {
             }
 
             mainViewModel.readTask(loggedInUser.getRole(), loggedInUser.getId());
-            mainViewModel.loadTesi(loggedInUser.getRole());
-
+            mainViewModel.loadTesiByRole(loggedInUser.getRole());
+            mainViewModel.loadLastTheses();
+            mainViewModel.loadThesesAmbito(loggedInUser.getAmbiti());
 
         });
 
-        mainViewModel.getThesis().observe(getViewLifecycleOwner(), queryDocumentSnapshots -> {
+        mainViewModel.getLastTheses().observe(getViewLifecycleOwner(), queryDocumentSnapshots -> {
             if(queryDocumentSnapshots == null || !isTaskReady) {
                 isThesisReady = true;
                 return;

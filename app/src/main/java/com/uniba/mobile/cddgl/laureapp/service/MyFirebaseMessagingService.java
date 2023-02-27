@@ -97,9 +97,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void createNotificationMessage(RemoteMessage remoteMessage) {
+        //TODO: implements this method
     }
 
     private void createNotificationReport(RemoteMessage remoteMessage) {
+        //TODO: implements this method
     }
 
     private void createNotification(Notification notification) {

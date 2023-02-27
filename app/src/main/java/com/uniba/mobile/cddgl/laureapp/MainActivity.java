@@ -3,6 +3,7 @@ package com.uniba.mobile.cddgl.laureapp;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,10 +40,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.ActivityMainBinding;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 
 import java.io.File;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -206,35 +209,35 @@ public class MainActivity extends AppCompatActivity {
         //only for the first time
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         boolean permissionRequestedBefore = sharedPref.getBoolean("permission_requested_before", false);
-            // Permission is not granted and has not been requested before
-            // Request the permission
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        // Permission is not granted and has not been requested before
+        // Request the permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
-                if (!permissionRequestedBefore && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                            REQUEST_RECEIVE_PERMISSION);
-                }
-
-                // Store the flag indicating the permission has been requested
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putBoolean("permission_requested_before", true);
-                editor.apply();
-
-            } else {
-                if (!permissionRequestedBefore && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NOTIFICATION_POLICY)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.ACCESS_NOTIFICATION_POLICY},
-                            REQUEST_RECEIVE_PERMISSION);
-                }
-
-                // Store the flag indicating the permission has been requested
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putBoolean("permission_requested_before", true);
-                editor.apply();
+            if (!permissionRequestedBefore && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        REQUEST_RECEIVE_PERMISSION);
             }
+
+            // Store the flag indicating the permission has been requested
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("permission_requested_before", true);
+            editor.apply();
+
+        } else {
+            if (!permissionRequestedBefore && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NOTIFICATION_POLICY)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_NOTIFICATION_POLICY},
+                        REQUEST_RECEIVE_PERMISSION);
+            }
+
+            // Store the flag indicating the permission has been requested
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("permission_requested_before", true);
+            editor.apply();
+        }
 
         return view;
     }

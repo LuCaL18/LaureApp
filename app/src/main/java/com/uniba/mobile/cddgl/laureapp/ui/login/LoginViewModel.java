@@ -22,6 +22,7 @@ import com.uniba.mobile.cddgl.laureapp.ui.login.registration.RegisterFormState;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,12 +83,12 @@ public class LoginViewModel extends ViewModel {
                 });
     }
 
-    public void register(String username, String password, String name, String surname, String dob, String bio, RoleUser role) {
+    public void register(String username, String password, String name, String surname, String dob, String bio, RoleUser role, List<String> ambiti) {
         auth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(task -> {
 
             if (task.isSuccessful()) {
                 isUserVerification.setValue(false);
-                currentLoggedUser = new LoggedInUser(auth.getCurrentUser().getUid(), username, name, surname, dob, bio, role);
+                currentLoggedUser = new LoggedInUser(auth.getCurrentUser().getUid(), username, name, surname, dob, bio, role, ambiti);
             } else {
                 try {
                     throw task.getException();

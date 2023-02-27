@@ -5,12 +5,16 @@ import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_INTERNET_PERM
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_READ_EXTERNAL_STORAGE;
 import static com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment.LIST_TASK_PERMISSION_CREATE;
 import static com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment.LIST_TASK_TESI_KEY;
+import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.SHARED_PREFS_NAME;
+import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.TESI_LIST_KEY_PREF;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -84,12 +88,14 @@ import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class VisualizeTesiFragment extends Fragment {
 
-    private static final String TESI_VISUALIZE = "tesi_visualize";
+    public static final String TESI_VISUALIZE = "tesi_visualize";
 
     private static final int SHARE_THESIS = R.id.share_thesis;
     private static final int QR_CODE_THESIS = R.id.qr_thesis;
@@ -112,6 +118,7 @@ public class VisualizeTesiFragment extends Fragment {
     private boolean isFavourite;
     private RecyclerView recyclerViewRelators;
     private RelatorsAdapter relatorsAdapter;
+    private LoggedInUser user;
 
     public VisualizeTesiFragment() {
         // Required empty public constructor
@@ -128,6 +135,12 @@ public class VisualizeTesiFragment extends Fragment {
 
         if (savedInstanceState != null && savedInstanceState.getSerializable(TESI_VISUALIZE) != null) {
             thesis = (Tesi) savedInstanceState.getSerializable(TESI_VISUALIZE);
+            return;
+        }
+
+        if (getArguments() != null && getArguments().getSerializable(TESI_VISUALIZE) != null) {
+            thesis = (Tesi) getArguments().getSerializable(TESI_VISUALIZE);
+
             return;
         }
 
@@ -415,6 +428,7 @@ public class VisualizeTesiFragment extends Fragment {
                 if (loggedInUser == null) {
                     return;
                 }
+                user = loggedInUser;
 
                 int menuToVisualize = R.menu.app_bar_visualize_tesi;
 
@@ -434,9 +448,6 @@ public class VisualizeTesiFragment extends Fragment {
                     editImage.setOnClickListener(view1 -> {
                         checkAndRequestReadExternalStorage();
                     });
-
-
-                    //TODO: gestire anche modifica vincoli e modifica relatori
                 }
 
                 if (loggedInUser.getRole().equals(RoleUser.STUDENT) && (thesis.getStudent() == null || !thesis.getStudent().getId().equals(loggedInUser.getId()))) {
@@ -450,17 +461,28 @@ public class VisualizeTesiFragment extends Fragment {
                                 if (documentSnapshot.exists()) {
                                     TesiClassifica classification = documentSnapshot.toObject(TesiClassifica.class);
 
-                                    for (String tesi : classification.getTesi()) {
-                                        if (tesi.equals(thesis.getId())) {
+                                    if (classification.getTesi().contains(thesis.getId())) {
+
+                                        if(menuTesi.findItem(FAVORITE_THESIS) != null) {
                                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
-                                            isFavourite = true;
-                                            break;
                                         }
+                                        isFavourite = true;
                                     }
                                 }
                             });
                 } else if (thesis.getStudent() != null && thesis.getStudent().getId().equals(loggedInUser.getId())) {
                     menuToVisualize = R.menu.app_bar_visualize_thesis_prof;
+                }
+
+                if (loggedInUser.getRole().equals(RoleUser.GUEST)) {
+                    if (getTesiList().contains(thesis.getId())) {
+
+                        if(menuTesi.findItem(FAVORITE_THESIS) != null) {
+                            menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
+                        }
+
+                        isFavourite = true;
+                    }
                 }
 
                 int finalMenuToVisualize = menuToVisualize;
@@ -764,6 +786,40 @@ public class VisualizeTesiFragment extends Fragment {
     }
 
     private boolean switchFavouriteThesis(MenuItem menuItem) {
+
+        if (user.getRole().equals(RoleUser.GUEST)) {
+
+            List<String> tesiList = getTesiList();
+            if (tesiList.isEmpty()) {
+
+                List<String> newTesiList = new ArrayList<>();
+                newTesiList.add(thesis.getId());
+
+                if (saveListofThesis(newTesiList)) {
+                    menuItem.setIcon(R.drawable.ic_favorite_24dp);
+                    isFavourite = true;
+                } else {
+                    Log.e("VisualizeTesiFragment", "Unable to add the thesis to the ranking");
+                }
+            } else {
+                int icon;
+
+                if (isFavourite) {
+                    tesiList.remove(thesis.getId());
+
+                    saveListofThesis(tesiList);
+                    icon = R.drawable.ic_baseline_favorite_border_24;
+                    isFavourite = false;
+                } else {
+                    tesiList.add(thesis.getId());
+                    saveListofThesis(tesiList);
+                    icon = R.drawable.ic_favorite_24dp;
+                    isFavourite = true;
+                }
+                menuItem.setIcon(icon);
+            }
+            return true;
+        }
 
         DocumentReference classificaDocument = FirebaseFirestore.getInstance().collection("tesi_classifiche")
                 .document(mainViewModel.getIdUser());
@@ -1089,6 +1145,27 @@ public class VisualizeTesiFragment extends Fragment {
         if (savedInstanceState != null && savedInstanceState.getSerializable(TESI_VISUALIZE) != null) {
             thesis = (Tesi) savedInstanceState.getSerializable(TESI_VISUALIZE);
         }
+    }
+
+    public boolean saveListofThesis(List<String> tesiList) {
+        try {
+            SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor mEdit1 = sp.edit();
+
+            Set<String> set = new HashSet<>(tesiList);
+
+            mEdit1.putStringSet(TESI_LIST_KEY_PREF, set);
+            return mEdit1.commit();
+        } catch (Exception e) {
+            Log.e("VisualizeTesiFragment", e.getMessage());
+            return false;
+        }
+    }
+
+    public ArrayList<String> getTesiList() {
+        SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+        Set<String> set = sp.getStringSet(TESI_LIST_KEY_PREF, new HashSet<>());
+        return new ArrayList<>(set);
     }
 
     @Override

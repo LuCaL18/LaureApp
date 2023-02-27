@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_navigation_home_to_tesiFragmant"
             app:destination="@id/tesiFragmant" />
+        <action
+            android:id="@+id/action_navigation_home_to_visualizeTesiFragment"
+            app:destination="@id/visualizeTesiFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_notifications"
@@ -84,7 +87,7 @@
     <fragment
         android:id="@+id/nav_chat_list_fragment"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.chat.ChatListFragment"
-        android:label="ChatListFragment" >
+        android:label="@string/chat_list" >
         <action
             android:id="@+id/action_chatListFragment_to_chatFragment"
             app:destination="@id/chatFragment" />

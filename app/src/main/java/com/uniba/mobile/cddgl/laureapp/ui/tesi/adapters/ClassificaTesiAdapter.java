@@ -25,7 +25,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
 
     private final Context mContext;
     private List<Tesi> mDataList;
-    private VisualizeThesisViewModel thesisViewModel;
+    private final VisualizeThesisViewModel thesisViewModel;
 
     public ClassificaTesiAdapter(Context context, VisualizeThesisViewModel model) {
         mContext = context;
@@ -78,16 +78,20 @@ public class ClassificaTesiAdapter extends BaseAdapter {
             }
         });
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String studenteId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DocumentReference classificaRef = db.collection("tesi_classifiche").document(studenteId);
+
                 Tesi tesi = mDataList.get(position);
                 mDataList.remove(tesi);
 
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    return;
+                }
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                String studenteId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DocumentReference classificaRef = db.collection("tesi_classifiche").document(studenteId);
                 Map<String, Object> updates = new HashMap<>();
                 updates.put("tesi", getIdOfThesis(mDataList));
 

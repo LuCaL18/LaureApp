@@ -1,7 +1,9 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +39,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
@@ -46,13 +49,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ClassificaTesiFragment extends Fragment {
+
+    public static final String SHARED_PREFS_NAME = "MY_SHARED_PREF";
+    public static final String TESI_LIST_KEY_PREF = "list_tesi_pref";
+
     private ListView listView;
     private ClassificaTesiAdapter adapter;
-    private List<Tesi> tesi;
+    private List<Tesi> tesiList;
     private BottomNavigationView navBar;
     private LoggedInUser user;
     private VisualizeThesisViewModel thesisViewModel;
@@ -67,59 +76,31 @@ public class ClassificaTesiFragment extends Fragment {
         navBar = getActivity().findViewById(R.id.nav_view);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String studenteId = currentUser.getUid();
 
         adapter = new ClassificaTesiAdapter(getContext(), thesisViewModel);
         listView.setAdapter(adapter);
 
-        CollectionReference mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
-        mCollection.whereEqualTo("studentId", studenteId).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        if (currentUser != null) {
+            CollectionReference mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
+            mCollection.whereEqualTo("studentId", currentUser.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                tesi = new ArrayList<>();
+                    tesiList = new ArrayList<>();
 
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    TesiClassifica classificaTesi = doc.toObject(TesiClassifica.class);
-
-                    if (classificaTesi.getTesi().isEmpty()) {
-
-                        tesi = new ArrayList<>();
-                        adapter.setmDataList(tesi);
-
-                    } else {
-
-                        List<String> tesiId = classificaTesi.getTesi();
-
-                        FirebaseFirestore.getInstance().collection("tesi").whereIn("id", tesiId)
-                                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                        List<Tesi> thesisList = new ArrayList<>();
-                                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                                            // Convert each document snapshot to a Thesis object
-                                            Tesi thesis = document.toObject(Tesi.class);
-                                            thesisList.add(thesis);
-                                        }
-
-                                        tesi = thesisList;
-                                        adapter.setmDataList(tesi);
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.e("Classifica tesi", e.getMessage());
-                                    }
-                                });
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        TesiClassifica classificaTesi = doc.toObject(TesiClassifica.class);
+                        fetchDataTesi(classificaTesi.getTesi());
                     }
                 }
-            }
-        });
+            });
+        } else {
+            fetchDataTesi(getTesiList());
+        }
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -170,7 +151,7 @@ public class ClassificaTesiFragment extends Fragment {
                         // unhighlight list item
                         return true;
                     case DragEvent.ACTION_DROP:
-                        tesi = adapter.getmDataList();
+                        tesiList = adapter.getmDataList();
                         return true;
                     case DragEvent.ACTION_DRAG_ENDED:
                         listView.setNestedScrollingEnabled(true);
@@ -188,8 +169,8 @@ public class ClassificaTesiFragment extends Fragment {
         spinnerOrdinamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (tesi.isEmpty()) return;
-                List<Tesi> listaTesiOrdinata = new ArrayList<>(tesi);
+                if (tesiList == null || tesiList.isEmpty()) return;
+                List<Tesi> listaTesiOrdinata = new ArrayList<>(tesiList);
                 String opzioneSelezionata = parent.getItemAtPosition(position).toString();
                 switch (opzioneSelezionata) {
                     case "Tesi A-Z":
@@ -284,7 +265,7 @@ public class ClassificaTesiFragment extends Fragment {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Classifica Tesi");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Ecco la mia classifica di tesi: " + tesi);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Ecco la mia classifica di tesi: " + tesiList);
         startActivity(Intent.createChooser(shareIntent, "Condividi la classifica tramite"));
     }
 
@@ -299,10 +280,81 @@ public class ClassificaTesiFragment extends Fragment {
         return listId;
     }
 
+    private void fetchDataTesi(List<String> thesisId) {
+        if (thesisId == null || thesisId.isEmpty()) {
+            tesiList = new ArrayList<>();
+            adapter.setmDataList(tesiList);
+        } else {
+            FirebaseFirestore.getInstance().collection("tesi").whereIn("id", thesisId)
+                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<Tesi> thesisList = new ArrayList<>();
+                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                // Convert each document snapshot to a Thesis object
+                                Tesi thesis = document.toObject(Tesi.class);
+                                thesisList.add(thesis);
+                            }
+
+                            tesiList = thesisList;
+                            adapter.setmDataList(tesiList);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("Classifica tesi", e.getMessage());
+                        }
+                    });
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         navBar.setVisibility(View.GONE);
+    }
+
+    public boolean saveListofThesis() {
+        try {
+            SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+            SharedPreferences.Editor mEdit1 = sp.edit();
+            Set<String> set = new HashSet<String>();
+
+            for (Tesi tesi : tesiList) {
+                set.add(tesi.getId());
+            }
+
+            mEdit1.putStringSet(TESI_LIST_KEY_PREF, set);
+            return mEdit1.commit();
+        } catch (Exception e) {
+            Log.e("ClassificaTesiFragment", e.getMessage());
+
+            return false;
+        }
+    }
+
+    public ArrayList<String> getTesiList() {
+        SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+
+        //NOTE: if shared preference is null, the method return empty Hashset and not null
+        Set<String> set = sp.getStringSet(TESI_LIST_KEY_PREF, new HashSet<>());
+
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (user != null && user.getRole().equals(RoleUser.GUEST)) {
+            saveListofThesis();
+        } else {
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("tesi", getIdOfThesis(tesiList));
+
+            FirebaseFirestore.getInstance().collection("tesi_classifiche").document(user.getId()).update(updates);
+        }
     }
 
     @Override
@@ -312,11 +364,6 @@ public class ClassificaTesiFragment extends Fragment {
 
         NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
         navigationView.getMenu().findItem(MainActivity.CLASSIFICA_TESI).setChecked(false);
-
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("tesi", getIdOfThesis(tesi));
-
-        FirebaseFirestore.getInstance().collection("tesi_classifiche").document(user.getId()).update(updates);
     }
 }
 
