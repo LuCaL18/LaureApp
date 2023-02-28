@@ -1,6 +1,6 @@
- package com.uniba.mobile.cddgl.laureapp.ui.tesi;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
- import static android.content.ContentValues.TAG;
+import static android.content.ContentValues.TAG;
 
  import android.content.Context;
  import android.util.Log;
@@ -151,7 +151,7 @@ public class ListAdapterTesi extends BaseAdapter {
         // Verifico se l'utente loggato è uno STUDENTE o PROFESSORE per visualizzare o meno il bottone addTesi
         if (userLogged.getRole() == RoleUser.PROFESSOR) {
             viewHolder.imageButton3.setVisibility(View.GONE);
-        } else {
+        } else if (userLogged.getRole() == RoleUser.STUDENT) {
             viewHolder.imageButton3.setVisibility(View.VISIBLE);
         }
         viewHolder.imageButton3.setOnClickListener(new View.OnClickListener() {
