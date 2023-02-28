@@ -133,27 +133,27 @@ public class MainActivity extends AppCompatActivity {
                         isSelected = true;
                         break;
                     case CHAT:
-                            navController.navigate(R.id.nav_chat_list_fragment);
-                            isSelected = true;
-                            break;
-                        case TICKET:
-                            navController.navigate(R.id.nav_ticket);
-                            isSelected = true;
-                            break;
-                        case BOOKING:
-                            navController.navigate(R.id.nav_bookingListFragment);
-                            isSelected = true;
-                            break;
-                        case LOGOUT:
-                            logout();
-                            isSelected = true;
-                            break;
-                        case MEETING:
+                        navController.navigate(R.id.nav_chat_list_fragment);
+                        isSelected = true;
+                        break;
+                    case TICKET:
+                        navController.navigate(R.id.nav_ticket);
+                        isSelected = true;
+                        break;
+                    case BOOKING:
+                        navController.navigate(R.id.nav_bookingListFragment);
+                        isSelected = true;
+                        break;
+                    case LOGOUT:
+                        logout();
+                        isSelected = true;
+                        break;
+                    case MEETING:
                         navController.navigate(R.id.ricevimento);
                         isSelected = true;
                         break;
-                        default:
-                            isSelected = false;
+                    default:
+                        isSelected = false;
                     }
                     drawer.closeDrawer(GravityCompat.START);
                     return isSelected;
