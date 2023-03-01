@@ -66,6 +66,7 @@
                 android:id="@+id/visualizza_task1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/color_hole_graph"
                 app:srcCompat="@android:drawable/ic_menu_view"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
