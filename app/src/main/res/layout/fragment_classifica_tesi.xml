@@ -5,6 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageButton
+        android:id="@+id/menuButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/color_hole_graph"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_menu_24dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/shareClassifica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="@color/color_hole_graph"
+        app:layout_constraintEnd_toStartOf="@+id/menuButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="?attr/actionModeShareDrawable"
+        tools:ignore="MissingConstraints" />
+
     <ListView
         android:id="@+id/classifica_tesi"
         android:layout_width="match_parent"
@@ -13,18 +36,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_classificatesi"
+        app:layout_constraintTop_toBottomOf="@+id/shareClassifica"
         app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/classifica_tesi" />
+        tools:listitem="@layout/classifica_tesi">
 
-    <Spinner
-        android:id="@+id/spinner_classificatesi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

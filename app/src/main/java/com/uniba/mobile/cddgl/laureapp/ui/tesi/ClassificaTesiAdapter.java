@@ -109,7 +109,6 @@ public class ClassificaTesiAdapter extends BaseAdapter {
                 classificaRef.set(new ClassificaTesi(mDataList, studenteId));
             }
         });
-
         return convertView;
     }
 

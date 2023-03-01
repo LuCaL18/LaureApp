@@ -1,0 +1,49 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/defaultClassifica"
+        android:title="Default"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/ambito2"
+        android:title="Ambito"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/chiave2"
+        android:title="Chiave"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/mediaVoto2"
+        android:title="Media Voto"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tempistiche2"
+        android:title="Tempistiche"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tesi_a_z2"
+        android:title="Tesi A-Z"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tesi_z_a2"
+        android:title="Tesi Z-A"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/relatore_a_z2"
+        android:title="Relatore A-Z"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/relatore_z_a2"
+        android:title="Relatore Z-A"
+        app:showAsAction="ifRoom" />
+
+</menu>
