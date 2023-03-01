@@ -39,6 +39,20 @@
                     android:layout_marginTop="5dp"
                     android:text="Scadenza" />
 
+                <TextView
+                    android:id="@+id/tesiTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Tesi" />
+
+                <TextView
+                    android:id="@+id/studenteTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Studente" />
+
                 <ProgressBar
                     android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyleHorizontal"

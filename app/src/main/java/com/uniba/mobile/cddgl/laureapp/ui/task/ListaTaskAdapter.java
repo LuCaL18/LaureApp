@@ -14,14 +14,20 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.TaskState;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +37,33 @@ public class ListaTaskAdapter extends BaseAdapter {
     private final Context mContext;
     private final List<Task> mDataList;
     private CollectionReference mCollectionRef;
+    private CollectionReference mCollection = FirebaseFirestore.getInstance().collection("users");
+    private CollectionReference mCollection2 = FirebaseFirestore.getInstance().collection("tesi");
+    private LoggedInUser userLogged = null;
 
     public ListaTaskAdapter(Context context, CollectionReference ref) {
         mContext = context;
         mDataList = new ArrayList<>();
         mCollectionRef = ref;
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
+        mCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e("FirebaseListAdapter", "Listen failed.", e);
+                    return;
+                }
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    LoggedInUser user = doc.toObject(LoggedInUser.class);
+                    if (user.getId().equals(userId)) {
+                        userLogged = user;
+                        notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+        });
         mCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -46,7 +74,13 @@ public class ListaTaskAdapter extends BaseAdapter {
                 mDataList.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Task task = doc.toObject(Task.class);
-                    mDataList.add(task);
+                    String idRelatore = doc.getString("relatore");
+                    String idStudent = doc.getString("studenteId");
+                    if (userLogged.getRole().equals(RoleUser.PROFESSOR) && idRelatore.equals(userLogged.getId())) {
+                        mDataList.add(task);
+                    } else if (userLogged.getRole().equals(RoleUser.STUDENT) && idStudent.equals(userLogged.getId())) {
+                        mDataList.add(task);
+                    }
                 }
                 notifyDataSetChanged();
             }
@@ -76,6 +110,8 @@ public class ListaTaskAdapter extends BaseAdapter {
             viewHolder = new com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskAdapter.ViewHolder();
             viewHolder.textView1 = convertView.findViewById(R.id.nomeTask);
             viewHolder.textView2 = convertView.findViewById(R.id.scadenzaTask);
+            viewHolder.textView3 = convertView.findViewById(R.id.tesiTask);
+            viewHolder.textView4 = convertView.findViewById(R.id.studenteTask);
             viewHolder.imageButton1 = convertView.findViewById(R.id.visualizza_task1);
             viewHolder.progressBar = convertView.findViewById(R.id.progressBar);
             convertView.setTag(viewHolder);
@@ -100,6 +136,29 @@ public class ListaTaskAdapter extends BaseAdapter {
                 viewHolder.progressBar.setProgress(0);
                 break;
         }
+        if (userLogged.getRole() == RoleUser.PROFESSOR) {
+            viewHolder.textView3.setVisibility(View.VISIBLE);
+            viewHolder.textView4.setVisibility(View.VISIBLE);
+            mCollection2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.e("FirebaseListAdapter", "Listen failed.", e);
+                        return;
+                    }
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Tesi tesi = doc.toObject(Tesi.class);
+                        if (tesi.getId().equals(task.getTesiId())) {
+                            viewHolder.textView3.setText(tesi.getNomeTesi());
+                            viewHolder.textView4.setText(tesi.getStudent().getDisplayName());
+                        }
+                    }
+                }
+            });
+        } else if (userLogged.getRole() == RoleUser.STUDENT) {
+            viewHolder.textView3.setVisibility(View.GONE);
+            viewHolder.textView4.setVisibility(View.GONE);
+        }
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +177,8 @@ public class ListaTaskAdapter extends BaseAdapter {
     private static class ViewHolder {
         TextView textView1;
         TextView textView2;
+        TextView textView3;
+        TextView textView4;
         ImageButton imageButton1;
         ProgressBar progressBar;
     }

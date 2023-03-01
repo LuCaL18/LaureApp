@@ -14,7 +14,8 @@
     </string-array>
     <string-array name="stato_array">
         <item>NEW</item>
-        <item>RUNNING</item>
+        <item>STARTED</item>
+        <item>COMPLETED</item>
         <item>END</item>
     </string-array>
     <string-array name="tesi_array">

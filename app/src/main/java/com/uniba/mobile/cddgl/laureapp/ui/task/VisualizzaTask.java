@@ -137,6 +137,7 @@ public class VisualizzaTask extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             String nuovoStato = stati[position];
+                            statoTask.setText(nuovoStato);
                             // Aggiorna l'istanza task su Firebase con il nuovo stato
                             Bundle bundle = getArguments();
                             if (bundle != null) {

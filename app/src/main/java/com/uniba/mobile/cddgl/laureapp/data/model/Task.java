@@ -3,43 +3,44 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 import com.uniba.mobile.cddgl.laureapp.data.TaskState;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Task implements Serializable {
 
-    private String student;
-    private List<String> relators;
+    private String studenteId;
+    private String relatore;
     private String descrizione;
     private String nomeTask;
     private String scadenza;
     private TaskState stato;
+    private String tesiId;
 
     public Task() {
     }
 
-    public Task(String student, List<String> relators, String descrizione, String nomeTask, String scadenza, TaskState stato) {
-        this.student = student;
-        this.relators = relators;
+    public Task(String studenteId, String relatore, String descrizione, String nomeTask, String scadenza, TaskState stato, String tesiId) {
+        this.studenteId = studenteId;
+        this.relatore = relatore;
         this.descrizione = descrizione;
         this.nomeTask = nomeTask;
         this.scadenza = scadenza;
         this.stato = stato;
+        this.tesiId = tesiId;
     }
 
     public String getStudent() {
-        return student;
+        return studenteId;
     }
 
-    public void setStudent(String student) {
-        this.student = student;
+    public void setStudent(String studenteId) {
+        this.studenteId = studenteId;
     }
 
-    public List<String> getRelators() {
-        return relators;
+    public String getRelators() {
+        return relatore;
     }
 
-    public void setRelators(List<String> relators) {
-        this.relators = relators;
+    public void setRelators(String relatore) {
+        this.relatore = relatore;
     }
 
     public String getDescrizione() {
@@ -72,5 +73,13 @@ public class Task implements Serializable {
 
     public void setStato(TaskState stato) {
         this.stato = stato;
+    }
+
+    public String getTesiId() {
+        return tesiId;
+    }
+
+    public void setTesiId(String tesiId) {
+        this.tesiId = tesiId;
     }
 }

@@ -2,9 +2,10 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ClassificaTesi {
+public class ClassificaTesi implements Serializable {
 
     private List<Tesi> tesi;
     private String studenteId;
