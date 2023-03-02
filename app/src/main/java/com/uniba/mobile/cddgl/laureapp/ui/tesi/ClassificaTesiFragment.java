@@ -43,30 +43,67 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * Fragment che si occupa della gestione della visualizzazione
+ * di una lista di task visibli dall'utente
+ *
+ */
+
 public class ClassificaTesiFragment extends Fragment {
 
+    /* ListView per la gestione della lista della classifica tesi da visualizzare */
     private ListView listView;
+    /* Adapter per la gestione di ClassificaTesiAdapter */
     private ClassificaTesiAdapter adapter;
+    /* Mappa contenente la stringa relativa all'id dello studente e un oggetto di tipo TesiClassifica */
     private Map<String, TesiClassifica> classifica;
+    /* Oggetto di tipo TesiClassifica per memorizzare la classifica tesi dello studente */
     private TesiClassifica dataList;
+    /* CollectionReference per il recupero di tutte le tesi istanziate su firebase */
     private CollectionReference mCollection;
+    /* navBar da rimuovere dalla schermata */
     private BottomNavigationView navBar;
+    /* Lista delle tesi originali della classifica da visualizzare a schermo */
     private List<Tesi> listaTesiOriginale;
 
+    /**
+     *
+     * Metodo "onCreateView" che si occupa della creazione della view che visualizzerà il
+     * layout relativo alla classifica tesi, presenta al suo interno l'implementazione
+     * relativa alla condivisione della classifica oppure al filtraggio tramite vincoli o
+     * condizioni che sono rispettivamente:
+     *
+     *   1. Ambito, ovvero il contesto in cui è incentrato la tesi
+     *   2. Chiave, parola chiave associata alla tesi
+     *   3. Media Voto, in base alla media minima richiesta e selezionata dall'utente
+     *   4. Tempistiche, mesi necessari per il completamento della tesi
+     *   5. Tesi A-Z o Z-A, ordinamento per nome tesi in ordine alfabetico A-Z o inverso
+     *   6. Relatore A-Z o Z-A, ordinamento per nome relatore in ordine alfabetico A-Z o inverso
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        /* Creazione della view responsabile della gestione della visualizzazione del layout */
         View view = inflater.inflate(R.layout.fragment_classifica_tesi, container, false);
         listView = view.findViewById(R.id.classifica_tesi);
+        /* Rimozione della navBar dallo schermo */
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.INVISIBLE);
         classifica = new HashMap<>();
         dataList = null;
+        /* Recupera l'ID del relatore attualmente loggato */
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String studenteId = currentUser.getUid();
         mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
         adapter = new ClassificaTesiAdapter(getActivity(), mCollection);
         Log.d("ClassificaTesiFragment", "onCreateView() method called");
         listView.setAdapter(adapter);
+        /* Utilizzo della mCollection per il recupero dell'istanza della classifica equivalente allo studente loggato */
         mCollection.whereEqualTo("studenteId", studenteId).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -75,6 +112,7 @@ public class ClassificaTesiFragment extends Fragment {
                     return;
                 }
                 classifica.clear();
+                /* Recupero della classifica corretta */
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     TesiClassifica tesiClassifica = doc.toObject(TesiClassifica.class);
                     dataList = tesiClassifica;
@@ -85,6 +123,7 @@ public class ClassificaTesiFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+        /* imageButon per la condivisione della classifica tesi */
         ImageButton shareClassifica = view.findViewById(R.id.shareClassifica);
         shareClassifica.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,44 +142,47 @@ public class ClassificaTesiFragment extends Fragment {
                 startActivity(Intent.createChooser(intent, "Condividi con:"));
             }
         });
+        /* imageButton per la visualizzazione di tutti i possibili filtri o interrogazioni sui vincoli delle tesi */
         ImageButton menuButton = view.findViewById(R.id.menuButton);
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu popup = new PopupMenu(getContext(), menuButton);
                 popup.getMenuInflater().inflate(R.menu.menu_classifica_layout, popup.getMenu());
-                List<Tesi> listaTesiOrdinata = new ArrayList<>(listaTesiOriginale); // crea una nuova lista ordinata a partire dalla lista originale
+                /* Crea una nuova lista ordinata a partire dalla lista originale */
+                List<Tesi> listaTesiOrdinata = new ArrayList<>(listaTesiOriginale);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.defaultClassifica:
-                                listaTesiOrdinata.clear(); // pulisci la lista ordinata e aggiungi nuovamente tutti gli elementi dalla lista originale
+                                /* Pulisci la lista ordinata e aggiungi nuovamente tutti gli elementi dalla lista originale */
+                                listaTesiOrdinata.clear();
                                 listaTesiOrdinata.addAll(listaTesiOriginale);
                                 break;
                             case R.id.ambito2:
-                                // Salva la classifica tesi originaria
+                                /* Salva la classifica tesi originaria */
                                 TesiClassifica copia2 = dataList;
-                                // Crea una lista di opzioni per il RadioGroup
+                                /* Crea una lista di opzioni per il RadioGroup */
                                 final String[] opzioni2 = {"Ingegneria","Informatica","Economia","Medicina","Psicologia","Lettere","Architettura","Biologia","Giurisprudenza"};
-                                // Crea un nuovo RadioGroup
+                                /* Crea un nuovo RadioGroup */
                                 RadioGroup radioGroup2 = new RadioGroup(getActivity());
                                 radioGroup2.setOrientation(RadioGroup.VERTICAL);
-                                // Cicla attraverso le opzioni e crea un nuovo RadioButton per ciascuna di esse
+                                /* Cicla attraverso le opzioni e crea un nuovo RadioButton per ciascuna di esse */
                                 for (String opzione : opzioni2) {
                                     RadioButton radioButton2 = new RadioButton(getActivity());
                                     radioButton2.setText(opzione);
                                     radioGroup2.addView(radioButton2);
                                 }
-                                // Aggiungi il RadioGroup al LinearLayout del dialog
+                                /* Aggiungi il RadioGroup al LinearLayout del dialog */
                                 LinearLayout layout2 = new LinearLayout(getActivity());
                                 layout2.setOrientation(LinearLayout.VERTICAL);
                                 layout2.addView(radioGroup2);
                                 AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
                                 builder2.setTitle("Filtra per tempistiche");
                                 builder2.setMessage("Seleziona una delle seguenti opzioni:");
-                                // Aggiungi il layout personalizzato al dialog
+                                /* Aggiungi il layout personalizzato al dialog */
                                 builder2.setView(layout2);
-                                // Aggiungi il pulsante "OK" al dialog
+                                /* Aggiungi il pulsante "OK" al dialog */
                                 builder2.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -148,112 +190,112 @@ public class ClassificaTesiFragment extends Fragment {
                                         View radioButton = radioGroup2.findViewById(radioButtonID);
                                         int index = radioGroup2.indexOfChild(radioButton);
                                         String selectedOption = opzioni2[index];
-                                        // Qui devi implementare il filtro per le tempistiche utilizzando il testo inserito dall'utente
-                                        // e aggiornare la lista delle tesi visualizzate di conseguenza
+                                        /* Qui devi implementare il filtro per le tempistiche utilizzando il testo inserito dall'utente
+                                         * e aggiornare la lista delle tesi visualizzate di conseguenza */
                                         List<Tesi> tesiFiltrate = new ArrayList<>();
-                                        // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di tempistiche
+                                        /* Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di tempistiche */
                                         for (Tesi t : copia2.getTesi()) {
                                             String ambito = t.getAmbito();
                                             if (selectedOption.startsWith(String.valueOf(ambito))) {
                                                 tesiFiltrate.add(t);
                                             }
                                         }
-                                        // Aggiorna la lista delle tesi visualizzate con quelle filtrate
+                                        /* Aggiorna la lista delle tesi visualizzate con quelle filtrate */
                                         adapter.updateList(tesiFiltrate);
                                     }
                                 });
-                                // Aggiungi il pulsante "Annulla" al dialog
+                                /* Aggiungi il pulsante "Annulla" al dialog */
                                 builder2.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
                                     }
                                 });
-                                // Visualizza il dialog
+                                /* Visualizza il dialog */
                                 builder2.show();
                                 break;
                             case R.id.chiave2:
-                                // Salva classifica tesi originaria //
+                                /* Salva classifica tesi originaria */
                                 TesiClassifica copia3 = dataList;
-                                // Codice da inserire nel metodo onClick per l'ambito
+                                /* Codice da inserire nel metodo onClick per l'ambito */
                                 final EditText input3 = new EditText(getActivity());
                                 AlertDialog.Builder builder3 = new AlertDialog.Builder(getActivity());
                                 builder3.setTitle("Filtra per chiave");
                                 builder3.setMessage("Inserisci il campo di ricerca per la chiave:");
-                                // Aggiungi il campo di testo personalizzato all'interno del dialog
+                                /* Aggiungi il campo di testo personalizzato all'interno del dialog */
                                 builder3.setView(input3);
-                                // Aggiungi il pulsante "OK" al dialog
+                                /* Aggiungi il pulsante "OK" al dialog */
                                 builder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         String text3 = input3.getText().toString();
-                                        // Qui devi implementare il filtro per l'ambito utilizzando il testo inserito dall'utente
-                                        // e aggiornare la lista delle tesi visualizzate di conseguenza
+                                        /* Qui devi implementare il filtro per l'ambito utilizzando il testo inserito dall'utente
+                                         * e aggiornare la lista delle tesi visualizzate di conseguenza */
                                         List<Tesi> tesiFiltrate = new ArrayList<>();
-                                        // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di ambito
+                                        /* Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di ambito */
                                         for (Tesi t : dataList.getTesi()) {
                                             if (t.getChiavi().contains(text3)) {
                                                 tesiFiltrate.add(t);
                                             }
                                         }
-                                        // Aggiorna la lista delle tesi visualizzate con quelle filtrate
+                                        /* Aggiorna la lista delle tesi visualizzate con quelle filtrate */
                                         adapter.updateList(tesiFiltrate);
                                     }
                                 });
-                                // Aggiungi il pulsante "Annulla" al dialog
+                                /* Aggiungi il pulsante "Annulla" al dialog */
                                 builder3.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
                                     }
                                 });
-                                // Visualizza il dialog
+                                /* Visualizza il dialog */
                                 builder3.show();
                                 dataList.equals(copia3);
                                 break;
                             case R.id.mediaVoto2:
-                                // Salva la classifica tesi originaria
+                                /* Salva la classifica tesi originaria */
                                 TesiClassifica copia4 = dataList;
-                                // Crea il layout del dialog
+                                /* Crea il layout del dialog */
                                 LayoutInflater inflater4 = LayoutInflater.from(getActivity());
                                 View dialogView4 = inflater4.inflate(R.layout.dialog_seekbar, null);
-                                // Inizializza la seekbar
+                                /* Inizializza la seekbar */
                                 final TextView textView4 = dialogView4.findViewById(R.id.seekbar_value);
                                 final SeekBar seekBar4 = dialogView4.findViewById(R.id.seekbar);
                                 seekBar4.setMax(24);
                                 seekBar4.setMin(0);
                                 seekBar4.setProgress(0);
                                 textView4.setText(String.valueOf((seekBar4.getProgress() * 0.5f) + 18.0f));
-                                // Crea il dialog
+                                /* Crea il dialog */
                                 AlertDialog.Builder builder4 = new AlertDialog.Builder(getActivity());
                                 builder4.setTitle("Filtra per media voto");
                                 builder4.setView(dialogView4);
-                                // Aggiungi il pulsante "OK" al dialog
+                                /* Aggiungi il pulsante "OK" al dialog */
                                 builder4.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         float voto = (seekBar4.getProgress() * 0.5f) + 18.0f;
-                                        // Qui devi implementare il filtro per il media voto utilizzando la seekbar
-                                        // e aggiornare la lista delle tesi visualizzate di conseguenza
+                                        /* Qui devi implementare il filtro per il media voto utilizzando la seekbar
+                                         * e aggiornare la lista delle tesi visualizzate di conseguenza */
                                         List<Tesi> tesiFiltrate = new ArrayList<>();
-                                        // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di media voto
+                                        /* Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di media voto */
                                         for (Tesi t : dataList.getTesi()) {
                                             if (t.getMediaVoto() >= voto) {
                                                 tesiFiltrate.add(t);
                                             }
                                         }
-                                        // Aggiorna la lista delle tesi visualizzate con quelle filtrate
+                                        /* Aggiorna la lista delle tesi visualizzate con quelle filtrate */
                                         adapter.updateList(tesiFiltrate);
                                     }
                                 });
-                                // Aggiungi il pulsante "Annulla" al dialog
+                                /* Aggiungi il pulsante "Annulla" al dialog */
                                 builder4.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
                                     }
                                 });
-                                // Aggiungi un listener per aggiornare il valore della seekbar sulla textview
+                                /* Aggiungi un listener per aggiornare il valore della seekbar sulla textview */
                                 seekBar4.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                                     @Override
                                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -264,34 +306,34 @@ public class ClassificaTesiFragment extends Fragment {
                                     @Override
                                     public void onStopTrackingTouch(SeekBar seekBar) {}
                                 });
-                                // Visualizza il dialog
+                                /* Visualizza il dialog */
                                 builder4.show();
                                 dataList.equals(copia4);
                                 break;
                             case R.id.tempistiche2:
-                                // Salva la classifica tesi originaria
+                                /* Salva la classifica tesi originaria */
                                 TesiClassifica copia = dataList;
-                                // Crea una lista di opzioni per il RadioGroup
+                                /* Crea una lista di opzioni per il RadioGroup */
                                 final String[] opzioni = {"1 mese","2 mesi", "3 mesi", "4 mesi", "5 mesi","6 mesi"};
-                                // Crea un nuovo RadioGroup
+                                /* Crea un nuovo RadioGroup */
                                 RadioGroup radioGroup = new RadioGroup(getActivity());
                                 radioGroup.setOrientation(RadioGroup.VERTICAL);
-                                // Cicla attraverso le opzioni e crea un nuovo RadioButton per ciascuna di esse
+                                /* Cicla attraverso le opzioni e crea un nuovo RadioButton per ciascuna di esse */
                                 for (String opzione : opzioni) {
                                     RadioButton radioButton = new RadioButton(getActivity());
                                     radioButton.setText(opzione);
                                     radioGroup.addView(radioButton);
                                 }
-                                // Aggiungi il RadioGroup al LinearLayout del dialog
+                                /* Aggiungi il RadioGroup al LinearLayout del dialog */
                                 LinearLayout layout = new LinearLayout(getActivity());
                                 layout.setOrientation(LinearLayout.VERTICAL);
                                 layout.addView(radioGroup);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 builder.setTitle("Filtra per tempistiche");
                                 builder.setMessage("Seleziona una delle seguenti opzioni:");
-                                // Aggiungi il layout personalizzato al dialog
+                                /* Aggiungi il layout personalizzato al dialog */
                                 builder.setView(layout);
-                                // Aggiungi il pulsante "OK" al dialog
+                                /* Aggiungi il pulsante "OK" al dialog */
                                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -299,28 +341,28 @@ public class ClassificaTesiFragment extends Fragment {
                                         View radioButton = radioGroup.findViewById(radioButtonID);
                                         int index = radioGroup.indexOfChild(radioButton);
                                         String selectedOption = opzioni[index];
-                                        // Qui devi implementare il filtro per le tempistiche utilizzando il testo inserito dall'utente
-                                        // e aggiornare la lista delle tesi visualizzate di conseguenza
+                                        /* Qui devi implementare il filtro per le tempistiche utilizzando il testo inserito dall'utente
+                                         * e aggiornare la lista delle tesi visualizzate di conseguenza */
                                         List<Tesi> tesiFiltrate = new ArrayList<>();
-                                        // Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di tempistiche
+                                        /* Cicla attraverso tutte le tesi per verificare se soddisfano il vincolo di tempistiche */
                                         for (Tesi t : copia.getTesi()) {
                                             int tempistiche = t.getTempistiche();
                                             if (selectedOption.startsWith(String.valueOf(tempistiche))) {
                                                 tesiFiltrate.add(t);
                                             }
                                         }
-                                        // Aggiorna la lista delle tesi visualizzate con quelle filtrate
+                                        /* Aggiorna la lista delle tesi visualizzate con quelle filtrate */
                                         adapter.updateList(tesiFiltrate);
                                     }
                                 });
-                                // Aggiungi il pulsante "Annulla" al dialog
+                                /* Aggiungi il pulsante "Annulla" al dialog */
                                 builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
                                     }
                                 });
-                                // Visualizza il dialog
+                                /* Visualizza il dialog */
                                 builder.show();
                                 break;
                             case R.id.tesi_a_z2:
@@ -358,7 +400,7 @@ public class ClassificaTesiFragment extends Fragment {
                             default:
                                 break;
                         }
-                        // aggiorna l'adapter con la nuova lista ordinata
+                        /* Aggiorna l'adapter con la nuova lista ordinata */
                         adapter.addTesi(listaTesiOrdinata);
                         adapter.notifyDataSetChanged();
                         return true;
@@ -367,9 +409,16 @@ public class ClassificaTesiFragment extends Fragment {
                 popup.show();
             }
         });
+        /* Ritorno della view da mostrare a schermo */
         return view;
     }
 
+    /**
+     *
+     * Metodo per chiamare l'intent che si occupa della gestione della condivisione
+     * della classifica tesi
+     *
+     */
     private void shareClassifica() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");

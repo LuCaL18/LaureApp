@@ -36,6 +36,7 @@ import java.util.List;
 
 public class ListaTaskFragment extends Fragment {
 
+    /* ListView per la visualizzazione della lista di task */
     private ListView listView;
     /* Adapter per la gestione di ListaTaskAdapter */
     private ListaTaskAdapter adapter;
@@ -45,6 +46,7 @@ public class ListaTaskFragment extends Fragment {
     private CollectionReference mCollection;
     /* CollectionReference per il recupero di tutti gli user istanziati su firebase */
     private CollectionReference mCollection2;
+    /* navBar da rimuovere nella schermata */
     private BottomNavigationView navBar;
     /* Oggetto di tipo LoggedInUser per memorizzare l'users attualmente loggato */
     private LoggedInUser userLogged = null;
@@ -61,21 +63,24 @@ public class ListaTaskFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        /* Recupero degli elementi del layout per la visualizzazione della lista task */
+        /* Creazione della view responsabile della gestione della visualizzazione del layout */
         View view = inflater.inflate(R.layout.fragment_lista_task, container, false);
         listView = view.findViewById(R.id.lista_task);
         /* Rimozione della navBar dallo schermo */
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.INVISIBLE);
+        /* Inizializzo il datalist, mCollection, mCollection2 e adapter */
         dataList = new ArrayList<>();
         mCollection = FirebaseFirestore.getInstance().collection("task");
         adapter = new ListaTaskAdapter(getActivity(), mCollection);
         Log.d("ListaTesiFragment", "onCreateView() method called");
+        /* Assegno l'adapter alla listView */
         listView.setAdapter(adapter);
         mCollection2 = FirebaseFirestore.getInstance().collection("users");
         /* Recupera l'ID del relatore attualmente loggato */
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
+        /* Utilizzo mCollection2 per il recupero di tutti gli users registrati nel database */
         mCollection2.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -93,7 +98,7 @@ public class ListaTaskFragment extends Fragment {
                 }
             }
         });
-        /* Recupero dei task dal database in base al ruolo dell'user loggato */
+        /* Utilizzo di mCollection per il recupero di tutti i task istanziati sul database */
         mCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -104,18 +109,22 @@ public class ListaTaskFragment extends Fragment {
                 dataList.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Task task = doc.toObject(Task.class);
+                    /* Recupero degli id dello studente e del relatore */
                     String idRelatore = doc.getString("relatore");
                     String idStudent = doc.getString("studenteId");
+                    /* Se l'utente loggato è un professore e l'id del relatore coincide con l'utente loggato, aggiungere il task alla lista */
                     if (userLogged.getRole().equals(RoleUser.PROFESSOR) && idRelatore.equals(userLogged.getId())) {
                         dataList.add(task);
-                    } else if (userLogged.getRole().equals(RoleUser.STUDENT) && idStudent.equals(userLogged.getId())) {
+                    } /* Se l'utente loggato è uno studente e l'id del relatore coincide con l'utente loggato, aggiungere il task alla lista */
+                    else if (userLogged.getRole().equals(RoleUser.STUDENT) && idStudent.equals(userLogged.getId())) {
                         dataList.add(task);
                     }
                 }
-
+                /* Notifico l'adapter delle modifiche effettuate */
                 adapter.notifyDataSetChanged();
             }
         });
+        /* Restituisco la view da mostrare a schermo */
         return view;
     }
 }

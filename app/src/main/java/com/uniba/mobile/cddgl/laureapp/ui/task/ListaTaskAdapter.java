@@ -41,9 +41,11 @@ import java.util.List;
 
 public class ListaTaskAdapter extends BaseAdapter {
 
+    /* Contesto dello stato corrente della lista dei task */
     private final Context mContext;
     /* Lista dei task da visualizzare a schermo */
     private final List<Task> mDataList;
+    /* CollectionReference */
     private CollectionReference mCollectionRef;
     /* CollectionReference per il recupero di tutti gli user istanziati su firebase */
     private CollectionReference mCollection = FirebaseFirestore.getInstance().collection("users");
@@ -53,12 +55,14 @@ public class ListaTaskAdapter extends BaseAdapter {
     private LoggedInUser userLogged = null;
 
     public ListaTaskAdapter(Context context, CollectionReference ref) {
+        /* Istanziamo mContext, mDataList e mCollectionReference*/
         mContext = context;
         mDataList = new ArrayList<>();
         mCollectionRef = ref;
         /* Recupero dell'ID dell'utente attualmente loggato da utilizzare per il recupero dei suoi dati */
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
+        /* Utilizzo della mCollection per il recupero delle istanze degli users presenti nel database */
         mCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -71,6 +75,7 @@ public class ListaTaskAdapter extends BaseAdapter {
                     LoggedInUser user = doc.toObject(LoggedInUser.class);
                     if (user.getId().equals(userId)) {
                         userLogged = user;
+                        /* Notifico della modifica effettuata */
                         notifyDataSetChanged();
                         break;
                     }
@@ -88,33 +93,55 @@ public class ListaTaskAdapter extends BaseAdapter {
                 mDataList.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Task task = doc.toObject(Task.class);
+                    /* Recupero degli id relativi a studente e relatore per effettuare i controlli */
                     String idRelatore = doc.getString("relatore");
                     String idStudent = doc.getString("studenteId");
-                    /* Se l'utente loggato è un professore, visualizzare la lista di tutti i task delle tesi
+                    /* Se l'utente loggato è un professore, aggiungere tutti i task delle tesi
                     *  in cui l'user è relatore o corelatore */
                     if (userLogged.getRole().equals(RoleUser.PROFESSOR) && idRelatore.equals(userLogged.getId())) {
                         mDataList.add(task);
-                    } /* Se l'utente loggato è uno studente, visualizzare la lista di tutti i task della tesi
-                    *  in cui l'user è studente associato a tale tesi */
+                    } /* Se l'utente loggato è uno studente, aggiungere tutti i task della tesi
+                      *  in cui l'user è studente associato a tale tesi */
                     else if (userLogged.getRole().equals(RoleUser.STUDENT) && idStudent.equals(userLogged.getId())) {
                         mDataList.add(task);
                     }
                 }
+                /* Notifica delle modifiche effettuate */
                 notifyDataSetChanged();
             }
         });
     }
 
+    /**
+     *
+     * Metodo per il recupero della dimensione della lista di tesi
+     *
+     * @return
+     */
     @Override
     public int getCount() {
         return mDataList.size();
     }
 
+    /**
+     *
+     * Metodo per il recupero della posizione di una specifica tesi nel mDataList
+     *
+     * @param position
+     * @return
+     */
     @Override
     public Object getItem(int position) {
         return mDataList.get(position);
     }
 
+    /**
+     *
+     * Metodo per il recupero del numero della posizione della tesi
+     *
+     * @param position
+     * @return
+     */
     @Override
     public long getItemId(int position) {
         return position;
@@ -148,6 +175,7 @@ public class ListaTaskAdapter extends BaseAdapter {
             viewHolder = (com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskAdapter.ViewHolder) convertView.getTag();
         }
         Task task = mDataList.get(position);
+        /* Recupero dei dati relativi a nomeTask e scadenza di un task */
         viewHolder.textView1.setText(task.getNomeTask());
         viewHolder.textView2.setText(task.getScadenza());
         TaskState taskState = task.getStato();
@@ -171,6 +199,7 @@ public class ListaTaskAdapter extends BaseAdapter {
         if (userLogged.getRole() == RoleUser.PROFESSOR) {
             viewHolder.textView3.setVisibility(View.VISIBLE);
             viewHolder.textView4.setVisibility(View.VISIBLE);
+            /* Utilizzo della mCollection2 per il recupero delle tesi istanziate all'interno del database */
             mCollection2.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -181,6 +210,8 @@ public class ListaTaskAdapter extends BaseAdapter {
                     /* Recupero della tesi corretta relativa al task associato */
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         Tesi tesi = doc.toObject(Tesi.class);
+                        /* Se l'id della tesi recuperata è equivalente all'id del task attuale, visualizzare anche le informazioni
+                        *  su nome tesi e dello studente associato a tale tesi */
                         if (tesi.getId().equals(task.getTesiId())) {
                             viewHolder.textView3.setText(tesi.getNomeTesi());
                             viewHolder.textView4.setText(tesi.getStudent().getDisplayName());
@@ -194,21 +225,31 @@ public class ListaTaskAdapter extends BaseAdapter {
             viewHolder.textView3.setVisibility(View.GONE);
             viewHolder.textView4.setVisibility(View.GONE);
         }
+        /* imageButton per la visualizzazione del singolo task nei dettagli */
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Task task = mDataList.get(position);
+                /* Creazione di un bundle per salvare l'istanza del task visualizzata che va
+                *  passata a VisualizzaTask */
                 Bundle bundle = new Bundle();
                 bundle.putString("nometask", task.getNomeTask());
                 bundle.putString("stato", task.getStato().toString());
                 bundle.putString("descrizione", task.getDescrizione());
                 bundle.putString("scadenza", task.getScadenza());
+                /* Chiamata al navigation gestore di VisualizzaTask */
                 Navigation.findNavController(v).navigate(R.id.nav_visualizza_task, bundle);
             }
         });
+        /* Ritorno la view da visualizzare a schermo */
         return convertView;
     }
 
+    /**
+     *
+     * Metodo per istanziare gli elementi del layout
+     *
+     */
     private static class ViewHolder {
         TextView textView1;
         TextView textView2;

@@ -42,6 +42,7 @@ import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
 public class VisualizzaTask extends Fragment {
 
+    /* View per la gestione della visualizzazione della schermata del singolo task */
     private View root;
     /* CollectionReference per il recupero di tutti gli users istanziati su firebase */
     private CollectionReference mCollection = FirebaseFirestore.getInstance().collection("users");
@@ -73,6 +74,7 @@ public class VisualizzaTask extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        /* Creazione della view responsabile della gestione della visualizzazione del layout */
         root = inflater.inflate(R.layout.visualizza_task, container, false);
         /* Recupero il task passato da ListaTaskAdapter */
         Bundle bundle = getArguments();
@@ -220,6 +222,7 @@ public class VisualizzaTask extends Fragment {
             });
             scadenzaTask.setText(bundle.getString("scadenza"));
         }
+        /* Ritorno della view da visualizzare a schermo */
         return root;
     }
 
