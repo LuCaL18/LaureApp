@@ -37,17 +37,34 @@ import java.util.List;
 public class ListaTaskFragment extends Fragment {
 
     private ListView listView;
+    /* Adapter per la gestione di ListaTaskAdapter */
     private ListaTaskAdapter adapter;
+    /* Lista dei task da visualizzare a schermo */
     private List<Task> dataList;
+    /* CollectionReference per il recupero di tutti i task istanziati su firebase */
     private CollectionReference mCollection;
+    /* CollectionReference per il recupero di tutti gli user istanziati su firebase */
     private CollectionReference mCollection2;
     private BottomNavigationView navBar;
+    /* Oggetto di tipo LoggedInUser per memorizzare l'users attualmente loggato */
     private LoggedInUser userLogged = null;
 
+    /**
+     *
+     * Metodo "onCreateView" per il recupero di tutti i task da visualizzare a schermo
+     * filtrati per lo specifico user in base al suo ruolo (PROFESSOR o STUDENT)
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        /* Recupero degli elementi del layout per la visualizzazione della lista task */
         View view = inflater.inflate(R.layout.fragment_lista_task, container, false);
         listView = view.findViewById(R.id.lista_task);
+        /* Rimozione della navBar dallo schermo */
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.INVISIBLE);
         dataList = new ArrayList<>();
@@ -56,6 +73,7 @@ public class ListaTaskFragment extends Fragment {
         Log.d("ListaTesiFragment", "onCreateView() method called");
         listView.setAdapter(adapter);
         mCollection2 = FirebaseFirestore.getInstance().collection("users");
+        /* Recupera l'ID del relatore attualmente loggato */
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
         mCollection2.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -65,6 +83,7 @@ public class ListaTaskFragment extends Fragment {
                     Log.e("FirebaseListAdapter", "Listen failed.", e);
                     return;
                 }
+                /* Recupero dei dati relativi all'user loggato tramite l'id recuperato in precedenza */
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     LoggedInUser user = doc.toObject(LoggedInUser.class);
                     if (user.getId().equals(userId)) {
@@ -74,6 +93,7 @@ public class ListaTaskFragment extends Fragment {
                 }
             }
         });
+        /* Recupero dei task dal database in base al ruolo dell'user loggato */
         mCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {

@@ -33,7 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
@@ -47,8 +47,8 @@ public class ClassificaTesiFragment extends Fragment {
 
     private ListView listView;
     private ClassificaTesiAdapter adapter;
-    private Map<String, ClassificaTesi> classifica;
-    private ClassificaTesi dataList;
+    private Map<String, TesiClassifica> classifica;
+    private TesiClassifica dataList;
     private CollectionReference mCollection;
     private BottomNavigationView navBar;
     private List<Tesi> listaTesiOriginale;
@@ -76,8 +76,8 @@ public class ClassificaTesiFragment extends Fragment {
                 }
                 classifica.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    ClassificaTesi classificaTesi = doc.toObject(ClassificaTesi.class);
-                    dataList = classificaTesi;
+                    TesiClassifica tesiClassifica = doc.toObject(TesiClassifica.class);
+                    dataList = tesiClassifica;
                 }
                 listaTesiOriginale = dataList.getTesi();
                 classifica.put("classificaTesi", dataList);
@@ -119,7 +119,7 @@ public class ClassificaTesiFragment extends Fragment {
                                 break;
                             case R.id.ambito2:
                                 // Salva la classifica tesi originaria
-                                ClassificaTesi copia2 = dataList;
+                                TesiClassifica copia2 = dataList;
                                 // Crea una lista di opzioni per il RadioGroup
                                 final String[] opzioni2 = {"Ingegneria","Informatica","Economia","Medicina","Psicologia","Lettere","Architettura","Biologia","Giurisprudenza"};
                                 // Crea un nuovo RadioGroup
@@ -174,7 +174,7 @@ public class ClassificaTesiFragment extends Fragment {
                                 break;
                             case R.id.chiave2:
                                 // Salva classifica tesi originaria //
-                                ClassificaTesi copia3 = dataList;
+                                TesiClassifica copia3 = dataList;
                                 // Codice da inserire nel metodo onClick per l'ambito
                                 final EditText input3 = new EditText(getActivity());
                                 AlertDialog.Builder builder3 = new AlertDialog.Builder(getActivity());
@@ -213,7 +213,7 @@ public class ClassificaTesiFragment extends Fragment {
                                 break;
                             case R.id.mediaVoto2:
                                 // Salva la classifica tesi originaria
-                                ClassificaTesi copia4 = dataList;
+                                TesiClassifica copia4 = dataList;
                                 // Crea il layout del dialog
                                 LayoutInflater inflater4 = LayoutInflater.from(getActivity());
                                 View dialogView4 = inflater4.inflate(R.layout.dialog_seekbar, null);
@@ -270,7 +270,7 @@ public class ClassificaTesiFragment extends Fragment {
                                 break;
                             case R.id.tempistiche2:
                                 // Salva la classifica tesi originaria
-                                ClassificaTesi copia = dataList;
+                                TesiClassifica copia = dataList;
                                 // Crea una lista di opzioni per il RadioGroup
                                 final String[] opzioni = {"1 mese","2 mesi", "3 mesi", "4 mesi", "5 mesi","6 mesi"};
                                 // Crea un nuovo RadioGroup

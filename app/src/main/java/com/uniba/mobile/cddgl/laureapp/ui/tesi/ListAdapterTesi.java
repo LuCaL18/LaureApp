@@ -26,11 +26,11 @@ import static android.content.ContentValues.TAG;
  import com.uniba.mobile.cddgl.laureapp.R;
  import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
  import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
- import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
+ import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
  import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
  import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
- import java.util.ArrayList;
+import java.util.ArrayList;
  import java.util.List;
 
 public class ListAdapterTesi extends BaseAdapter {
@@ -164,16 +164,16 @@ public class ListAdapterTesi extends BaseAdapter {
                 classificaTesiDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        ClassificaTesi tesiClassificate;
+                        TesiClassifica tesiClassificate;
                         if (documentSnapshot.exists()) {
-                            tesiClassificate = documentSnapshot.toObject(ClassificaTesi.class);
+                            tesiClassificate = documentSnapshot.toObject(TesiClassifica.class);
                             if (!(tesiClassificate.getTesi().contains(tesiSelezionata))) {
                                 tesiClassificate.addTesi(tesiSelezionata);
                             }
                         } else {
                             List<Tesi> classifica = new ArrayList<>();
                             classifica.add(tesiSelezionata);
-                            tesiClassificate = new ClassificaTesi(classifica, studenteId);
+                            tesiClassificate = new TesiClassifica(classifica, studenteId);
                         }
                         classificaTesiDoc.set(tesiClassificate).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

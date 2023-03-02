@@ -20,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
 import java.util.ArrayList;
@@ -48,8 +48,8 @@ public class ClassificaTesiAdapter extends BaseAdapter {
                 }
                 mDataList.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    ClassificaTesi classificaTesi = doc.toObject(ClassificaTesi.class);
-                    mDataList = classificaTesi.getTesi();
+                    TesiClassifica tesiClassifica = doc.toObject(TesiClassifica.class);
+                    mDataList = tesiClassifica.getTesi();
                 }
                 classifica.put("classificaTesi", mDataList);
                 notifyDataSetChanged();
@@ -106,7 +106,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Tesi tesi = mDataList.get(position);
                 mDataList.remove(tesi);
-                classificaRef.set(new ClassificaTesi(mDataList, studenteId));
+                classificaRef.set(new TesiClassifica(mDataList, studenteId));
             }
         });
         return convertView;

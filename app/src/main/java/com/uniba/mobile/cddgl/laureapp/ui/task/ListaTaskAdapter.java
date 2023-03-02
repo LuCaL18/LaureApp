@@ -42,16 +42,21 @@ import java.util.List;
 public class ListaTaskAdapter extends BaseAdapter {
 
     private final Context mContext;
+    /* Lista dei task da visualizzare a schermo */
     private final List<Task> mDataList;
     private CollectionReference mCollectionRef;
+    /* CollectionReference per il recupero di tutti gli user istanziati su firebase */
     private CollectionReference mCollection = FirebaseFirestore.getInstance().collection("users");
+    /* CollectionReference per il recupero di tutte le tesi istanziate su firebase */
     private CollectionReference mCollection2 = FirebaseFirestore.getInstance().collection("tesi");
+    /* Oggetto di tipo LoggedInUser per memorizzare l'users attualmente loggato */
     private LoggedInUser userLogged = null;
 
     public ListaTaskAdapter(Context context, CollectionReference ref) {
         mContext = context;
         mDataList = new ArrayList<>();
         mCollectionRef = ref;
+        /* Recupero dell'ID dell'utente attualmente loggato da utilizzare per il recupero dei suoi dati */
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
         mCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -61,6 +66,7 @@ public class ListaTaskAdapter extends BaseAdapter {
                     Log.e("FirebaseListAdapter", "Listen failed.", e);
                     return;
                 }
+                /* Recupero di tutti gli attributi dell'user attualmente loggato */
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     LoggedInUser user = doc.toObject(LoggedInUser.class);
                     if (user.getId().equals(userId)) {
@@ -71,6 +77,7 @@ public class ListaTaskAdapter extends BaseAdapter {
                 }
             }
         });
+        /* Recupero dei dati da visualizzare in base al ruolo dell'user loggato */
         mCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -83,9 +90,13 @@ public class ListaTaskAdapter extends BaseAdapter {
                     Task task = doc.toObject(Task.class);
                     String idRelatore = doc.getString("relatore");
                     String idStudent = doc.getString("studenteId");
+                    /* Se l'utente loggato è un professore, visualizzare la lista di tutti i task delle tesi
+                    *  in cui l'user è relatore o corelatore */
                     if (userLogged.getRole().equals(RoleUser.PROFESSOR) && idRelatore.equals(userLogged.getId())) {
                         mDataList.add(task);
-                    } else if (userLogged.getRole().equals(RoleUser.STUDENT) && idStudent.equals(userLogged.getId())) {
+                    } /* Se l'utente loggato è uno studente, visualizzare la lista di tutti i task della tesi
+                    *  in cui l'user è studente associato a tale tesi */
+                    else if (userLogged.getRole().equals(RoleUser.STUDENT) && idStudent.equals(userLogged.getId())) {
                         mDataList.add(task);
                     }
                 }
@@ -109,10 +120,21 @@ public class ListaTaskAdapter extends BaseAdapter {
         return position;
     }
 
+    /**
+     *
+     * Metodo "getView" per la visualizzazione a schermo degli elementi del layout per la
+     * visualizzazione della lista di tutti i task
+     *
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskAdapter.ViewHolder viewHolder;
         if (convertView == null) {
+            /* Recupero degli elementi del layout per la visualizzazione della lista task */
             convertView = LayoutInflater.from(mContext).inflate(R.layout.lista_task, parent, false);
             viewHolder = new com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskAdapter.ViewHolder();
             viewHolder.textView1 = convertView.findViewById(R.id.nomeTask);
@@ -129,6 +151,7 @@ public class ListaTaskAdapter extends BaseAdapter {
         viewHolder.textView1.setText(task.getNomeTask());
         viewHolder.textView2.setText(task.getScadenza());
         TaskState taskState = task.getStato();
+        /* Switch utilizzato per differenziare lo stato di progresso della barra in base allo stato del task */
         switch (taskState) {
             case NEW:
                 viewHolder.progressBar.setProgress(10);
@@ -143,6 +166,8 @@ public class ListaTaskAdapter extends BaseAdapter {
                 viewHolder.progressBar.setProgress(0);
                 break;
         }
+        /* Se l'utente loggato è un PROFESSORE, visualizzare nel layout anche le informazioni relative allo specifico
+        *  studente e tesi associate a quel task, in modo tale da ottimizzare l'utilizzo della visualizzazione della lista */
         if (userLogged.getRole() == RoleUser.PROFESSOR) {
             viewHolder.textView3.setVisibility(View.VISIBLE);
             viewHolder.textView4.setVisibility(View.VISIBLE);
@@ -153,6 +178,7 @@ public class ListaTaskAdapter extends BaseAdapter {
                         Log.e("FirebaseListAdapter", "Listen failed.", e);
                         return;
                     }
+                    /* Recupero della tesi corretta relativa al task associato */
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         Tesi tesi = doc.toObject(Tesi.class);
                         if (tesi.getId().equals(task.getTesiId())) {
@@ -162,7 +188,9 @@ public class ListaTaskAdapter extends BaseAdapter {
                     }
                 }
             });
-        } else if (userLogged.getRole() == RoleUser.STUDENT) {
+        } /* Se l'utente è uno STUDENTE, ignorare la visualizzazione dei dati relativi alla tesi e studente in quanto
+           * inutili e ridondanti poichè farebbero riferimento alla stessa tesi e studente */
+        else if (userLogged.getRole() == RoleUser.STUDENT) {
             viewHolder.textView3.setVisibility(View.GONE);
             viewHolder.textView4.setVisibility(View.GONE);
         }
