@@ -33,11 +33,21 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
+/**
+ *
+ * Fragment che si occupa della gestione della visualizzazione di un task
+ * esistente selezionato dalla lista dei task visibili dall'utente
+ *
+ */
+
 public class VisualizzaTask extends Fragment {
 
     private View root;
+    /* CollectionReference per il recupero di tutti gli users istanziati su firebase */
     private CollectionReference mCollection = FirebaseFirestore.getInstance().collection("users");
+    /* Oggetto di tipo LoggedInUser per memorizzare l'users attualmente loggato */
     private LoggedInUser userLogged2;
+    /* Stringa in cui memorizzare l'id del task da visualizzare */
     private String taskId;
 
     public static VisualizzaTask newInstance() {
@@ -49,17 +59,28 @@ public class VisualizzaTask extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     *
+     * Metodo 'onCreateView' in cui avviene la gestione di tutte le operazioni: dalla visualizzazione
+     * a schermo delle varie componenti del layout e all'eventuale modifica dell'attributo STATO di
+     * un task se l'utente loggato è un PROFESSOR
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.visualizza_task, container, false);
-        // Recupero il task passato da ListaTaskAdapter
+        /* Recupero il task passato da ListaTaskAdapter */
         Bundle bundle = getArguments();
         if (bundle != null) {
-            // Visualizzo il titolo del task
+            /* Visualizzo il titolo del task */
             TextView title = root.findViewById(R.id.nometask2);
             title.setText(bundle.getString("nometask"));
-            // Card descrizione
+            /* Card descrizione */
             MaterialCardView cardDescrizione = root.findViewById(R.id.cv_descrizione);
             LinearLayout cvDescrizioneLayout = root.findViewById(R.id.descrizione_task);
             TextView descrizioneTask = root.findViewById(R.id.tv_descrizione3);
@@ -74,7 +95,7 @@ public class VisualizzaTask extends Fragment {
                 }
             });
             descrizioneTask.setText(bundle.getString("descrizione"));
-            // Recupero user attualmente loggato
+            /* Recupero user attualmente loggato */
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             ImageButton editStatoTask = root.findViewById(R.id.edit_task_state);
             if (currentUser != null) {
@@ -86,6 +107,7 @@ public class VisualizzaTask extends Fragment {
                             Log.e("FirebaseListAdapter", "Listen failed.", e);
                             return;
                         }
+                        /* Recupero dei dati relativi all'utente loggato e da riportare su "userLogged2" istanziato in precedenza */
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
                             LoggedInUser user = doc.toObject(LoggedInUser.class);
                             if (user.getId().equals(userId)) {
@@ -93,7 +115,7 @@ public class VisualizzaTask extends Fragment {
                                 break;
                             }
                         }
-                        // Verifico se l'utente loggato è uno STUDENTE o PROFESSORE per visualizzare o meno il bottone editStatoTask
+                        /* Verifico se l'utente loggato è uno STUDENTE o PROFESSORE per visualizzare o meno il bottone editStatoTask */
                         if (userLogged2 != null && userLogged2.getRole() == RoleUser.STUDENT) {
                             editStatoTask.setVisibility(View.GONE);
                         } else if (userLogged2 != null && userLogged2.getRole() == RoleUser.PROFESSOR) {
@@ -102,7 +124,7 @@ public class VisualizzaTask extends Fragment {
                     }
                 });
             }
-            // Card stato
+            /* Card stato */
             MaterialCardView cardStato = root.findViewById(R.id.cv_stato);
             LinearLayout cvStatoLayout = root.findViewById(R.id.stato_task);
             TextView statoTask = root.findViewById(R.id.tv_stato3);
@@ -120,28 +142,27 @@ public class VisualizzaTask extends Fragment {
             editStatoTask.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Crea il dialog personalizzato
+                    /* Crea il dialog personalizzato */
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     View dialogView = getLayoutInflater().inflate(R.layout.dialog_modifica_stato, null);
                     builder.setView(dialogView);
                     AlertDialog dialog = builder.create();
-
-                    // Popola la ListView con le opzioni dello stato
+                    /* Popola la ListView con le opzioni dello stato */
                     ListView listViewStato = dialogView.findViewById(R.id.listview_stato);
                     String[] stati = {"NEW", "STARTED", "COMPLETED", "CLOSED"};
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, stati);
                     listViewStato.setAdapter(adapter);
-
-                    // Aggiorna l'istanza task su Firebase quando l'utente seleziona una delle opzioni
+                    /* Aggiorna l'istanza task su Firebase quando l'utente seleziona una delle opzioni */
                     listViewStato.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             String nuovoStato = stati[position];
                             statoTask.setText(nuovoStato);
-                            // Aggiorna l'istanza task su Firebase con il nuovo stato
+                            /* Aggiorna l'istanza task su Firebase con il nuovo stato */
                             Bundle bundle = getArguments();
                             if (bundle != null) {
                                 String nomeTask = bundle.getString("nomeTask");
+                                /* Recupero del task visualizzato presente su firebase */
                                 FirebaseFirestore.getInstance().collection("task")
                                         .whereEqualTo("nomeTask", bundle.getString("nometask")).get()
                                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -150,6 +171,7 @@ public class VisualizzaTask extends Fragment {
                                                 if (!queryDocumentSnapshots.isEmpty()) {
                                                     DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                                                     String taskId = documentSnapshot.getId();
+                                                    /* Aggiornamento del task visualizzato con la modifica dell'attributo stato */
                                                     FirebaseFirestore.getInstance().collection("task").document(taskId)
                                                             .update("stato", nuovoStato)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -182,7 +204,7 @@ public class VisualizzaTask extends Fragment {
                     dialog.show();
                 }
             });
-            // Card scadenza
+            /* Card scadenza */
             MaterialCardView cardScadenza = root.findViewById(R.id.cv_scadenza);
             LinearLayout cvScadenzaLayout = root.findViewById(R.id.scadenza_task);
             TextView scadenzaTask = root.findViewById(R.id.tv_scadenza3);

@@ -32,6 +32,13 @@ import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * Adapter che funge da complementare a ListaTaskFragment per la
+ * visualizzazione della lista dei task visibili all'utente
+ *
+ */
+
 public class ListaTaskAdapter extends BaseAdapter {
 
     private final Context mContext;

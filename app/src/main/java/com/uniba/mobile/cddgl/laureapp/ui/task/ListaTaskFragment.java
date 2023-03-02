@@ -27,6 +27,13 @@ import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * Fragment che si occupa della gestione della visualizzazione
+ * di una lista di task visibli dall'utente
+ *
+ */
+
 public class ListaTaskFragment extends Fragment {
 
     private ListView listView;
