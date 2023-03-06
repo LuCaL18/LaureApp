@@ -3,6 +3,7 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 import com.uniba.mobile.cddgl.laureapp.data.TaskState;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -15,8 +16,8 @@ public class Task implements Serializable {
 
     /* Stringa che rappresenta l'id dello studente all'interno del database */
     private String studenteId;
-    /* Stringa che rappresenta l'id del relatore all'interno del database */
-    private String relatore;
+    /* Lista di Stringhe che rappresenta l'id dei relatori all'interno del database */
+    private List<String> relators;
     /* Stringa che rappresenta la descrizione nei dettagli del task assegnato */
     private String descrizione;
     /* Stringa che rappresenta il nome del task assegnato */
@@ -44,7 +45,7 @@ public class Task implements Serializable {
      *
      * I campi che saranno oggetto di attenzione all'interno del costruttore sono:
      *
-     * relatore   : stringa identificatore univoco del relatore
+     * relatore   : lista di stringhe identificatore univoco del relatore
      * tesiId     : stringa identificatrice univoca della tesi
      * studenteId : stringa identificatore univoco dello studente
      * descrizione: stringa descrittrice nei dettagli del compito assegnato allo studente
@@ -53,9 +54,9 @@ public class Task implements Serializable {
      * scadenza   : stringa descrittrice del termine ultimo in cui completare il task
      *
      */
-    public Task(String studenteId, String relatore, String descrizione, String nomeTask, String scadenza, TaskState stato, String tesiId) {
+    public Task(String studenteId, List<String> relators, String descrizione, String nomeTask, String scadenza, TaskState stato, String tesiId) {
         this.studenteId = studenteId;
-        this.relatore = relatore;
+        this.relators = relators;
         this.descrizione = descrizione;
         this.nomeTask = nomeTask;
         this.scadenza = scadenza;
@@ -76,12 +77,12 @@ public class Task implements Serializable {
         this.studenteId = studenteId;
     }
 
-    public String getRelators() {
-        return relatore;
+    public List<String> getRelators() {
+        return relators;
     }
 
-    public void setRelators(String relatore) {
-        this.relatore = relatore;
+    public void setRelators(List<String> relatore) {
+        this.relators = relatore;
     }
 
     public String getDescrizione() {

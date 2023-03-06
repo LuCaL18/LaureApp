@@ -45,11 +45,14 @@ public class ListaTaskAdapter extends BaseAdapter {
     private final Context mContext;
     private List<Task> mDataList;
     /* CollectionReference per il recupero di tutte le tesi istanziate su firebase */
-    private CollectionReference mCollection2 = FirebaseFirestore.getInstance().collection("tesi");
+    private final CollectionReference mCollection2 = FirebaseFirestore.getInstance().collection("tesi");
 
-    public ListaTaskAdapter(Context context, List<Task> list) {
+    private LoggedInUser userLogged;
+
+    public ListaTaskAdapter(Context context, List<Task> list, LoggedInUser user) {
         mContext = context;
         mDataList = list;
+        userLogged = user;
     }
 
     /**
@@ -134,11 +137,13 @@ public class ListaTaskAdapter extends BaseAdapter {
                 viewHolder.progressBar.setProgress(0);
                 break;
         }
+
         /* Se l'utente loggato è un PROFESSORE, visualizzare nel layout anche le informazioni relative allo specifico
         *  studente e tesi associate a quel task, in modo tale da ottimizzare l'utilizzo della visualizzazione della lista */
         if (userLogged.getRole() == RoleUser.PROFESSOR) {
             viewHolder.textView3.setVisibility(View.VISIBLE);
             viewHolder.textView4.setVisibility(View.VISIBLE);
+
             /* Utilizzo della mCollection2 per il recupero delle tesi istanziate all'interno del database */
             mCollection2.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
@@ -147,24 +152,29 @@ public class ListaTaskAdapter extends BaseAdapter {
                         Log.e("FirebaseListAdapter", "Listen failed.", e);
                         return;
                     }
-                    /* Recupero della tesi corretta relativa al task associato */
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        Tesi tesi = doc.toObject(Tesi.class);
-                        /* Se l'id della tesi recuperata è equivalente all'id del task attuale, visualizzare anche le informazioni
-                        *  su nome tesi e dello studente associato a tale tesi */
-                        if (tesi.getId().equals(task.getTesiId())) {
-                            viewHolder.textView3.setText(tesi.getNomeTesi());
-                            viewHolder.textView4.setText(tesi.getStudent().getDisplayName());
+                    if(queryDocumentSnapshots != null ) {
+                        /* Recupero della tesi corretta relativa al task associato */
+                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                            Tesi tesi = doc.toObject(Tesi.class);
+                            /* Se l'id della tesi recuperata è equivalente all'id del task attuale, visualizzare anche le informazioni
+                             *  su nome tesi e dello studente associato a tale tesi */
+                            if (tesi.getId().equals(task.getTesiId())) {
+                                viewHolder.textView3.setText(tesi.getNomeTesi());
+                                viewHolder.textView4.setText(tesi.getStudent().getDisplayName());
+                            }
                         }
                     }
                 }
             });
-        } /* Se l'utente è uno STUDENTE, ignorare la visualizzazione dei dati relativi alla tesi e studente in quanto
+
+        }
+        /* Se l'utente è uno STUDENTE, ignorare la visualizzazione dei dati relativi alla tesi e studente in quanto
            * inutili e ridondanti poichè farebbero riferimento alla stessa tesi e studente */
         else if (userLogged.getRole() == RoleUser.STUDENT) {
             viewHolder.textView3.setVisibility(View.GONE);
             viewHolder.textView4.setVisibility(View.GONE);
         }
+
         /* imageButton per la visualizzazione del singolo task nei dettagli */
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override

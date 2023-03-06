@@ -16,10 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -27,7 +29,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.uniba.mobile.cddgl.laureapp.MainActivity;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
@@ -40,10 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * Fragment che si occupa della gestione della visualizzazione
  * di una lista di task visibli dall'utente
- *
  */
 
 public class ListaTaskFragment extends Fragment {
@@ -64,8 +68,17 @@ public class ListaTaskFragment extends Fragment {
     private MenuProvider providerMenu;
     private String idThesis;
 
+    private LoggedInUser user;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        user = mainViewModel.getUser().getValue();
+    }
+
     /**
-     *
      * Metodo "onCreateView" per il recupero di tutti i task da visualizzare a schermo
      * filtrati per lo specifico user in base al suo ruolo (PROFESSOR o STUDENT)
      *
@@ -81,46 +94,39 @@ public class ListaTaskFragment extends Fragment {
 
         Query query;
 
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             idThesis = getArguments().getString(LIST_TASK_TESI_KEY);
             permissionCreate = Boolean.parseBoolean(getArguments().getString(LIST_TASK_PERMISSION_CREATE));
             query = FirebaseFirestore.getInstance().collection("task").whereEqualTo("idTesi", idThesis);
+        } else if (user.getRole().equals(RoleUser.PROFESSOR)) {
+            query = FirebaseFirestore.getInstance().collection("task").whereArrayContains("relators", user.getId());
+        } else if (user.getRole().equals(RoleUser.STUDENT)) {
+            query = FirebaseFirestore.getInstance().collection("task").whereArrayContains("studenteId", user.getId());
         } else {
-            query = FirebaseFirestore.getInstance().collection("task");
+            query = null;
+            //TODO: gestire lista vuota guest
         }
 
         listView = view.findViewById(R.id.lista_task);
 
         dataList = new ArrayList<>();
-        adapter = new ListaTaskAdapter(getActivity(), dataList);
-        Log.d("ListaTesiFragment", "onCreateView() method called");
+        adapter = new ListaTaskAdapter(getActivity(), dataList, user);
 
         listView.setAdapter(adapter);
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                dataList.clear();
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    Task task = doc.toObject(Task.class);
-                    /* Recupero degli id dello studente e del relatore */
-                    String idRelatore = doc.getString("relatore");
-                    String idStudent = doc.getString("studenteId");
-                    /* Se l'utente loggato è un professore e l'id del relatore coincide con l'utente loggato, aggiungere il task alla lista */
-                    if (userLogged.getRole().equals(RoleUser.PROFESSOR) && idRelatore.equals(userLogged.getId())) {
-                        dataList.add(task);
-                    } /* Se l'utente loggato è uno studente e l'id del relatore coincide con l'utente loggato, aggiungere il task alla lista */
-                    else if (userLogged.getRole().equals(RoleUser.STUDENT) && idStudent.equals(userLogged.getId())) {
-                        dataList.add(task);
-                    }
-                }
-                 adapter.setmDataList(dataList);
-            }
-        });
 
+        if (query != null) {
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    dataList.clear();
+                    adapter.setmDataList(dataList);
+                }
+            });
+        }
         return view;
     }
 
@@ -167,5 +173,8 @@ public class ListaTaskFragment extends Fragment {
         super.onDestroyView();
         navBar.setVisibility(View.VISIBLE);
         requireActivity().removeMenuProvider(providerMenu);
+
+        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
+        navigationView.getMenu().findItem(MainActivity.LISTA_TASK).setChecked(false);
     }
 }

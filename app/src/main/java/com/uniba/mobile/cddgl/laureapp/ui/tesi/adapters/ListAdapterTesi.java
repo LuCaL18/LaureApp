@@ -160,7 +160,7 @@ public class ListAdapterTesi extends BaseAdapter {
                         } else {
                             List<String> classifica = new ArrayList<>();
                             classifica.add(tesiSelezionata.getId());
-                            tesiClassificate = new TesiClassifica(studenteId, classifica);
+                            tesiClassificate = new TesiClassifica(classifica, studenteId);
                         }
 
                         classificaTesiDoc.set(tesiClassificate).addOnSuccessListener(new OnSuccessListener<Void>() {

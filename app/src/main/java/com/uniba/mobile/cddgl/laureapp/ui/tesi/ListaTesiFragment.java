@@ -345,6 +345,7 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
     public void onDestroyView() {
         super.onDestroyView();
         requireActivity().removeMenuProvider(menuProvider);
+        menuProvider = null;
         queryAll = null;
     }
 }

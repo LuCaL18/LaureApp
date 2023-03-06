@@ -1,7 +1,6 @@
-package com.uniba.mobile.cddgl.laureapp.ui.tesi;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +8,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.model.ClassificaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,17 +34,11 @@ public class ClassificaTesiAdapter extends BaseAdapter {
     /* Lista delle tesi da visualizzare a schermo */
     private List<Tesi> mDataList;
     private final VisualizeThesisViewModel thesisViewModel;
-    /* Lista delle tesi filtrate da visualizzare a schermo */
-    private List<Tesi> filteredData;
-    /* Mappa contenente la stringa relativa all'id dello studente e della sua lista di tesi preferite */
-    private Map<String, List<Tesi>> classifica;
 
     public ClassificaTesiAdapter(Context context, VisualizeThesisViewModel model) {
         mContext = context;
         mDataList = new ArrayList<>();
         thesisViewModel = model;
-        /* Istanziamo la lista delle tesi filtrate */
-        filteredData = new ArrayList<>();
     }
 
     /**
@@ -163,17 +149,6 @@ public class ClassificaTesiAdapter extends BaseAdapter {
         return convertView;
     }
 
-    /**
-     *
-     * Metodo per l'aggiornamento della classifica tesi
-     *
-     * @param newList
-     */
-    public void updateList(List<Tesi> newList) {
-        mDataList.clear();
-        mDataList.addAll(newList);
-        notifyDataSetChanged();
-    }
 
     /**
      *
@@ -187,6 +162,12 @@ public class ClassificaTesiAdapter extends BaseAdapter {
         ImageButton imageButton2;
     }
 
+    public void addTheses(List<Tesi> tesi) {
+        mDataList.clear();
+        mDataList.addAll(tesi);
+        notifyDataSetChanged();
+    }
+
     public void insertItem(int position, Tesi tesi) {
         mDataList.add(position, tesi);
         notifyDataSetChanged();
@@ -197,6 +178,12 @@ public class ClassificaTesiAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     *
+     * Metodo per l'aggiornamento della classifica tesi
+     *
+     * @param mDataList
+     */
     public void setmDataList(List<Tesi> mDataList) {
         this.mDataList = mDataList;
         notifyDataSetChanged();

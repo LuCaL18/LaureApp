@@ -14,7 +14,7 @@
         android:backgroundTint="@color/color_hole_graph"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_menu_24dp"
+        android:src="@drawable/ic_baseline_filter_list_24"
         tools:ignore="MissingConstraints" />
 
     <ImageButton
@@ -26,7 +26,7 @@
         android:backgroundTint="@color/color_hole_graph"
         app:layout_constraintEnd_toStartOf="@+id/menuButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="?attr/actionModeShareDrawable"
+        android:src="@drawable/ic_baseline_share_24"
         tools:ignore="MissingConstraints" />
 
     <ListView

@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,14 +43,14 @@ import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
 public class VisualizzaTask extends Fragment {
 
-    /* View per la gestione della visualizzazione della schermata del singolo task */
-    private View root;
     /* CollectionReference per il recupero di tutti gli users istanziati su firebase */
     private CollectionReference mCollection = FirebaseFirestore.getInstance().collection("users");
     /* Oggetto di tipo LoggedInUser per memorizzare l'users attualmente loggato */
     private LoggedInUser userLogged2;
     /* Stringa in cui memorizzare l'id del task da visualizzare */
     private String taskId;
+
+    private BottomNavigationView navBar;
 
     public static VisualizzaTask newInstance() {
         return new VisualizzaTask();
@@ -75,7 +76,8 @@ public class VisualizzaTask extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         /* Creazione della view responsabile della gestione della visualizzazione del layout */
-        root = inflater.inflate(R.layout.visualizza_task, container, false);
+        /* View per la gestione della visualizzazione della schermata del singolo task */
+        View root = inflater.inflate(R.layout.visualizza_task, container, false);
         /* Recupero il task passato da ListaTaskAdapter */
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -226,4 +228,19 @@ public class VisualizzaTask extends Fragment {
         return root;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        /* Rimozione della navBar dal layout */
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        navBar.setVisibility(View.VISIBLE);
+        navBar = null;
+    }
 }

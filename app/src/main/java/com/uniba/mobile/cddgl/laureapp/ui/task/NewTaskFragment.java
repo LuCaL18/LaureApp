@@ -40,10 +40,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * Fragment che si occupa della gestione della creazione di un nuovo task
  * da aggiungere ad una tesi già assegnata ad uno studente
- *
  */
 
 public class NewTaskFragment extends Fragment {
@@ -51,7 +49,7 @@ public class NewTaskFragment extends Fragment {
     /* Istanza per avviare il collegamento con firebase */
     private FirebaseFirestore db;
     /* EditText da visualizzare a schermo */
-    private EditText nometaskEditText,descrizioneEditText,scadenzaEditText;
+    private EditText nometaskEditText, descrizioneEditText, scadenzaEditText;
     /* Button per completare l'operazione di creazione task */
     private Button addtaskButton;
     /* CollectionReference per il recupero di tutte le tesi istanziate su firebase */
@@ -60,6 +58,8 @@ public class NewTaskFragment extends Fragment {
     public List<Tesi> tesiBackup;
     /* Lista di users di backup da utilizzare durante le operazioni */
     public List<PersonaTesi> personaBackup;
+
+    private BottomNavigationView navBar;
 
     public NewTaskFragment() {
         //
@@ -70,12 +70,11 @@ public class NewTaskFragment extends Fragment {
     }
 
     @Override
-    public void onCreate (Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     /**
-     *
      * Metodo 'onCreateView' in cui avviene la gestione di tutte le operazioni: dalla visualizzazione
      * a schermo delle varie componenti del layout, all'inserimento ed elaborazione dei dati, infine al
      * salvataggio dei dati all'interno del database
@@ -86,37 +85,44 @@ public class NewTaskFragment extends Fragment {
      * @return
      */
     @Override
-    public View onCreateView (@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         /* Creazione della view responsabile della gestione della visualizzazione del layout */
-        View view = inflater.inflate(R.layout.fragment_new_task,container,false);
+        View view = inflater.inflate(R.layout.fragment_new_task, container, false);
+
         /* Istanza del database */
         db = FirebaseFirestore.getInstance();
-        /* Rimozione della navBar dal layout */
-        BottomNavigationView navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.INVISIBLE);
+
         /* Chiamata alle varie componenti del layout tramite findViewById */
         nometaskEditText = view.findViewById(R.id.nometask);
+
         descrizioneEditText = view.findViewById(R.id.descrizione);
+
         /* Spiiner relativi allo stato, tesi e studenteù */
         Spinner statoSpinner = view.findViewById(R.id.stato);
         Spinner tesiSpinner = view.findViewById(R.id.tesi_spinner);
         Spinner studenteSpinner = view.findViewById(R.id.studente_spinner);
         scadenzaEditText = view.findViewById(R.id.scadenza);
         addtaskButton = view.findViewById(R.id.addtask_button);
+
         tesiReference = FirebaseFirestore.getInstance().collection("tesi");
+
         /* Adapter per creazione dello spinner relativo allo stato del task */
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.stato_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statoSpinner.setAdapter(adapter);
+
         /* Recupera l'ID del relatore attualmente loggato */
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String relatoreId = currentUser.getUid();
+
         /* Seleziona le tesi in cui il campo relatore o correlatore corrisponde all'ID del relatore loggato */
         List<String> tesiList = new ArrayList<>();
         List<Tesi> tesiList2 = new ArrayList<>();
+
         /* Definizione istanza delle liste di backup */
         tesiBackup = new ArrayList<>();
         personaBackup = new ArrayList<>();
+
         /* Utilizzo della tesiReeference per il recupero delle istanze degli users presenti nel database */
         tesiReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -127,6 +133,7 @@ public class NewTaskFragment extends Fragment {
                 }
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Tesi tesi = doc.toObject(Tesi.class);
+
                     /* List che contiene tutte le informazioni relativi ai relatori associati a quella specifica tesi recuperata dal firebase */
                     List<PersonaTesi> coRelatore = tesi.getCoRelatori();
                     if (coRelatore.isEmpty()) {
@@ -139,6 +146,7 @@ public class NewTaskFragment extends Fragment {
                             }
                         }
                     }
+
                     /* Se il relatore coincide con l'utente loggato, procedere al salvataggio della tesi nelle liste */
                     if (tesi.getRelatore().getId().equals(relatoreId)) {
                         tesiList.add(tesi.getNomeTesi());
@@ -146,30 +154,35 @@ public class NewTaskFragment extends Fragment {
                         tesiBackup.add(tesi);
                     }
                 }
-                Log.d("ListaTesiFragment", "onCreateView() method called");
+
                 /* Creazione dell'adapter per la lista delle tesi di cui l'utente
                    loggato è relatore o coRelatore in cui associare il task */
                 ArrayAdapter<String> tesiAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, tesiList);
                 tesiAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 tesiSpinner.setAdapter(tesiAdapter);
+
                 /* Quando viene selezionata una tesi dal primo spinner, recuperare l'ID della tesi selezionata */
                 tesiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         /* Recupero della tesi scelta */
                         String tesiNome = (String) parent.getItemAtPosition(position);
+
                         /* Lista degli studenti da popolare */
                         List<String> studentiList = new ArrayList<>();
                         List<PersonaTesi> studentiList2 = new ArrayList<>();
                         personaBackup = studentiList2;
+
                         for (Tesi tesi : tesiList2) {
                             if (tesi.getNomeTesi().equals(tesiNome)) {
                                 // String tesiId = tesi.getId();
                                 /* Seleziona gli studenti associati alla tesi selezionata */
                                 studentiList2.add(tesi.getStudent());
+
                                 for (PersonaTesi studente : studentiList2) {
                                     studentiList.add(studente.getDisplayName());
                                 }
+
                                 /* Popola il secondo spinner con i dati degli studenti selezionati */
                                 ArrayAdapter<String> studentiAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, studentiList);
                                 studentiAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -178,6 +191,7 @@ public class NewTaskFragment extends Fragment {
                             }
                         }
                     }
+
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
                         // Do nothing
@@ -222,8 +236,8 @@ public class NewTaskFragment extends Fragment {
                     listaTask.put("descrizione", descrizione);
                     listaTask.put("scadenza", scadenza);
                     listaTask.put("relatore", relatoreId);
-                    listaTask.put("tesiId",tesiId);
-                    listaTask.put("studenteId",studenteId);
+                    listaTask.put("tesiId", tesiId);
+                    listaTask.put("studenteId", studenteId);
                     /* Salvataggio del nuovo task nel database */
                     db.collection("task")
                             .add(listaTask)
@@ -246,4 +260,19 @@ public class NewTaskFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        /* Rimozione della navBar dal layout */
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        navBar.setVisibility(View.VISIBLE);
+        navBar = null;
+    }
 }
