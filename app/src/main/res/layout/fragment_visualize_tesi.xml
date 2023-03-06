@@ -374,6 +374,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layout_exam_n"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -591,6 +592,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="5dp"
+                        android:textSize="16sp"
                         android:visibility="gone" />
 
                     <EditText
@@ -694,6 +696,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layout_search_key"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -738,16 +741,31 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:id="@+id/btn_book"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/book_thesis_uppercase"
-            android:visibility="gone" />
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btn_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/book_thesis_uppercase"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button_no_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:elevation="5dp"
+                android:alpha="0.00"
+                android:visibility="gone"/>
+        </FrameLayout>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

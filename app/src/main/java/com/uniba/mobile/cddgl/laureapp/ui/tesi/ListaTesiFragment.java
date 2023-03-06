@@ -19,13 +19,22 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.ListAdapterTesi;
 
@@ -33,12 +42,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTextListener {
-    private ListAdapterTesi adapter;
-    private List<Tesi> tesiList;
+
+    private final int SEARCH_ITEM_MENU = R.id.search_tesi;
+    private final int FILTER_ITEM_MENU = R.id.filter_tesi;
+    private final int TAB_ALL = 0;
+    private final int TAB_PERSONAL = 1;
+
+    private ListAdapterTesi adapterAll;
+    private ListAdapterTesi adapterPersonal;
+    private List<Tesi> currentTesiList;
+    private List<Tesi> allTesiList;
+    private List<Tesi> personalTesiList;
     private VisualizeThesisViewModel visualizeThesisViewModel;
-    private Query query;
+    private Query queryAll;
     private MenuProvider menuProvider;
     private SearchView searchView;
+    private int currentTab;
+    private LoggedInUser user;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        allTesiList = new ArrayList<>();
+        personalTesiList = new ArrayList<>();
+
+        if (savedInstanceState != null) {
+            currentTab = Integer.parseInt(savedInstanceState.getString("current_tab"));
+        } else {
+            currentTab = 0;
+        }
+
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        user = mainViewModel.getUser().getValue();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,28 +84,177 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
         visualizeThesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
 
-        tesiList = new ArrayList<>();
+        adapterAll = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel);
+        adapterPersonal = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel);
 
-        adapter = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel);
-        listView.setAdapter(adapter);
+        CollectionReference tesiRef = FirebaseFirestore.getInstance().collection("tesi");
 
-        query = FirebaseFirestore.getInstance().collection("tesi").orderBy("created_at", Query.Direction.DESCENDING);
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        queryAll = tesiRef.whereEqualTo("isAssigned", false).orderBy("created_at", Query.Direction.DESCENDING);
+        queryAll.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
                     Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                tesiList.clear();
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+
+                allTesiList.clear();
+                for (DocumentSnapshot doc : querySnapshot) {
                     Tesi tesi = doc.toObject(Tesi.class);
-                    tesiList.add(tesi);
+                    allTesiList.add(tesi);
                 }
 
-                adapter.setTesiList(tesiList);
+                adapterAll.setTesiList(allTesiList);
+
+                if (currentTab == TAB_ALL) {
+                    currentTesiList = allTesiList;
+
+                    if(currentTesiList.isEmpty()) {
+                        view.findViewById(R.id.text_no_tesi_available).setVisibility(View.VISIBLE);
+                        listView.setVisibility(View.GONE);
+                    } else {
+                        view.findViewById(R.id.text_no_tesi_available).setVisibility(View.GONE);
+                        listView.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
+
+        if (user.getRole().equals(RoleUser.PROFESSOR)) {
+            Query queryProf = tesiRef.whereEqualTo("relatore.id", user.getId()).orderBy("created_at", Query.Direction.DESCENDING);
+
+            Query queryCoRelatori = tesiRef.whereArrayContains("coRelatori", new PersonaTesi(user.getId(), user.getDisplayName(), user.getEmail(), null))
+                    .orderBy("created_at", Query.Direction.DESCENDING);
+
+            com.google.android.gms.tasks.Task<QuerySnapshot> query1Task = queryProf.get();
+            com.google.android.gms.tasks.Task<QuerySnapshot> query2Task = queryCoRelatori.get();
+
+            Tasks.whenAllSuccess(query1Task, query2Task)
+                    .addOnSuccessListener(new OnSuccessListener<List<Object>>() {
+                        @Override
+                        public void onSuccess(List<Object> objects) {
+                            personalTesiList.clear();
+                            for (Object object : objects) {
+                                QuerySnapshot querySnapshot = (QuerySnapshot) object;
+
+                                for (DocumentSnapshot doc : querySnapshot) {
+                                    Tesi tesi = doc.toObject(Tesi.class);
+                                    personalTesiList.add(tesi);
+                                }
+
+                                adapterPersonal.setTesiList(personalTesiList);
+
+                                if (currentTab == TAB_PERSONAL) {
+                                    currentTesiList = personalTesiList;
+
+                                    if(currentTesiList.isEmpty()) {
+                                        view.findViewById(R.id.text_no_tesi_available).setVisibility(View.VISIBLE);
+                                        listView.setVisibility(View.GONE);
+                                    } else {
+                                        view.findViewById(R.id.text_no_tesi_available).setVisibility(View.GONE);
+                                        listView.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        } else if (user.getRole().equals(RoleUser.STUDENT)) {
+            Query queryStudent = tesiRef.whereEqualTo("student.id", user.getId()).orderBy("created_at", Query.Direction.DESCENDING);
+
+            queryStudent.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    personalTesiList.clear();
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Tesi tesi = doc.toObject(Tesi.class);
+                        personalTesiList.add(tesi);
+                    }
+
+                    adapterPersonal.setTesiList(personalTesiList);
+
+                    if (currentTab == TAB_PERSONAL) {
+                        currentTesiList = personalTesiList;
+
+                        if(currentTesiList.isEmpty()) {
+                            view.findViewById(R.id.text_no_tesi_available).setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            view.findViewById(R.id.text_no_tesi_available).setVisibility(View.GONE);
+                            listView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
+
+        } else {
+            personalTesiList = new ArrayList<>();
+            adapterPersonal.setTesiList(personalTesiList);
+
+            if (currentTab == TAB_PERSONAL) {
+                currentTesiList = personalTesiList;
+
+                if(currentTesiList.isEmpty()) {
+                    view.findViewById(R.id.text_no_tesi_available).setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
+                } else {
+                    view.findViewById(R.id.text_no_tesi_available).setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
+        TabLayout listTesiTabLayout = view.findViewById(R.id.tab_layout);
+        listTesiTabLayout.selectTab(listTesiTabLayout.getTabAt(currentTab));
+        listTesiTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == TAB_ALL) {
+                    adapterAll.setTesiList(allTesiList);
+                    listView.setAdapter(adapterAll);
+                    currentTesiList = adapterAll.getTesiList();
+                    currentTab = TAB_ALL;
+                } else {
+                    adapterPersonal.setTesiList(personalTesiList);
+                    listView.setAdapter(adapterPersonal);
+                    currentTesiList = adapterPersonal.getTesiList();
+                    currentTab = tab.getPosition();
+                }
+
+                if(currentTesiList.isEmpty()) {
+                    view.findViewById(R.id.text_no_tesi_available).setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
+                } else {
+                    view.findViewById(R.id.text_no_tesi_available).setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        if (currentTab == TAB_ALL) {
+            listView.setAdapter(adapterAll);
+        } else {
+            listView.setAdapter(adapterPersonal);
+        }
+
         return view;
     }
 
@@ -101,13 +287,23 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
                 @Override
                 public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
 
-                    if (menuItem.getItemId() == R.id.search_tesi) {
-                        searchView.setQuery("", false);
-                        adapter.setTesiList(tesiList);
-                        return true;
-                    }
+                    switch (menuItem.getItemId()) {
+                        case SEARCH_ITEM_MENU:
+                            searchView.setQuery("", false);
 
-                    return false;
+                            if (currentTab == TAB_PERSONAL) {
+                                adapterPersonal.setTesiList(currentTesiList);
+                                return true;
+                            }
+
+                            adapterAll.setTesiList(currentTesiList);
+                            return true;
+
+                        case FILTER_ITEM_MENU:
+                            return true;
+                        default:
+                            return false;
+                    }
                 }
             };
 
@@ -124,20 +320,32 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
     @Override
     public boolean onQueryTextChange(String newText) {
         List<Tesi> filteredList = new ArrayList<>();
-        for (Tesi thesis : tesiList) {
+        for (Tesi thesis : currentTesiList) {
             if (thesis.getNomeTesi().toLowerCase().contains(newText.toLowerCase())) {
                 filteredList.add(thesis);
             }
         }
-        adapter.setTesiList(filteredList);
+
+        if (currentTab == TAB_ALL) {
+            adapterAll.setTesiList(filteredList);
+            return true;
+        }
+
+        adapterPersonal.setTesiList(filteredList);
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("current_tab", String.valueOf(currentTab));
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         requireActivity().removeMenuProvider(menuProvider);
-        query = null;
+        queryAll = null;
     }
 }
 

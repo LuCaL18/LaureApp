@@ -290,10 +290,16 @@ public class ClassificaTesiFragment extends Fragment {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             List<Tesi> thesisList = new ArrayList<>();
-                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                                // Convert each document snapshot to a Thesis object
-                                Tesi thesis = document.toObject(Tesi.class);
-                                thesisList.add(thesis);
+                            if(!queryDocumentSnapshots.isEmpty()) {
+                                for(String id : thesisId) {
+                                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                        // Convert each document snapshot to a Thesis object
+                                        Tesi thesis = document.toObject(Tesi.class);
+                                        if(id.equals(thesis.getId())) {
+                                            thesisList.add(thesisId.indexOf(thesis.getId()),thesis);
+                                        }
+                                    }
+                                }
                             }
 
                             tesiList = thesisList;
@@ -319,7 +325,7 @@ public class ClassificaTesiFragment extends Fragment {
         try {
             SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
             SharedPreferences.Editor mEdit1 = sp.edit();
-            Set<String> set = new HashSet<String>();
+            Set<String> set = new HashSet<>();
 
             for (Tesi tesi : tesiList) {
                 set.add(tesi.getId());
@@ -351,7 +357,8 @@ public class ClassificaTesiFragment extends Fragment {
             saveListofThesis();
         } else {
             Map<String, Object> updates = new HashMap<>();
-            updates.put("tesi", getIdOfThesis(tesiList));
+            List<Tesi> newList = adapter.getmDataList();
+            updates.put("tesi", getIdOfThesis(newList));
 
             FirebaseFirestore.getInstance().collection("tesi_classifiche").document(user.getId()).update(updates);
         }

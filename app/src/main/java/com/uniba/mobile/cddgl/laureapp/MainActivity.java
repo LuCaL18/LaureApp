@@ -3,7 +3,6 @@ package com.uniba.mobile.cddgl.laureapp;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -32,6 +33,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -39,13 +41,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
-import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.ActivityMainBinding;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 
 import java.io.File;
-import java.util.List;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int NEW_TASK = R.id.nav_new_task;
     public static final int CLASSIFICA_TESI = R.id.nav_classifica_tesi;
     public static final int LISTA_TESI = R.id.navigation_lista_tesi;
+    public static final int SETTINGS = R.id.nav_settings;
 
     public static final int REQUEST_WRITE_STORAGE_PERMISSION = 1;
     public static final int REQUEST_INTERNET_PERMISSION = 2;
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private BroadcastReceiver downloadReceiver;
     private ShareContent shareContent;
+    private String defaultTheme, defaultLanguage;
 
     @Nullable
     private LoggedInUser user;
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        applySettings();
 
         try {
 
@@ -151,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
                             navController.navigate(R.id.ricevimento);
                             isSelected = true;
                             break;
+                        case SETTINGS:
+                            navController.navigate(R.id.fragment_settings);
+                            isSelected = true;
                         default:
                             isSelected = false;
                     }
@@ -249,6 +257,11 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         mainViewModel.getUser().observe(this, loggedInUser -> {
+
+            if(loggedInUser.getRole().equals(RoleUser.PROFESSOR)) {
+                navigationView.getMenu().findItem(CLASSIFICA_TESI).setVisible(false);
+            }
+
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.display_name_text_view)).setText(loggedInUser.getDisplayName());
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_text_view)).setText(loggedInUser.getEmail());
 
@@ -287,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
         return user;
     }
 
-    private void goToLoginActivity() {
+    public void goToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -313,6 +326,50 @@ public class MainActivity extends AppCompatActivity {
 
     public static File getExternalStorageDirectory(String directoryPictures) {
         return getExternalStoragePublicDirectory(directoryPictures);
+    }
+
+    private void applySettings() {
+
+        String systemLanguage = getResources().getConfiguration().getLocales().get(0).getLanguage();
+        int systemTheme = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+        String themeDefault = "light";
+        if(systemTheme == Configuration.UI_MODE_NIGHT_YES) {
+            themeDefault = "night";
+        }
+
+        // Get the saved values from SharedPreferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        defaultTheme = sharedPreferences.getString("theme_enabled", themeDefault);
+        defaultLanguage = sharedPreferences.getString("language", systemLanguage);
+
+        // Apply the saved settings to your app
+        applyTheme(defaultTheme);
+        applyLanguage(defaultLanguage);
+    }
+
+    private void applyTheme(String theme) {
+        if (theme.equals("night")) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else if (theme.equals("light")) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
+    private void applyLanguage(String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration configuration = getResources().getConfiguration();
+        configuration.setLocale(locale);
+        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+    }
+
+    public String getDefaultTheme() {
+        return defaultTheme;
+    }
+
+    public String getDefaultLanguage() {
+        return defaultLanguage;
     }
 
     @Override

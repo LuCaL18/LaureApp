@@ -1,6 +1,9 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
 import static android.app.Activity.RESULT_OK;
+import static android.view.MotionEvent.ACTION_HOVER_ENTER;
+import static android.view.MotionEvent.ACTION_HOVER_EXIT;
+import static android.view.MotionEvent.ACTION_HOVER_MOVE;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_INTERNET_PERMISSION;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_READ_EXTERNAL_STORAGE;
 import static com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment.LIST_TASK_PERMISSION_CREATE;
@@ -9,6 +12,7 @@ import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.SHA
 import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.TESI_LIST_KEY_PREF;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -24,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -74,6 +79,7 @@ import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
 import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
+import com.uniba.mobile.cddgl.laureapp.ui.component.RequestLoginDialog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.DocumentAdapter;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.RelatorsAdapter;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.BookingDialogFragment;
@@ -228,9 +234,13 @@ public class VisualizeTesiFragment extends Fragment {
         TextView averageTextView = root.findViewById(R.id.tv_constraint_average);
         averageTextView.setText(String.valueOf(thesis.getMediaVoto()));
 
-        TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
-        String esami = String.join(", ", thesis.getEsami());
-        examTextView.setText(esami);
+        if(thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
+            root.findViewById(R.id.layout_exam_n).setVisibility(View.GONE);
+        } else {
+            TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
+            String esami = String.join(", ", thesis.getEsami());
+            examTextView.setText(esami);
+        }
 
         TextView skillsTextView = root.findViewById(R.id.tv_constraint_skills);
         skillsTextView.setText(thesis.getSkill());
@@ -283,7 +293,7 @@ public class VisualizeTesiFragment extends Fragment {
         TextView textViewNotes = root.findViewById(R.id.text_view_notes);
         ImageView arrowCardNotes = root.findViewById(R.id.arrow_image_card_notes);
 
-        if (thesis.getNote() == null) {
+        if (thesis.getNote() == null || thesis.getNote().isEmpty()) {
             textViewNotes.setText(getText(R.string.no_notes));
         } else {
             textViewNotes.setText(thesis.getNote());
@@ -343,8 +353,13 @@ public class VisualizeTesiFragment extends Fragment {
         TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
         scopeTextView.setText(thesis.getAmbito());
 
-        TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
-        searchWordsTextView.setText(String.join(", ", thesis.getChiavi()));
+
+        if(thesis.getChiavi() == null) {
+            root.findViewById(R.id.layout_search_key).setVisibility(View.GONE);
+        } else {
+            TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
+            searchWordsTextView.setText(String.join(", ", thesis.getChiavi()));
+        }
 
         cardSearchKey.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -430,7 +445,7 @@ public class VisualizeTesiFragment extends Fragment {
                 }
                 user = loggedInUser;
 
-                int menuToVisualize = R.menu.app_bar_visualize_tesi;
+                Integer menuToVisualize = null;
 
                 if (thesis.getRelatore().getId().equals(loggedInUser.getId())) {
 
@@ -451,6 +466,7 @@ public class VisualizeTesiFragment extends Fragment {
                 }
 
                 if (loggedInUser.getRole().equals(RoleUser.STUDENT) && (thesis.getStudent() == null || !thesis.getStudent().getId().equals(loggedInUser.getId()))) {
+                    menuToVisualize = R.menu.app_bar_visualize_tesi;
 
                     if (!thesis.getIsAssigned()) {
                         root.findViewById(R.id.btn_book).setVisibility(View.VISIBLE);
@@ -463,7 +479,7 @@ public class VisualizeTesiFragment extends Fragment {
 
                                     if (classification.getTesi().contains(thesis.getId())) {
 
-                                        if(menuTesi.findItem(FAVORITE_THESIS) != null) {
+                                        if(menuTesi != null) {
                                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                                         }
                                         isFavourite = true;
@@ -475,21 +491,38 @@ public class VisualizeTesiFragment extends Fragment {
                 }
 
                 if (loggedInUser.getRole().equals(RoleUser.GUEST)) {
+                    menuToVisualize = R.menu.app_bar_visualize_tesi;
+
                     if (getTesiList().contains(thesis.getId())) {
 
-                        if(menuTesi.findItem(FAVORITE_THESIS) != null) {
+                        if(menuTesi != null) {
                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                         }
 
                         isFavourite = true;
                     }
+
+                    if (!thesis.getIsAssigned()) {
+                        Button bookButton = root.findViewById(R.id.btn_book);
+                        bookButton.setVisibility(View.VISIBLE);
+                        bookButton.setEnabled(false);
+
+                        Button buttonBookLayout = root.findViewById(R.id.button_no_book);
+                        buttonBookLayout.setVisibility(View.VISIBLE);
+                        buttonBookLayout.setOnClickListener(v -> Toast.makeText(getContext(), getString(R.string.registration_required_to_booking), Toast.LENGTH_SHORT).show());
+                    }
                 }
 
-                int finalMenuToVisualize = menuToVisualize;
+                Integer finalMenuToVisualize = menuToVisualize;
                 providerMenu = new MenuProvider() {
                     @Override
                     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                         menu.clear();
+
+                        if(finalMenuToVisualize == null) {
+                            return;
+                        }
+
                         menuInflater.inflate(finalMenuToVisualize, menu);
                         menuTesi = menu;
 
@@ -504,9 +537,19 @@ public class VisualizeTesiFragment extends Fragment {
                             case VisualizeTesiFragment.FAVORITE_THESIS:
                                 return switchFavouriteThesis(menuItem);
                             case VisualizeTesiFragment.ADD_TICKET_THESIS:
-                                Ticket ticket = new Ticket(mainViewModel.getIdUser(), thesis.getRelatore().getId(), thesis.getId(), thesis.getNomeTesi(), TicketState.NEW);
+
+                                String id = mainViewModel.getIdUser();
+
+                                if(id == null) {
+                                    RequestLoginDialog requestLoginDialog = new RequestLoginDialog();
+                                    requestLoginDialog.show(getParentFragmentManager(), "RequestLoginDialogFragment");
+
+                                    return true;
+                                }
+
+                                Ticket ticket = new Ticket(id, thesis.getRelatore().getId(), thesis.getId(), thesis.getNomeTesi(), TicketState.NEW);
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable(TicketFragment.TICKET_KEY, (Serializable) ticket);
+                                bundle.putSerializable(TicketFragment.TICKET_KEY, ticket);
                                 navController.navigate(R.id.action_visualizeTesiFragment_to_ticketFragment, bundle);
                                 return true;
                             case VisualizeTesiFragment.SHARE_THESIS:
@@ -635,7 +678,7 @@ public class VisualizeTesiFragment extends Fragment {
                 isEditing = !isEditing;
                 textViewNotes.setVisibility(isEditing ? View.GONE : View.VISIBLE);
                 editTextNotes.setVisibility(isEditing ? View.VISIBLE : View.GONE);
-                editTextNotes.setText(textViewNotes.getText().toString());
+                editTextNotes.setText(textViewNotes.getText().toString().equals(getText(R.string.no_notes)) ? "" : textViewNotes.getText().toString());
 
                 if (editTextNotes.getVisibility() == View.VISIBLE) {
                     editTextNotes.requestFocus();
@@ -664,6 +707,12 @@ public class VisualizeTesiFragment extends Fragment {
                                 editTextNotes.setVisibility(View.GONE);
                                 buttonSave.setVisibility(View.GONE);
                                 checkAndRequestInternetPermission();
+
+                                if (thesis.getNote() == null || thesis.getNote().isEmpty()) {
+                                    textViewNotes.setText(getText(R.string.no_notes));
+                                } else {
+                                    textViewNotes.setText(thesis.getNote());
+                                }
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -1065,17 +1114,21 @@ public class VisualizeTesiFragment extends Fragment {
         TextView skillsTextView = root.findViewById(R.id.tv_constraint_skills);
         skillsTextView.setText(thesis.getSkill());
 
-        //TODO: aggiungere modifica esami
-//        thesis.setEsami(esamiNecessari);
-//        TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
-//        String esami = String.join(", ", thesis.getEsami());
-//        examTextView.setText(esami);
+        thesis.setEsami(esamiNecessari);
+        if(thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
+            root.findViewById(R.id.layout_exam_n).setVisibility(View.GONE);
+        } else {
+            root.findViewById(R.id.layout_exam_n).setVisibility(View.VISIBLE);
+            TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
+            String esami = String.join(", ", thesis.getEsami());
+            examTextView.setText(esami);
+        }
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("tempistiche", thesis.getTempistiche());
         updates.put("mediaVoto", thesis.getMediaVoto());
         updates.put("skill", thesis.getSkill());
-//        updates.put("tempistiche", thesis.getTempistiche());
+        updates.put("esami", thesis.getEsami());
 
         updateDataThesis(updates);
     }
@@ -1087,8 +1140,12 @@ public class VisualizeTesiFragment extends Fragment {
         TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
         scopeTextView.setText(thesis.getAmbito());
 
-        TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
-        searchWordsTextView.setText(String.join(", ", thesis.getChiavi()));
+        if(keyWords.isEmpty()) {
+            root.findViewById(R.id.layout_search_key).setVisibility(View.GONE);
+        } else {
+            TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
+            searchWordsTextView.setText(String.join(", ", thesis.getChiavi()));
+        }
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("ambito", thesis.getAmbito());

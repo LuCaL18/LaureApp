@@ -8,4 +8,9 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
 
+    <item android:id="@+id/filter_tesi"
+        android:title="@string/filters"
+        android:icon="@drawable/ic_baseline_filter_list_24"
+        app:showAsAction="ifRoom" />
+
 </menu>

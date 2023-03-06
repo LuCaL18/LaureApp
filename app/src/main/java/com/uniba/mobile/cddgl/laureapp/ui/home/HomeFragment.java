@@ -34,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
@@ -89,7 +90,7 @@ public class HomeFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
         if (actionBar != null) {
-            actionBar.setTitle(R.string.app_name_upperCase);
+            actionBar.setTitle(R.string.app_name);
         }
 
         provider = new HomeMenu(navController, mainViewModel.getUser().getValue().getRole());
@@ -281,11 +282,9 @@ public class HomeFragment extends Fragment {
 
     private void setCardThesisRole(QuerySnapshot querySnapshot) {
 
-        if(querySnapshot.isEmpty()) {
+        if(!querySnapshot.isEmpty()) {
             TextView userThesis = binding.userThesis;
-            userThesis.setVisibility(View.GONE);
-
-            return;
+            userThesis.setVisibility(View.VISIBLE);
         }
 
         int counter = 0;

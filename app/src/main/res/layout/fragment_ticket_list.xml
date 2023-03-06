@@ -30,34 +30,38 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <ScrollView
+        android:id="@+id/scroll_view_ticket_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:elevation="2dp"/>
+        android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ticket_list_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="625dp"
-        android:background="@android:color/white"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="16dp"
-        android:padding="16dp"
-        android:backgroundTint="?attr/colorOnPrimary"
-        android:scrollbars="vertical" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ticket_list_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="16dp"
+            android:padding="16dp"
+            android:backgroundTint="?attr/colorOnPrimary"
+            android:scrollbars="vertical" />
+    </ScrollView>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/text_no_tickets"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:text="@string/no_tickets" />
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:text="@string/no_tickets" />
+
+    </LinearLayout>
+
 
 </LinearLayout >

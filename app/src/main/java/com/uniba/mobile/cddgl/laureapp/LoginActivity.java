@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
@@ -21,6 +25,7 @@ import java.io.Serializable;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    private AppBarConfiguration appBarConfiguration;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,14 @@ public class LoginActivity extends AppCompatActivity {
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.appBarLogin.topAppBarLogin);
+
+        appBarConfiguration = new AppBarConfiguration.Builder(R.id.startFragment)
+                .build();
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_login);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         LoginViewModel loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
         loginViewModel.getLoggedUser().observe(this, new Observer<LoggedInUser>() {
@@ -62,6 +75,29 @@ public class LoginActivity extends AppCompatActivity {
                 Log.w("Main Activity", "Fetching FCM registration token failed", task.getException());
             }
         }));
+    }
+
+//    public void hideSupportActionBar() {
+//        try {
+//            getSupportActionBar().hide();
+//        } catch(NullPointerException e) {
+//            Log.e("LoginActivity", e.getMessage());
+//        }
+//    }
+//
+//    public void showSupportActionBar() {
+//        try {
+//            getSupportActionBar().show();
+//        } catch(NullPointerException e) {
+//            Log.e("LoginActivity", e.getMessage());
+//        }
+//    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_login);
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 
     @Override

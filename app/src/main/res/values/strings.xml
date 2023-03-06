@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">LaureApp</string>
-    <string name="app_name_upperCase"><b>LAURE</b>APP</string>
+    <string name="app_name"><b>Laure</b>App</string>
     <string name="content_description_notification">Show notifications</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -8,7 +7,7 @@
     <string name="welcome">"Welcome! "</string>
     <string name="login_failed">"Login failed"</string>
     <string name="registration_failed">"Registration failed"</string>
-    <string name="login">login</string>
+    <string name="login">Login</string>
     <string name="sign_up">Sign up</string>
     <string name="login_guest"><u>Enter as guest</u></string>
     <string name="favorite">Favourites</string>
@@ -67,7 +66,7 @@
     <string name="share_tesi">Condividi tesi</string>
 
     <!--    ERROR USER-->
-    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_username">Not a valid email</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="invalid_name">Not a valid name</string>
     <string name="invalid_surname">Not a valid surname</string>
@@ -301,6 +300,19 @@
     <string name="select_your_scopes">Select your scopes</string>
     <string name="chat_list">Chat list</string>
     <string name="search_hint">Search for a thesis by title</string>
+    <string name="required_exams">Required exams</string>
+    <string name="enter_exam">Enter exam</string>
+    <string name="filters">Filters</string>
+    <string name="all">All</string>
+    <string name="personal">Personal</string>
+    <string name="there_are_no_theses_available">There are no theses available</string>
+    <string name="available">Available</string>
+    <string name="registration_required_to_booking">Registration required to make a booking</string>
+    <string name="go_to_login">Go to login</string>
+    <string name="to_activate_this_functionality_you_must_be_registered_please_sign_up_to_access_this_feature">To activate this functionality, you must be registered. Please sign up to access this feature.</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="languages">Languages</string>
+    <string name="settings">Settings</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">
@@ -312,5 +324,20 @@
         <item>Cultura</item>
         <item>Finanza</item>
         <item>Politica</item>
+    </string-array>
+
+    <string-array name="available_languages">
+        <item>English</item>
+        <item>Italian</item>
+    </string-array>
+
+    <string-array name="available_languages_values">
+        <item>en</item>
+        <item>it</item>
+    </string-array>
+
+    <string-array name="available_theme">
+        <item>light</item>
+        <item>night</item>
     </string-array>
 </resources>

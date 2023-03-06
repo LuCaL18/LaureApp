@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.interfaces.TicketItemClickCallback;

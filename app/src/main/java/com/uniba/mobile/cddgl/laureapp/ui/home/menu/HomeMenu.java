@@ -31,11 +31,11 @@ public class HomeMenu implements MenuProvider {
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         menu.clear();
+        menuInflater.inflate(R.menu.app_bar_home, menu);
 
-        if (role.equals(RoleUser.PROFESSOR)) {
-            menuInflater.inflate(R.menu.app_bar_home, menu);
-        } else {
-            menuInflater.inflate(R.menu.app_bar_home, menu);
+        if (!role.equals(RoleUser.PROFESSOR)) {
+            MenuItem menuItem = menu.findItem(HomeFragment.CREATE_TESI_APP_BAR);
+            menuItem.setVisible(false);
         }
 
         this.menu.setValue(menu);

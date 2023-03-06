@@ -18,11 +18,10 @@
         app:liftOnScroll="true">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/topAppBar"
+            android:id="@+id/topAppBarLogin"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIconTint="?attr/iconTint"
-            app:title="@string/app_name"
             app:titleTextColor="?attr/colorPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>

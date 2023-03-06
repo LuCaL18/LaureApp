@@ -137,7 +137,7 @@ public class TicketFragment extends Fragment {
         EditText receiverText = root.findViewById(R.id.text_receiver_ticket);
         receiverText.setVisibility(View.GONE);
 
-        Button sendButton = root.findViewById(R.id.button_send);
+        sendButton = root.findViewById(R.id.button_send);
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override

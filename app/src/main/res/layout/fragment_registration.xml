@@ -3,26 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:scrollbars="none"
+    android:layout_marginTop="?android:attr/actionBarSize"
     tools:context=".ui.login.registration.RegistrationFragment">
 
-    <LinearLayout
-        android:id="@+id/container"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/fragment_horizontal_margin"
-        android:paddingTop="@dimen/fragment_vertical_margin"
-        android:paddingRight="@dimen/fragment_horizontal_margin"
-        android:paddingBottom="@dimen/fragment_vertical_margin">
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <EditText
             android:id="@+id/username"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="176dp"
+            android:layout_marginTop="20dp"
             android:autofillHints="@string/prompt_email"
             android:hint="@string/prompt_email"
             android:inputType="textEmailAddress"
@@ -119,16 +120,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group_ambiti"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:chipSpacingHorizontal="4dp"
-            app:chipSpacingVertical="8dp"
-            app:flow_horizontalAlign="start"
-            app:flow_verticalAlign="top"
-            app:singleLine="true" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_ambiti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:chipSpacingHorizontal="4dp"
+                app:chipSpacingVertical="8dp"
+                app:flow_horizontalAlign="start"
+                app:flow_verticalAlign="top"
+                app:singleLine="true" />
         </HorizontalScrollView>
 
         <EditText
@@ -186,16 +187,14 @@
             android:text="@string/sign_up"
             app:layout_constraintVertical_bias="0.437" />
 
+        </LinearLayout>
         <ProgressBar
             android:id="@+id/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="64dp"
-            android:visibility="gone"
-            app:layout_constraintVertical_bias="0.3" />
-    </LinearLayout>
+            android:visibility="gone" />
+
+    </FrameLayout>
+
 </ScrollView>

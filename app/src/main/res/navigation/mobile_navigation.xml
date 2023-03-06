@@ -147,4 +147,8 @@
         android:name="com.uniba.mobile.cddgl.laureapp.RicevimentoFragment"
         android:label="fragment_ricevimento"
         tools:layout="@layout/fragment_ricevimento" />
+    <fragment
+        android:id="@+id/fragment_settings"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.settings.SettingsFragment"
+        android:label="@string/settings" />
 </navigation>
