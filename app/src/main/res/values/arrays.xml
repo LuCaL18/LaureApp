@@ -2,6 +2,10 @@
 <!--    SPINNER CLASSIFICA TESI // NEW TASK -->
 <resources>
     <string-array name="classificatesi_array">
+        <item>Ambito</item>
+        <item>Chiave</item>
+        <item>Media Voto</item>
+        <item>Tempistiche</item>
         <item>Tesi A-Z</item>
         <item>Tesi Z-A</item>
         <item>Relatore A-Z</item>
@@ -10,7 +14,12 @@
     </string-array>
     <string-array name="stato_array">
         <item>NEW</item>
-        <item>RUNNING</item>
+        <item>STARTED</item>
+        <item>COMPLETED</item>
         <item>END</item>
+    </string-array>
+    <string-array name="tesi_array">
+    </string-array>
+    <string-array name="student_tesi_array">
     </string-array>
 </resources>

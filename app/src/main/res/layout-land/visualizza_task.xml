@@ -59,7 +59,7 @@
                         android:layout_height="28dp"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="261dp"
+                        android:layout_marginEnd="567dp"
                         android:src="@drawable/ic_baseline_edit_note_24"
                         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 

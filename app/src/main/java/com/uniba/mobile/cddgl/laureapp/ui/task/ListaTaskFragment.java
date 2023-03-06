@@ -20,6 +20,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,7 +28,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.TicketState;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
@@ -39,6 +39,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * Fragment che si occupa della gestione della visualizzazione
+ * di una lista di task visibli dall'utente
+ *
+ */
+
 public class ListaTaskFragment extends Fragment {
 
     public static final String LIST_TASK_TESI_KEY = "idThesis";
@@ -47,15 +54,29 @@ public class ListaTaskFragment extends Fragment {
     private static final int ADD_TASK = R.id.add_task;
 
     private ListView listView;
+    /* Adapter per la gestione di ListaTaskAdapter */
     private ListaTaskAdapter adapter;
+    /* Lista dei task da visualizzare a schermo */
     private List<Task> dataList;
+    private CollectionReference mCollection;
     private BottomNavigationView navBar;
     private boolean permissionCreate;
     private MenuProvider providerMenu;
     private String idThesis;
 
+    /**
+     *
+     * Metodo "onCreateView" per il recupero di tutti i task da visualizzare a schermo
+     * filtrati per lo specifico user in base al suo ruolo (PROFESSOR o STUDENT)
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        /* Creazione della view responsabile della gestione della visualizzazione del layout */
         View view = inflater.inflate(R.layout.fragment_lista_task, container, false);
 
         Query query;
@@ -85,7 +106,16 @@ public class ListaTaskFragment extends Fragment {
                 dataList.clear();
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Task task = doc.toObject(Task.class);
-                    dataList.add(task);
+                    /* Recupero degli id dello studente e del relatore */
+                    String idRelatore = doc.getString("relatore");
+                    String idStudent = doc.getString("studenteId");
+                    /* Se l'utente loggato è un professore e l'id del relatore coincide con l'utente loggato, aggiungere il task alla lista */
+                    if (userLogged.getRole().equals(RoleUser.PROFESSOR) && idRelatore.equals(userLogged.getId())) {
+                        dataList.add(task);
+                    } /* Se l'utente loggato è uno studente e l'id del relatore coincide con l'utente loggato, aggiungere il task alla lista */
+                    else if (userLogged.getRole().equals(RoleUser.STUDENT) && idStudent.equals(userLogged.getId())) {
+                        dataList.add(task);
+                    }
                 }
                  adapter.setmDataList(dataList);
             }

@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp;
+package com.uniba.mobile.cddgl.laureapp.data.model;
 
 public class Relatore {
     private String id_relatore;
