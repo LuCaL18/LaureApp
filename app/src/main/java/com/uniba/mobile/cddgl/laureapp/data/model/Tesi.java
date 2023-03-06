@@ -14,46 +14,49 @@ public class Tesi implements Serializable, Cloneable {
     private String id;
     private String nomeTesi;
     private String imageTesi;
-    private List<PersonaTesi> realatori;
-    private PersonaTesi professor;
+    private List<PersonaTesi> coRelatori;
+    private PersonaTesi relatore;
     private String descrizione;
     private String ambito;
-    private String chiave;
+    private List<String> chiavi;
     private String skill;
-    private String tempistiche;
-    private String esami;
-    private String mediaVoto;
+    private int tempistiche;
+    private List<String> esami;
+    private float mediaVoto;
     private List<String> documents;
     private PersonaTesi student;
     private Boolean isAssigned;
     private String note;
+    private long created_at;
 
     public Tesi() {
     }
 
-    public Tesi(String nomeTesi, List<PersonaTesi> realatori, PersonaTesi professor, String descrizione, String ambito, String chiave, String skill, String tempistiche, String esami, String mediaVoto, List<String> documents, Boolean isAssigned, String note) {
+    public Tesi(String nomeTesi, List<PersonaTesi> coRelatori, PersonaTesi relatore, String descrizione, String ambito, List<String> chiavi, String skill, int tempistiche, List<String> esami, float mediaVoto, List<String> documents, PersonaTesi student, String note) {
         this.id = UUID.randomUUID().toString();
         this.nomeTesi = nomeTesi;
-        this.realatori = realatori;
-        this.professor = professor;
+        this.coRelatori = coRelatori;
+        this.relatore = relatore;
         this.descrizione = descrizione;
         this.ambito = ambito;
-        this.chiave = chiave;
+        this.chiavi = chiavi;
         this.skill = skill;
         this.tempistiche = tempistiche;
         this.esami = esami;
         this.mediaVoto = mediaVoto;
         this.documents = documents;
-        this.isAssigned = isAssigned;
+        this.student = student;
         this.note = note;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        isAssigned = false;
+        this.created_at = System.currentTimeMillis();
     }
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNomeTesi() {
@@ -64,20 +67,28 @@ public class Tesi implements Serializable, Cloneable {
         this.nomeTesi = nomeTesi;
     }
 
-    public List<PersonaTesi> getRealatori() {
-        return realatori;
+    public String getImageTesi() {
+        return imageTesi;
     }
 
-    public void setRealatori(List<PersonaTesi> realatori) {
-        this.realatori = realatori;
+    public void setImageTesi(String imageTesi) {
+        this.imageTesi = imageTesi;
     }
 
-    public PersonaTesi getProfessor() {
-        return professor;
+    public List<PersonaTesi> getCoRelatori() {
+        return coRelatori;
     }
 
-    public void setProfessor(PersonaTesi professor) {
-        this.professor = professor;
+    public void setCoRelatori(List<PersonaTesi> coRelatori) {
+        this.coRelatori = coRelatori;
+    }
+
+    public PersonaTesi getRelatore() {
+        return relatore;
+    }
+
+    public void setRelatore(PersonaTesi relatore) {
+        this.relatore = relatore;
     }
 
     public String getDescrizione() {
@@ -96,12 +107,12 @@ public class Tesi implements Serializable, Cloneable {
         this.ambito = ambito;
     }
 
-    public String getChiave() {
-        return chiave;
+    public List<String> getChiavi() {
+        return chiavi;
     }
 
-    public void setChiave(String chiave) {
-        this.chiave = chiave;
+    public void setChiavi(List<String> chiavi) {
+        this.chiavi = chiavi;
     }
 
     public String getSkill() {
@@ -112,27 +123,27 @@ public class Tesi implements Serializable, Cloneable {
         this.skill = skill;
     }
 
-    public String getTempistiche() {
+    public int getTempistiche() {
         return tempistiche;
     }
 
-    public void setTempistiche(String tempistiche) {
+    public void setTempistiche(int tempistiche) {
         this.tempistiche = tempistiche;
     }
 
-    public String getEsami() {
+    public List<String> getEsami() {
         return esami;
     }
 
-    public void setEsami(String esami) {
+    public void setEsami(List<String> esami) {
         this.esami = esami;
     }
 
-    public String getMediaVoto() {
+    public float getMediaVoto() {
         return mediaVoto;
     }
 
-    public void setMediaVoto(String mediaVoto) {
+    public void setMediaVoto(float mediaVoto) {
         this.mediaVoto = mediaVoto;
     }
 
@@ -152,11 +163,11 @@ public class Tesi implements Serializable, Cloneable {
         this.student = student;
     }
 
-    public Boolean getAssigned() {
+    public Boolean getIsAssigned() {
         return isAssigned;
     }
 
-    public void setAssigned(Boolean assigned) {
+    public void setIsAssigned(Boolean assigned) {
         isAssigned = assigned;
     }
 
@@ -168,33 +179,34 @@ public class Tesi implements Serializable, Cloneable {
         this.note = note;
     }
 
-    public String getImageTesi() {
-        return imageTesi;
+    public long getCreated_at() {
+        return created_at;
     }
 
-    public void setImageTesi(String imageTesi) {
-        this.imageTesi = imageTesi;
+    public void setCreated_at(long created_at) {
+        this.created_at = created_at;
     }
 
     @Override
     public String toString() {
         return "Tesi{" +
-                "id='" + id + '\'' +
+                ", id='" + id + '\'' +
                 ", nomeTesi='" + nomeTesi + '\'' +
                 ", imageTesi='" + imageTesi + '\'' +
-                ", realatori=" + realatori +
-                ", professor=" + professor +
+                ", coRelatori=" + coRelatori +
+                ", relatore=" + relatore +
                 ", descrizione='" + descrizione + '\'' +
                 ", ambito='" + ambito + '\'' +
-                ", chiave='" + chiave + '\'' +
+                ", chiavi=" + chiavi +
                 ", skill='" + skill + '\'' +
                 ", tempistiche='" + tempistiche + '\'' +
-                ", esami='" + esami + '\'' +
-                ", mediaVoto='" + mediaVoto + '\'' +
+                ", esami=" + esami +
+                ", mediaVoto=" + mediaVoto +
                 ", documents=" + documents +
                 ", student=" + student +
                 ", isAssigned=" + isAssigned +
                 ", note='" + note + '\'' +
+                ", created_at=" + created_at +
                 '}';
     }
 

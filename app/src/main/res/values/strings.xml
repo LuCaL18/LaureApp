@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">LaureApp</string>
-    <string name="app_name_upperCase"><b>LAURE</b>APP</string>
+    <string name="app_name"><b>Laure</b>App</string>
     <string name="content_description_notification">Show notifications</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -8,7 +7,7 @@
     <string name="welcome">"Welcome! "</string>
     <string name="login_failed">"Login failed"</string>
     <string name="registration_failed">"Registration failed"</string>
-    <string name="login">login</string>
+    <string name="login">Login</string>
     <string name="sign_up">Sign up</string>
     <string name="login_guest"><u>Enter as guest</u></string>
     <string name="favorite">Favourites</string>
@@ -55,8 +54,19 @@
     <string name="role_professor">Professor</string>
     <string name="forgot_password"><u>Forgot password?</u></string>
 
+    <!--    TASK FIELD-->
+    <string name="nometask">Nome Task</string>
+    <string name="stato">Stato</string>
+    <string name="descrizione">Descrizione</string>
+    <string name="scadenza">Scadenza</string>
+    <string name="lista_task">Lista Task</string>
+
+    <!--    SHARE TESI-->
+    <string name="share_classifica">Condividi classifica</string>
+    <string name="share_tesi">Condividi tesi</string>
+
     <!--    ERROR USER-->
-    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_username">Not a valid email</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="invalid_name">Not a valid name</string>
     <string name="invalid_surname">Not a valid surname</string>
@@ -65,10 +75,41 @@
     <string name="invalid_confirm_password">Passwords do not match</string>
     <string name="invalid_filename">The file name may not contain special characters</string>
 
+    <!--    ERROR TASK-->
+    <string name="invalid_state">Not a valid state</string>
+    <string name="invalid_taskname">Not a valid name for a task</string>
+    <string name="invalid_task">Not a valid task</string>
+    <string name="invalid_description">Description must contain a maximum of 200 characters</string>
+    <string name="invalid_scadenza">Not a valid end date</string>
+
     <!--    FIREBASE EXCEPTION-->
     <string name="weak_password">Your password is too weak</string>
     <string name="invalid_credentials">Your email is invalid or already in use</string>
     <string name="user_collision">User is already registered with this email</string>
+    <string name="nome_tesi">NOME TESI</string>
+    <string name="relatori">RELATORI</string>
+    <string name="vincoli">VINCOLI</string>
+    <string name="crea_tesi">Crea tesi</string>
+    <string name="popvincoli">Vincoli</string>
+    <string name="creare_task">Creare task</string>
+    <string name="accettare_tesisti">Accettare tesisti</string>
+    <string name="modificare_eliminare_task">Modificare ed \n eliminare task</string>
+    <string name="modificare_tesi">Modificare tesi</string>
+    <string name="cancella">CANCELLA</string>
+    <string name="aggiungi">AGGIUNGI</string>
+    <string name="email">EMAIL</string>
+    <string name="cognome">COGNOME</string>
+    <string name="nome">NOME</string>
+    <string name="vedi_tutte">Vedi tutte</string>
+    <string name="task_creati">TASK CREATI</string>
+    <string name="verifica_email">VERIFICA EMAIL</string>
+    <string name="new_task">New Task</string>
+    <string name="classifica_tesi">Classifica Tesi</string>
+    <string name="lista_tesi">Lista Tesi</string>
+    <string name="title_activity_new_task">NewTaskActivity</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_slideshow">Slideshow</string>
 
     <!--    FORGOT PASSWORD-->
     <string name="request_send_forgot_password">Are you sure you want to send a password reset request to this e-mail address:\n\n<b>%s</b></string>
@@ -84,7 +125,7 @@
 
     <!--    TITLE NAVIGATION BAR-->
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_thesis_list">Thesis list</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_chat">Chat</string>
     <string name="user_profile">User profile</string>
@@ -211,9 +252,92 @@
     <string name="state_new">NEW</string>
     <string name="started">STARTED</string>
     <string name="completed">COMPLETED</string>
-    <string name="task">TASK</string>
+    <string name="task">Task</string>
     <string name="there_are_no_assigned_tasks">There are no assigned tasks</string>
     <string name="task_graph">Task: \n%s</string>
 
+    <string name="tempistiche">Timeline</string>
+    <string name="mesi_2"><![CDATA[<2 mesi]]></string>
+    <string name="mesi_3"><![CDATA[<3 mesi]]></string>
+    <string name="mesi_4"><![CDATA[<4 mesi]]></string>
+    <string name="piu_mesi"><![CDATA[>4 mesi]]></string>
+    <string name="salva">Salva</string>
+    <string name="meetings">Meetings</string>
+    <string name="unable_add_favorite">Unable to add the thesis to the ranking</string>
+    <string name="weeks">weeks</string>
+    <string name="add_task">Add task</string>
+    <string name="list_task">List tasks</string>
+    <string name="calendar">Calendar</string>
+    <string name="click_to_add_task">Click to add task</string>
+    <string name="click_to_list_task">Click to view list of tasks</string>
+    <string name="click_to_calendar_tesi">Click to view calendar</string>
+    <string name="verify_email">Verify email</string>
+    <string name="email_not_found">Email not found</string>
+    <string name="relator_already_inserted">Relator already inserted</string>
+    <string name="change_email">Change email</string>
+    <string name="no_permissions">no permissions</string>
+    <string name="title_dialog_delete_relator">Delete relator</string>
+    <string name="title_dialog_delete_student">Delete student</string>
+    <string name="message_dialog_delete_relator">Are you sure you want to delete the relator <b>%s</b></string>
+    <string name="message_dialog_delete_student">Are you sure you want to delete the student <b>%s</b></string>
+    <string name="required_skills_and_competences">Required skills and competences</string>
+    <string name="requested_grade_average">Requested grade average</string>
+    <string name="timeline_value_weeks">%s weeks</string>
+    <string name="es_programming_in_java">ES. Programming in java...</string>
+    <string name="search_keys">Search keys</string>
+    <string name="scopes">Scopes</string>
+    <string name="search_words">Search words</string>
+    <string name="key_words">Key words</string>
+    <string name="add">Add</string>
+    <string name="scope">Scope</string>
+    <string name="keyword_entered">keyword entered</string>
+    <string name="existing_keyword">Existing keyword</string>
+    <string name="latest_entries">Latest entries</string>
+    <string name="there_are_no_theses_inserted">There are no theses inserted</string>
+    <string name="your_theses">Your theses</string>
+    <string name="for_your_scope">For your scope</string>
+    <string name="there_are_no_theses_for_your_scopes">There are no theses for your scopes</string>
+    <string name="select_your_scopes">Select your scopes</string>
+    <string name="chat_list">Chat list</string>
+    <string name="search_hint">Search for a thesis by title</string>
+    <string name="required_exams">Required exams</string>
+    <string name="enter_exam">Enter exam</string>
+    <string name="filters">Filters</string>
+    <string name="all">All</string>
+    <string name="personal">Personal</string>
+    <string name="there_are_no_theses_available">There are no theses available</string>
+    <string name="available">Available</string>
+    <string name="registration_required_to_booking">Registration required to make a booking</string>
+    <string name="go_to_login">Go to login</string>
+    <string name="to_activate_this_functionality_you_must_be_registered_please_sign_up_to_access_this_feature">To activate this functionality, you must be registered. Please sign up to access this feature.</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="languages">Languages</string>
+    <string name="settings">Settings</string>
 
+    <!-- SPINNER-->
+    <string-array name="ambiti">
+        <item>Informatica</item>
+        <item>Scienze biologiche</item>
+        <item>Astronomia</item>
+        <item>Arte</item>
+        <item>Medicina</item>
+        <item>Cultura</item>
+        <item>Finanza</item>
+        <item>Politica</item>
+    </string-array>
+
+    <string-array name="available_languages">
+        <item>English</item>
+        <item>Italian</item>
+    </string-array>
+
+    <string-array name="available_languages_values">
+        <item>en</item>
+        <item>it</item>
+    </string-array>
+
+    <string-array name="available_theme">
+        <item>light</item>
+        <item>night</item>
+    </string-array>
 </resources>

@@ -3,83 +3,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="none">
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+    android:layout_marginTop="?android:attr/actionBarSize"
+    tools:context=".ui.login.registration.RegistrationFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/fragment_horizontal_margin"
-        android:paddingTop="@dimen/fragment_vertical_margin"
-        android:paddingRight="@dimen/fragment_horizontal_margin"
-        android:paddingBottom="@dimen/fragment_vertical_margin"
-        tools:context=".ui.login.registration.RegistrationFragment">
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <EditText
             android:id="@+id/username"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="176dp"
-            android:layout_marginEnd="24dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:autofillHints="@string/prompt_email"
             android:hint="@string/prompt_email"
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:selectAllOnFocus="true" />
 
         <EditText
             android:id="@+id/name"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
             android:autofillHints="@string/name"
             android:hint="@string/name"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:minHeight="48dp"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
+            android:selectAllOnFocus="true" />
 
         <EditText
             android:id="@+id/surname"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
             android:autofillHints="@string/surname"
             android:hint="@string/surname"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:minHeight="48dp"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
+            android:selectAllOnFocus="true" />
 
 
         <RadioGroup
             android:id="@+id/radio_group_role"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.493"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/surname">
+            app:layout_constraintStart_toStartOf="parent">
 
             <RadioButton
                 android:id="@+id/radio_button_student"
@@ -99,9 +88,8 @@
             android:id="@+id/birthDay"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
             android:autofillHints="@string/birth_day"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -110,18 +98,46 @@
             android:imeOptions="actionDone"
             android:inputType="date"
             android:minHeight="48dp"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radio_group_role" />
+            android:selectAllOnFocus="true" />
+
+        <TextView
+            android:layout_width="338dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/select_your_scopes"
+            android:textSize="18sp"/>
+
+        <Spinner
+            android:id="@+id/spinner_ambiti"
+            android:layout_width="355dp"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <HorizontalScrollView
+            android:layout_width="338dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_ambiti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:chipSpacingHorizontal="4dp"
+                app:chipSpacingVertical="8dp"
+                app:flow_horizontalAlign="start"
+                app:flow_verticalAlign="top"
+                app:singleLine="true" />
+        </HorizontalScrollView>
 
         <EditText
             android:id="@+id/bio"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
             android:autofillHints="@string/bio"
             android:hint="@string/bioHint"
             android:imeActionLabel="@string/action_sign_in_short"
@@ -129,80 +145,56 @@
             android:inputType="textMultiLine"
             android:maxLength="200"
             android:minHeight="48dp"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/birthDay" />
+            android:selectAllOnFocus="true" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
             android:autofillHints="@string/prompt_password"
             android:hint="@string/prompt_password"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:minHeight="48dp"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bio" />
+            android:selectAllOnFocus="true" />
 
         <EditText
             android:id="@+id/confirm_password"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
             android:autofillHints="@string/confirm_password"
             android:hint="@string/confirm_password"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:minHeight="48dp"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            android:selectAllOnFocus="true" />
 
         <Button
             android:id="@+id/register"
             android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginStart="48dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
-            android:layout_marginEnd="48dp"
             android:layout_marginBottom="50dp"
+            android:background="@drawable/button_login"
             android:enabled="false"
             android:text="@string/sign_up"
-            android:background="@drawable/button_login"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.521"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/confirm_password"
             app:layout_constraintVertical_bias="0.437" />
 
+        </LinearLayout>
         <ProgressBar
             android:id="@+id/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="64dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:visibility="gone" />
+
+    </FrameLayout>
+
 </ScrollView>

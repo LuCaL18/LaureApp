@@ -45,8 +45,7 @@
                 android:layout_height="match_parent"
                 android:clickable="true"
                 android:padding="16dp"
-                android:src="@drawable/ic_baseline_download_24"
-                tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
+                android:src="@drawable/ic_baseline_download_24" />
 
         </LinearLayout>
 

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/relatore"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="50dp"
+        android:contentDescription="TODO"
+        app:civ_border_color="@color/primary_green"
+        app:civ_border_width="3dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nome"
+        app:layout_constraintTop_toBottomOf="@+id/image"
+        android:textSize="24sp"
+        android:layout_marginTop="15dp"
+        android:hint="@string/nome"
+        android:textAlignment="center"
+        android:visibility="invisible"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/nome"
+        android:textSize="24sp"
+        android:layout_marginTop="15dp"
+        android:hint="@string/email"
+        android:textAlignment="center"/>
+
+    <LinearLayout
+        android:id="@+id/tasti"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/email"
+        android:orientation="horizontal" />
+    <CheckBox
+        android:id="@+id/permesso1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/creare_task"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tasti"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="12dp"
+        />
+
+    <CheckBox
+        android:id="@+id/permesso2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/accettare_tesisti"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tasti"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="12dp"
+        />
+
+    <CheckBox
+        android:id="@+id/permesso3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/modificare_eliminare_task"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/permesso1"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="12dp"
+        />
+
+    <CheckBox
+        android:id="@+id/permesso4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/modificare_tesi"
+        app:layout_constraintStart_toStartOf="@id/permesso2"
+        app:layout_constraintTop_toBottomOf="@id/permesso1"
+        android:layout_marginTop="15dp"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/saveButton"
+        android:shadowColor="@color/primary_green"
+        app:layout_constraintTop_toBottomOf="@id/permesso3"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:text="@string/aggiungi"
+        android:visibility="invisible"/>
+
+    <Button
+        android:theme="@style/Button.Red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cancelButton"
+        app:layout_constraintTop_toBottomOf="@id/permesso3"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:text="@string/cancella"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,12 +9,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 /**
  * Fragment per la visualizzazione del logo.
@@ -22,8 +24,13 @@ import android.widget.ProgressBar;
 public class LogoFragment extends Fragment {
 
     private ProgressBar progressBar;
+    private BottomNavigationView navBar;
+    private boolean isTaskReady;
+    private boolean isThesisReady;
 
     public LogoFragment() {
+        isTaskReady = false;
+        isThesisReady = false;
     }
 
     @Override
@@ -43,20 +50,67 @@ public class LogoFragment extends Fragment {
         return view;
     }
 
+
     @Override
-    public void onStart() {
-        super.onStart();
-        NavController navController = NavHostFragment.findNavController(this);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         mainViewModel.getUser().observe(getViewLifecycleOwner(), loggedInUser -> {
-            navController.navigate(R.id.action_logo_fragment_to_navigation_home);
-            progressBar.setVisibility(View.GONE);
+            if(loggedInUser == null) {
+                return;
+            }
+
+            mainViewModel.readTask(loggedInUser.getRole(), loggedInUser.getId());
+            mainViewModel.loadTesiByRole(loggedInUser.getRole());
+            mainViewModel.loadLastTheses();
+            mainViewModel.loadThesesAmbito(loggedInUser.getAmbiti());
+
         });
+
+        mainViewModel.getLastTheses().observe(getViewLifecycleOwner(), queryDocumentSnapshots -> {
+            if(queryDocumentSnapshots == null || !isTaskReady) {
+                isThesisReady = true;
+                return;
+            }
+
+            NavController navController = NavHostFragment.findNavController(this);
+
+            if (navController.getCurrentDestination().getId() == R.id.logo_fragment)  {
+                navController.navigate(R.id.action_logo_fragment_to_navigation_home);
+                progressBar.setVisibility(View.GONE);
+            }
+
+        });
+
+        mainViewModel.getTasks().observe(getViewLifecycleOwner(), tasks -> {
+            if(tasks == null || !isThesisReady) {
+                isTaskReady = true;
+                return;
+            }
+
+            NavController navController = NavHostFragment.findNavController(this);
+
+            if (navController.getCurrentDestination().getId() == R.id.logo_fragment)  {
+                navController.navigate(R.id.action_logo_fragment_to_navigation_home);
+                progressBar.setVisibility(View.GONE);
+            }
+
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        navBar.setVisibility(View.VISIBLE);
     }
 }

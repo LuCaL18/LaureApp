@@ -8,8 +8,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,11 +84,11 @@ public class BaseRequestNotification {
     }
 
     public void sendRequest(int method, Context context) {
-        FirebaseDatabase.getInstance().getReference("users").child(receiveId).child("token").get().addOnCompleteListener(task -> {
+        FirebaseFirestore.getInstance().collection("users").document(receiveId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                String token = (String) task.getResult().getValue();
+                LoggedInUser user = ((DocumentSnapshot) task.getResult()).toObject(LoggedInUser.class);
 
-                JsonObjectRequest request = createJsonRequest(method, token);
+                JsonObjectRequest request = createJsonRequest(method, user.getToken());
 
                 Volley.newRequestQueue(context).add(request);
 

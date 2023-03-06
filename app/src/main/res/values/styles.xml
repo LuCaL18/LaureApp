@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="roundedImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+        <item name="color">@color/white</item>
+    </style>
+    <style name="Button.Red" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@android:color/holo_red_dark</item>
+    </style>
+</resources>

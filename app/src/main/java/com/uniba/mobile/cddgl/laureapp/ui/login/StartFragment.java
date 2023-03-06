@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.uniba.mobile.cddgl.laureapp.LoginActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
@@ -61,11 +63,13 @@ public class StartFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
         navController = null;
     }
 }

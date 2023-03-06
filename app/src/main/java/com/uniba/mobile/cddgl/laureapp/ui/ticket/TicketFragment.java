@@ -22,10 +22,9 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
@@ -97,19 +96,18 @@ public class TicketFragment extends Fragment {
 
         titleTicket.setText(ticket.getNameTesi() + " - " + ticket.getIdTesi());
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users")
-                .child(user.getRole().equals(RoleUser.STUDENT) ? ticket.getIdReceiver() : ticket.getIdSender())
-                .child("email");
+        DocumentReference reference = FirebaseFirestore.getInstance().collection("users")
+                .document(user.getRole().equals(RoleUser.STUDENT) ? ticket.getIdReceiver() : ticket.getIdSender());
 
         reference.get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
-                String email = task.getResult().getValue(String.class);
+                LoggedInUser loggedInUser = ((DocumentSnapshot) task.getResult()).toObject(LoggedInUser.class);
 
                 if(user.getRole().equals(RoleUser.STUDENT)) {
                     emailStudentTicket.setText(getString(R.string.email_student_title, user.getEmail()));
-                    emailProfTicket.setText(getString(R.string.email_prof_title, email));
+                    emailProfTicket.setText(getString(R.string.email_prof_title, loggedInUser.getEmail()));
                 } else {
-                    emailStudentTicket.setText(getString(R.string.email_student_title, email));
+                    emailStudentTicket.setText(getString(R.string.email_student_title, loggedInUser.getEmail()));
                     emailProfTicket.setText(getString(R.string.email_prof_title, user.getEmail()));
                 }
             }
@@ -139,7 +137,7 @@ public class TicketFragment extends Fragment {
         EditText receiverText = root.findViewById(R.id.text_receiver_ticket);
         receiverText.setVisibility(View.GONE);
 
-        Button sendButton = root.findViewById(R.id.button_send);
+        sendButton = root.findViewById(R.id.button_send);
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override

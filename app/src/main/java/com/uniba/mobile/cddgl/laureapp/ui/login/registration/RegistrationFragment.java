@@ -1,5 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.ui.login.registration;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -7,10 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,11 +26,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentRegistrationBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.component.DatePickerFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RegistrationFragment extends Fragment {
 
@@ -63,12 +73,14 @@ public class RegistrationFragment extends Fragment {
         final EditText confirmPasswordEditText = binding.confirmPassword;
         final Button registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
+        final Spinner spinnerAmbiti = binding.spinnerAmbiti;
+
+        List<String> ambiti = new ArrayList<>();
 
         dobEditText.setOnClickListener(v -> {
             DialogFragment datePicker = new DatePickerFragment(R.layout.fragment_registration);
             datePicker.show(getParentFragmentManager(), "date picker");
         });
-
 
 
         loginViewModel.getRegisterFormState().observe(getViewLifecycleOwner(), registerFormState -> {
@@ -88,13 +100,13 @@ public class RegistrationFragment extends Fragment {
             if (registerFormState.getSurnameError() != null) {
                 surnameEditText.setError(getString(registerFormState.getSurnameError()));
             }
-            if(registerFormState.getDateError() != null) {
+            if (registerFormState.getDateError() != null) {
                 dobEditText.setError(getString(registerFormState.getDateError()));
             }
             if (registerFormState.getBioError() != null) {
                 bioEditText.setError(getString(registerFormState.getBioError()));
             }
-            if(registerFormState.getConfirmPasswordError() != null) {
+            if (registerFormState.getConfirmPasswordError() != null) {
                 confirmPasswordEditText.setError(getString(registerFormState.getConfirmPasswordError()));
             }
         });
@@ -137,12 +149,52 @@ public class RegistrationFragment extends Fragment {
         bioEditText.addTextChangedListener(afterTextChangedListener);
         confirmPasswordEditText.addTextChangedListener(afterTextChangedListener);
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.ambiti, R.layout.custom_item_spinner);
+        adapter.setDropDownViewResource(R.layout.custom_item_spinner);
+
+        spinnerAmbiti.setAdapter(adapter);
+
+        ChipGroup chipGroup = binding.chipGroupAmbiti;
+
+        spinnerAmbiti.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                Chip chip = new Chip(getContext());
+                chip.setText(selectedItem);
+                chip.setCloseIconTint(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                chip.setCloseIconVisible(true);
+                chip.setChipBackgroundColorResource(R.color.primary_green);
+                chip.setTextColor(getResources().getColor(R.color.white));
+
+
+                if (!ambiti.contains(selectedItem)) {
+                    ambiti.add(selectedItem);
+                    chipGroup.addView(chip);
+                }
+
+                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        chipGroup.removeView(chip);
+                        ambiti.remove(selectedItem);
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loginViewModel.register(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString(), nameEditText.getText().toString(),
                         surnameEditText.getText().toString(), dobEditText.getText().toString(),
-                        bioEditText.getText().toString(), getRoleFromRadioButton());
+                        bioEditText.getText().toString(), getRoleFromRadioButton(), ambiti);
             }
             return false;
         });
@@ -152,12 +204,12 @@ public class RegistrationFragment extends Fragment {
             loginViewModel.register(usernameEditText.getText().toString(),
                     passwordEditText.getText().toString(), nameEditText.getText().toString(),
                     surnameEditText.getText().toString(), dobEditText.getText().toString(),
-                    bioEditText.getText().toString(), getRoleFromRadioButton());
+                    bioEditText.getText().toString(), getRoleFromRadioButton(), ambiti);
         });
 
         loginViewModel.getIsUserVerification().observe(getViewLifecycleOwner(), isUserVerification -> {
-            if(!isUserVerification) {
-               navController.navigate(R.id.action_signInFragment_to_confirmRegistrationFragment);
+            if (!isUserVerification) {
+                navController.navigate(R.id.action_signInFragment_to_confirmRegistrationFragment);
             }
         });
     }

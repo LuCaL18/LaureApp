@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.login.LoginFragment"
-        android:label="fragment_login"
+        android:label="@string/login"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/startFragment"
@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.login.registration.RegistrationFragment"
-        android:label="fragment_sign_in"
+        android:label="@string/sign_up"
         tools:layout="@layout/fragment_registration" >
         <action
             android:id="@+id/action_signInFragment_to_confirmRegistrationFragment"
