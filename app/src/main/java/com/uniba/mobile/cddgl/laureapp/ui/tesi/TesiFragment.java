@@ -3,12 +3,16 @@ package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 import static java.lang.Integer.parseInt;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,9 +20,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,7 +33,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,39 +42,47 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.model.Relatore;
+import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.model.Filtri;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentTesiBinding;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TesiFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference relatoriRef = db.collection("relatore");
-    private final CollectionReference vincoliRef = db.collection("parola_chiave");
+    private final CollectionReference relatoriRef = db.collection("users");
+    private final CollectionReference filtriRef = db.collection("filtri");
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private FragmentTesiBinding binding;
     private AlertDialog.Builder dialogBuilder, dialogBuilder2;
     private AlertDialog dialog, dialog2;
     private ListView keywordListView;
-    private EditText popup_email, eNuovakey, eSkill;
+    private EditText popup_email, eNuovakey, eSkill, eNote, eNomeTesi, eDescrizione;
     private TextView popup_nome, relatore;
-    private Button cancel, save, verifica, modifica, addKey;
+    private Button cancel, save, verifica, modifica, cancel2, addKey, salva, save2;
     private BottomNavigationView navBar;
     private CheckBox permesso1, permesso2, permesso3, permesso4;
-    private RadioGroup radioGroup;
-    private RadioButton radioButton;
-    private TextView vincoloT, Ambito, Tempistiche, Chiave, Skill, paroleChiave, voto;
-    private String permessi;
-    private ArrayAdapter<String> arrayAdapter2;
-    private ArrayList<String> arrayChiavi = new ArrayList<>();
-    private Spinner ambito;
-    private SeekBar media;
-    private Map<String, String> co_relatori = new HashMap<>();
-    private String permessiI;
-
-
+    private TextView Ambito, Tempistiche, Chiave, Skill, Media, text_settimane, voto, paroleChiave;
+    private String permessi, textAmbito;
+    private List<Integer> permessiList = new ArrayList<>();
+    private Spinner ambitoSpinner;
+    private SeekBar mediaSeek, settimaneSeek;
+    private List<PersonaTesi> co_relatori = new ArrayList<>();
+    private int n_settimane, textmedia;
+    public List<String> keywordList = new ArrayList<>();
+    public List<Filtri> filtriList = new ArrayList<>();
+    public List<String> ambitiList = new ArrayList<>();
+    private List<String> keywordSelezionate = new ArrayList<>();
+    private LoggedInUser relatoreObj;
+    private PersonaTesi relatorePrincipaleObj;
+    private boolean trovato;
+    private Drawable yourDrawable;
+    private final int GALLERY_REQ_CODE=1000;
+    private ImageView addImage;
     public TesiFragment() {
         // Required empty public constructor
     }
@@ -98,149 +108,152 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
 
         NavController navController = NavHostFragment.findNavController(this);
 
-        String relatoreEmail = currentUser.getEmail();
+        relatorePrincipaleObj = new PersonaTesi(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail());
         relatore = binding.relatorePrincipale;
-        relatore.setText(relatoreEmail);
+        relatore.setText(relatorePrincipaleObj.getEmail());
+        salva = binding.salva;
+        eNote = binding.note;
+        eDescrizione = binding.descrizione;
+        eNomeTesi = binding.nomeTesi;
+        addImage = binding.addImage;
 
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iGallery = new Intent(Intent.ACTION_PICK);
+                iGallery.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                getActivity().startActivity(iGallery);
+            }
+        });
+
+        /*Imposta la sezione relativa all'aggiunta dei relatori*/
         ImageView b_aggiungi_relatore = binding.aggiungiRelatore;
+        final View relatorePopup = getLayoutInflater().inflate(R.layout.popup_relatore, null);
+        dialogBuilder = new AlertDialog.Builder(getContext());
+        dialogBuilder.setView(relatorePopup);
+        dialog = dialogBuilder.create();
+
+        /*Apertura del popup Relatore */
         b_aggiungi_relatore.setOnClickListener(view1 -> {
-            final View relatorePopup = getLayoutInflater().inflate(R.layout.popup_relatore, null);
-            dialogBuilder = new AlertDialog.Builder(getContext());
-            dialogBuilder.setView(relatorePopup);
-            dialog = dialogBuilder.create();
-            dialog.show();
             viewRelatore(relatorePopup);
             save.setOnClickListener(view11 -> {
                 permessi = "";
                 aggiungiRelatore(checkPermessi(permessi));
-                co_relatori.put(popup_email.getText().toString(), permessiI);
+                PersonaTesi relatore = new PersonaTesi(relatoreObj.getId(), relatoreObj.getDisplayName(), relatoreObj.getEmail(), permessiList);
+                co_relatori.add(relatore);
                 dialog.dismiss();
             });
-
             cancel.setOnClickListener(view112 -> dialog.dismiss());
+            dialog.show();
         });
 
-        /*
-         * vincoli
-         */
-
+        /*Imposta la sezione relativa all'aggiunta dei vincoli*/
         ImageView b_aggiungi_vincoli = binding.aggiungiVincoli;
         final View vincoliPopup = getLayoutInflater().inflate(R.layout.popup_vincoli, null);
         dialogBuilder2 = new AlertDialog.Builder(getContext());
         dialogBuilder2.setView(vincoliPopup);
         dialog2 = dialogBuilder2.create();
+
+        /*Apertura del popup Vincoli*/
         b_aggiungi_vincoli.setOnClickListener(view12 -> {
             viewVincoli(vincoliPopup);
             LinearLayout parentLayout = binding.vincoliTesi;
-            dialog2.show();
+            filtriRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot documentSnapshots) {
+                    paroleChiave.setText("PAROLE CHIAVE");
+                    keywordListView.clearChoices();
+                    keywordSelezionate.clear();
+                    filtriList = documentSnapshots.toObjects(Filtri.class);
+                    ambitiList = filtriList.get(0).getLista();
+                    keywordList = filtriList.get(1).getLista();
 
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                    R.array.ambiti,
-                    android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            ambito.setAdapter(adapter);
-            ambito.setOnItemSelectedListener(TesiFragment.this);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_spinner_dropdown_item, ambitiList);
+                    ambitoSpinner.setAdapter(adapter);
 
+                    ListAdapter listAdapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_list_item_1,
+                            keywordList
+                    );
+                    keywordListView.setAdapter(listAdapter);
+                    keywordListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                    keywordListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if(!keywordListView.isItemChecked(position)){
+                                keywordListView.getChildAt(position).setBackgroundColor(Color.WHITE);
+                            }
+                            else{
+                                keywordListView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
+                            }
+                            paroleChiave.setText("PAROLE CHIAVE (" + keywordListView.getCheckedItemCount()+")");
+                        }
 
-
-            if (!vincoliEmpty()) {
-                parentLayout.removeAllViews();
-            }
-
-            ArrayList<String> keywordList = new ArrayList<>();
-            addKey.setOnClickListener(view1212 -> {
-                String nuovakey = String.valueOf(eNuovakey.getText());
-                if(!keywordList.contains(nuovakey)) {
-                    keywordList.add(nuovakey);
-                    arrayAdapter2.notifyDataSetChanged();
-                    keywordListView.setItemChecked(keywordList.size()-1, true);
-                    paroleChiave.setText("PAROLE CHIAVE ("+keywordListView.getCheckedItemCount()+ ")");
-                    Map<String, String> T_chiave = new HashMap<>();
-                    T_chiave.put("chiave", nuovakey);
-                    db.collection("parola_chiave")
-                                .add(T_chiave)
-                                .addOnSuccessListener(documentReference -> {
-                                    Toast.makeText(getContext(), "chiave inserita", Toast.LENGTH_SHORT).show();
-                                });
-                }
-                    else {
-                    Toast.makeText(getContext(), "Chiave esistente", Toast.LENGTH_SHORT).show();
+                    });
                 }
             });
-            vincoliRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
-                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    vincoloT = new TextView(getContext());
-                    keywordList.add(documentSnapshot.get("chiave").toString());
-                }
-                arrayAdapter2 = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_list_item_multiple_choice, keywordList);
-
-                keywordListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                keywordListView.setAdapter(arrayAdapter2);
-                keywordListView.setOnItemClickListener((adapterView, view121, position, id) -> {
-                    paroleChiave.setText("PAROLE CHIAVE ("+keywordListView.getCheckedItemCount()+ ")");
-                });
-            });
-
-            save.setOnClickListener(view1214 -> {
-                int radioId = radioGroup.getCheckedRadioButtonId();
-                radioButton = vincoliPopup.findViewById(radioId);
-                String tempistiche = radioButton.getText().toString();
-                Ambito.setText(ambito.getSelectedItem().toString());
-                Tempistiche.setText(tempistiche);
-                String chiavi="";
-                for(int i=0;i<keywordList.size();i++){
-                    if(keywordListView.isItemChecked(i)){
-                        arrayChiavi.add(keywordListView.getItemAtPosition(i).toString());
-                        chiavi += keywordListView.getItemAtPosition(i).toString()+", ";
+            save2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    rimuoviVincoli(parentLayout);
+                    int i = 0;
+                    int j = 0;
+                    while (j < keywordListView.getCheckedItemCount() && i<keywordListView.getChildCount()) {
+                        if (keywordListView.isItemChecked(i)) {
+                            keywordSelezionate.add(keywordListView.getItemAtPosition(i).toString());
+                            j++;
+                        }
+                        i++;
                     }
+                    textmedia = parseInt(voto.getText().toString());
+                    n_settimane = parseInt(text_settimane.getText().toString());
+                    textAmbito = ambitoSpinner.getSelectedItem().toString();
+                    Chiave.setText("("+stampaKey(keywordSelezionate)+")");
+                    Tempistiche.setText("SETTIMANE PREVISTE: " + n_settimane);
+                    Media.setText("MEDIA: " + textmedia);
+                    Ambito.setText("AMBITO: " + textAmbito);
+                    Skill.setText("SKILL: " + eSkill.getText().toString());
+                    aggiungiVincoli(parentLayout);
+                    dialog2.dismiss();
                 }
-                if(chiavi.length()>2){
-                    chiavi = chiavi.substring(0,chiavi.length()-2);
+                });
+            cancel2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog2.dismiss();
                 }
-                Chiave.setText(chiavi);
-                Skill.setText(eSkill.getText().toString());
-                aggiungiVincoli(parentLayout);
-                dialog2.dismiss();
             });
-
-            cancel.setOnClickListener(view1215 -> dialog2.dismiss());
+            dialog2.show();
         });
-
-        Button salva = binding.salva;
-        salva.setOnClickListener(view13 -> {
-            EditText nome_tesi = binding.nomeTesi;
-            EditText descrizione = binding.descrizione;
-            String Nome_tesi = nome_tesi.getText().toString();
-            String Relatore = relatore.getText().toString();
-            String Descrizione = descrizione.getText().toString();
-            if(TextUtils.isEmpty(Nome_tesi) || TextUtils.isEmpty(Descrizione)){
-                Toast.makeText(getContext(), "Riempire tutti i campi", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                caricaTesi(Nome_tesi, Descrizione, Relatore);
+        salva.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                caricaTesi();
                 navController.navigate(R.id.action_tesiFragmant_to_navigation_home);
             }
-    });
+        });
     }
 
-    private void caricaTesi(String nome_tesi, String descrizione, String relatore) {
+    private void caricaTesi() {
         Map<String, Object> T_tesi = new HashMap<>();
+        long millis = System.currentTimeMillis();
 
-        T_tesi.put("nome_tesi", nome_tesi);
-        T_tesi.put("descrizione", descrizione);
-        T_tesi.put("relatore", relatore);
-        T_tesi.put("ambito", Ambito.getText().toString());
-        T_tesi.put("chiave", Chiave.getText().toString());
-        T_tesi.put("tempistiche", Tempistiche.getText().toString());
+        T_tesi.put("nomeTesi", eNomeTesi.getText().toString());
+        T_tesi.put("descrizione", eDescrizione.getText().toString());
+        T_tesi.put("relatore", relatorePrincipaleObj);
+        T_tesi.put("ambito", textAmbito);
+        T_tesi.put("chiavi", keywordSelezionate);
+        T_tesi.put("tempistiche", n_settimane);
         T_tesi.put("skill", Skill.getText().toString());
-        T_tesi.put("media", parseInt(voto.getText().toString()));
-        T_tesi.put("co_relatori", co_relatori);
-
+        T_tesi.put("mediaVoto", textmedia);
+        T_tesi.put("coRelatori", co_relatori);
+        T_tesi.put("created_at", millis);
+        T_tesi.put("note", eNote.getText().toString());
+        T_tesi.put("student", null);
+        T_tesi.put("isAssigned", false);
+        T_tesi.put("imageTesi", null);
+        T_tesi.put("documents", null);
         db.collection("tesi")
                 .add(T_tesi)
                 .addOnSuccessListener(documentReference -> {
@@ -249,20 +262,44 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
                 ).addOnFailureListener(e -> Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show());
     }
 
+    private String stampaKey(List<String> keywordSelezionate) {
+        String textKeySelezionate = "";
+        for (String key: keywordSelezionate) {
+            textKeySelezionate += key+", ";
+        }
+        if(textKeySelezionate.length()>2)
+            textKeySelezionate= textKeySelezionate.substring(0, textKeySelezionate.length()-2);
+        return textKeySelezionate;
+    }
+
     public void viewVincoli(View vincoliPopup){
+        paroleChiave = vincoliPopup.findViewById(R.id.keyword);
         eSkill = vincoliPopup.findViewById(R.id.CeS_edit);
         eNuovakey = vincoliPopup.findViewById(R.id.nuova_chiave);
-        ambito = vincoliPopup.findViewById(R.id.spinner);
-        paroleChiave = vincoliPopup.findViewById(R.id.keyword);
+        ambitoSpinner = vincoliPopup.findViewById(R.id.spinner);
         addKey = vincoliPopup.findViewById(R.id.aggiungi_keyword);
-        save = vincoliPopup.findViewById(R.id.saveButton);
-        cancel = vincoliPopup.findViewById(R.id.cancelButton);
-        radioGroup = vincoliPopup.findViewById(R.id.radio);
+        save2 = vincoliPopup.findViewById(R.id.save2Button);
+        cancel2 = vincoliPopup.findViewById(R.id.cancel2Button);
+        settimaneSeek = vincoliPopup.findViewById(R.id.settimane);
+        text_settimane = vincoliPopup.findViewById(R.id.n_settimane);
+        settimaneSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar settimane, int progress, boolean fromUser) {
+                text_settimane.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar settimane) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar settimane) {}
+        });
+
         keywordListView = vincoliPopup.findViewById(R.id.keywordsList);
         voto = vincoliPopup.findViewById(R.id.voto);
-        media = vincoliPopup.findViewById(R.id.media);
+        mediaSeek = vincoliPopup.findViewById(R.id.media);
 
-        media.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mediaSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar media, int progress, boolean fromUser) {
                 voto.setText(String.valueOf(progress));
@@ -278,16 +315,18 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
 
     private void aggiungiVincoli(LinearLayout parent){
         parent.addView(Ambito);
-        parent.addView(Tempistiche);
         parent.addView(Chiave);
         parent.addView(Skill);
+        parent.addView(Media);
+        parent.addView(Tempistiche);
     }
 
-    private boolean vincoliEmpty() {
-        if(Ambito.getText().toString().isEmpty() ||
-           Tempistiche.getText().toString().isEmpty()){
-            return true;
-        }else return false;
+    private void rimuoviVincoli(LinearLayout parent){
+        parent.removeView(Ambito);
+        parent.removeView(Chiave);
+        parent.removeView(Skill);
+        parent.removeView(Media);
+        parent.removeView(Tempistiche);
     }
 
     private void impostaVincoli() {
@@ -295,8 +334,11 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
         Tempistiche = new TextView(getContext());
         Chiave = new TextView(getContext());
         Skill = new TextView(getContext());
+        Media = new TextView(getContext());
         Ambito.setTextSize(20);
         Ambito.setTextColor(Color.BLACK);
+        Media.setTextSize(20);
+        Media.setTextColor(Color.BLACK);
         Tempistiche.setTextSize(20);
         Tempistiche.setTextColor(Color.BLACK);
         Chiave.setTextSize(20);
@@ -306,23 +348,22 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     private String checkPermessi(String permessi) {
-        permessiI="";
         if(permesso1.isChecked()){
             permessi += permesso1.getText() + ", ";
-            permessiI += "1";
+            permessiList.add(1);
         }
         if(permesso2.isChecked())
         {
             permessi += permesso2.getText() + ", ";
-            permessiI += "2";
+            permessiList.add(2);
         }
         if(permesso3.isChecked()){
             permessi += permesso3.getText() + ", ";
-            permessiI += "3";
+            permessiList.add(3);
         }
         if(permesso4.isChecked()){
             permessi += permesso4.getText() + ", ";
-            permessiI += "4";
+            permessiList.add(4);
         }
         if(permessi.length()>2){
             permessi = permessi.substring(0, permessi.length()-2);
@@ -379,6 +420,7 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
         verifica.setBackgroundColor(save.getShadowColor());
         verifica.setText("Verifica email");
         LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
+        trovato = false;
         verifica.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -389,8 +431,9 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                    Relatore relatoreObj = documentSnapshot.toObject(Relatore.class);
-                                    popup_nome.setText(relatoreObj.getNome() + " " + relatoreObj.getCognome());
+                                    trovato=true;
+                                    relatoreObj = documentSnapshot.toObject(LoggedInUser.class);
+                                    popup_nome.setText(relatoreObj.getDisplayName());
                                     popup_nome.setVisibility(View.VISIBLE);
                                     popup_email.setVisibility(View.INVISIBLE);
                                     modifica = (Button) impostaModifica(relatorePopup);
@@ -406,12 +449,11 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
                                     save.setVisibility(View.VISIBLE);
                                 }
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), "L'email non è presente nel database", Toast.LENGTH_SHORT).show();
-                            }
                         });
+                if(trovato==false) {
+                    Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake_animation);
+                    popup_email.startAnimation(shake);
+                }
             }
         });
         tastiLayout.removeView(modifica);

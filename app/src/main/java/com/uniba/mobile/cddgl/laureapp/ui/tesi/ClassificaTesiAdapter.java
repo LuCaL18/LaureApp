@@ -86,9 +86,9 @@ public class ClassificaTesiAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         Tesi tesi = mDataList.get(position);
-        if (tesi != null && tesi.getNomeTesi() != null && tesi.getProfessor() != null) {
+        if (tesi != null && tesi.getNomeTesi() != null && tesi.getRelatore() != null) {
             viewHolder.textView1.setText(tesi.getNomeTesi());
-            viewHolder.textView2.setText(tesi.getProfessor().getDisplayName());
+            viewHolder.textView2.setText(tesi.getRelatore().getDisplayName());
         }
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override

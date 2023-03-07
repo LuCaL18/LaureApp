@@ -89,7 +89,7 @@ public class ListAdapterTesi extends BaseAdapter {
         }
         Tesi tesi = mDataList.get(position);
         viewHolder.textView1.setText(tesi.getNomeTesi());
-        viewHolder.textView2.setText(tesi.getProfessor().getDisplayName());
+        viewHolder.textView2.setText(tesi.getRelatore().getDisplayName());
         viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

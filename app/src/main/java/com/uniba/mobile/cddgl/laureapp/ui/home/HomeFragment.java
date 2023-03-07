@@ -58,7 +58,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -74,7 +73,6 @@ public class HomeFragment extends Fragment {
 
         ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
         NavController navController = NavHostFragment.findNavController(this);
-
         if (actionBar != null) {
             actionBar.setTitle(R.string.app_name_upperCase);
         }
@@ -112,7 +110,13 @@ public class HomeFragment extends Fragment {
             setGraphTask();
         });
 
-
+        vediTutte = binding.mostraTesi;
+        vediTutte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.listatesi);
+            }
+        });
     }
 
     private void setGraphTask() {
@@ -207,7 +211,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadTesi() {
-            tesiRef.whereEqualTo("professor.email", currentUser.getEmail())
+            tesiRef.whereEqualTo("relatore.email", currentUser.getEmail())
                     .limit(3)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -222,15 +226,7 @@ public class HomeFragment extends Fragment {
                                 switch (counter) {
                                     case 0:
                                         binding.scrollView2.setVisibility(View.VISIBLE);
-
-                                        vediTutte = binding.mostraTesi;
                                         vediTutte.setVisibility(View.VISIBLE);
-                                        vediTutte.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                            /**collegamento a tutte le tesi*/
-                                            }
-                                        });
                                         cardView = binding.card1;
                                         cardView.setVisibility(View.VISIBLE);
                                         img = binding.img1;
@@ -264,7 +260,7 @@ public class HomeFragment extends Fragment {
                                 String descrizione = tesi.getDescrizione();
 
                                 counter++;
-                                img.setImageResource(R.drawable.add);
+                                img.setImageResource(R.drawable.baseline_add_to_photos_24);
                                 Titolo.setText(nome);
                                 Descrizione.setText(descrizione);
                             }

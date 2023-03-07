@@ -1,19 +1,15 @@
 package com.uniba.mobile.cddgl.laureapp.util;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
-import static android.os.Environment.getExternalStoragePublicDirectory;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 
-import androidx.annotation.RequiresPermission;
 import androidx.core.content.FileProvider;
 
 import com.google.zxing.BarcodeFormat;
@@ -24,7 +20,6 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,13 +74,14 @@ public class ShareContent {
         return null;
     }
 
+    @SuppressLint("StringFormatMatches")
     public Intent shareThesisData(Tesi tesi) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.thesis_data));
         emailIntent.putExtra(Intent.EXTRA_TITLE, context.getString(R.string.title).toUpperCase());
         emailIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.data_shared_data,
-                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getProfessor().getDisplayName(), tesi.getTempistiche(),
+                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getRelatore().getDisplayName(), tesi.getTempistiche(),
                 tesi.getMediaVoto(), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
         return emailIntent;
     }

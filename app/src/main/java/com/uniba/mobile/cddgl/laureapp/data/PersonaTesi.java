@@ -1,14 +1,23 @@
 package com.uniba.mobile.cddgl.laureapp.data;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PersonaTesi implements Serializable {
 
     private String id;
     private String displayName;
     private String email;
+    private List<Integer> permessi;
 
     public PersonaTesi() {
+    }
+
+    public PersonaTesi(String id, String displayName, String email, List<Integer> permessi) {
+        this.id = id;
+        this.displayName = displayName;
+        this.email = email;
+        this.permessi = permessi;
     }
 
     public PersonaTesi(String id, String displayName, String email) {
@@ -39,6 +48,14 @@ public class PersonaTesi implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Integer> getPermessi() {
+        return permessi;
+    }
+
+    public void setPermessi(List<Integer> permessi) {
+        this.permessi = permessi;
     }
 
     @Override

@@ -13,4 +13,7 @@
         <item>RUNNING</item>
         <item>END</item>
     </string-array>
+    <string-array name="tesi_array">
+
+    </string-array>
 </resources>

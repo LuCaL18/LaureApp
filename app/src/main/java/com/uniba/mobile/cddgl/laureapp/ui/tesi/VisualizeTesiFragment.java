@@ -151,10 +151,10 @@ public class VisualizeTesiFragment extends Fragment {
         ImageView cvProfArrow = root.findViewById(R.id.arrow_image_view);
 
         TextView tvNameProfessor = root.findViewById(R.id.tv_prof_display_name);
-        tvNameProfessor.setText(thesis.getProfessor().getDisplayName());
+        tvNameProfessor.setText(thesis.getRelatore().getDisplayName());
 
         TextView tvEmailProfessor = root.findViewById(R.id.tv_prof_email);
-        tvEmailProfessor.setText(thesis.getProfessor().getEmail());
+        tvEmailProfessor.setText(thesis.getRelatore().getEmail());
 
         cardProfessor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,11 +174,11 @@ public class VisualizeTesiFragment extends Fragment {
         RecyclerView recyclerViewRelators = root.findViewById(R.id.recycler_relators);
         ImageView relatorsArrowCard = root.findViewById(R.id.arrow_image_card_relators);
 
-        RelatorsAdapter relatorsAdapter = new RelatorsAdapter(thesis.getRelatori());
+        RelatorsAdapter relatorsAdapter = new RelatorsAdapter(thesis.getCoRelatori());
         recyclerViewRelators.setAdapter(relatorsAdapter);
         recyclerViewRelators.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (thesis.getRelatori().isEmpty()) {
+        if (thesis.getCoRelatori().isEmpty()) {
             relatorsCard.setVisibility(View.GONE);
         }
 
@@ -202,15 +202,15 @@ public class VisualizeTesiFragment extends Fragment {
         ImageView constraintsArrowCard = root.findViewById(R.id.arrow_image_card_constraints);
         LinearLayout constraintsInfoLl = root.findViewById(R.id.ll_card_constraints_info);
 
-        TextView timelineTextView = root.findViewById(R.id.tv_constraint_timelines);
+       TextView timelineTextView = root.findViewById(R.id.tv_constraint_timelines);
         timelineTextView.setText(thesis.getTempistiche());
-
+/*
         TextView averageTextView = root.findViewById(R.id.tv_constraint_average);
         averageTextView.setText(thesis.getMediaVoto());
 
         TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
         examTextView.setText(thesis.getEsami());
-
+*/
         TextView skillsTextView = root.findViewById(R.id.tv_constraint_skills);
         skillsTextView.setText(thesis.getSkill());
 
@@ -322,7 +322,7 @@ public class VisualizeTesiFragment extends Fragment {
             BookingDialogFragment bookingDialogFragment = new BookingDialogFragment(
                     mainViewModel.getIdUser(),
                     user.getEmail(), user.getName(), user.getSurname(),
-                    thesis.getProfessor().getId(), thesis.getId(), thesis.getNomeTesi()
+                    thesis.getRelatore().getId(), thesis.getId(), thesis.getNomeTesi()
             );
 
             bookingDialogFragment.show(getParentFragmentManager(), "BookingDialogFragment");
@@ -382,7 +382,7 @@ public class VisualizeTesiFragment extends Fragment {
                     return;
                 }
 
-                if (thesis.getProfessor().getId().equals(loggedInUser.getId())) {
+                if (thesis.getRelatore().getId().equals(loggedInUser.getId())) {
 
                     setCardDocumentsCreator();
                     setNotesText();
@@ -439,7 +439,7 @@ public class VisualizeTesiFragment extends Fragment {
                             case VisualizeTesiFragment.FAVORITE_THESIS:
                                 return switchFavouriteThesis(menuItem);
                             case VisualizeTesiFragment.ADD_TICKET_THESIS:
-                                Ticket ticket = new Ticket(mainViewModel.getIdUser(), thesis.getProfessor().getId(), thesis.getId(), thesis.getNomeTesi(), TicketState.NEW);
+                                Ticket ticket = new Ticket(mainViewModel.getIdUser(), thesis.getRelatore().getId(), thesis.getId(), thesis.getNomeTesi(), TicketState.NEW);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(TicketFragment.TICKET_KEY, (Serializable) ticket);
                                 navController.navigate(R.id.action_visualizeTesiFragment_to_ticketFragment, bundle);

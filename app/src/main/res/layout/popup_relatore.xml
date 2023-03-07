@@ -104,7 +104,6 @@
         android:visibility="invisible"/>
 
     <Button
-        android:theme="@style/Button.Red"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cancelButton"
