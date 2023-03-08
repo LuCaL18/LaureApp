@@ -22,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIconTint="?attr/iconTint"
-            app:title="@string/app_name_upperCase"
             app:titleTextColor="?attr/colorPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>

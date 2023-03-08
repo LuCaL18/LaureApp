@@ -72,7 +72,7 @@ public class LoginViewModel extends ViewModel {
                             if(task1.isSuccessful()) {
                                 loginResult.setValue(new LoginResult((LoggedInUser) task1.getResult().getValue(LoggedInUser.class)));
                             } else {
-                                loginResult.setValue(new LoginResult(new LoggedInUser(user.getEmail(), user.getDisplayName())));
+                                loginResult.setValue(new LoginResult(new LoggedInUser(user.getEmail(),  user.getDisplayName())));
                             }
                         });
                     } else {

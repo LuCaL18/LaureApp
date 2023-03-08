@@ -19,8 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.task.dashboard.DashboardFragment"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
@@ -144,12 +143,12 @@
         tools:layout="@layout/fragment_ricevimento" />
     <fragment
         android:id="@+id/navigation_profilo"
-        android:name="com.uniba.mobile.cddgl.laureapp.profiloFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.profilo.profiloFragment"
         android:label="Profilo"
         tools:layout="@layout/fragment_profilo" />
     <fragment
         android:id="@+id/navigation_ModificaDati"
-        android:name="com.uniba.mobile.cddgl.laureapp.ModificaDatiFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.profilo.ModificaDatiFragment"
         android:label="Modifica Dati"
         tools:layout="@layout/fragment_modifica_dati" />
 

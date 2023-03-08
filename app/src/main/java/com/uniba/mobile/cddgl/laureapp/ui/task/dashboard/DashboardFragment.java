@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp.ui.dashboard;
+package com.uniba.mobile.cddgl.laureapp.ui.task.dashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

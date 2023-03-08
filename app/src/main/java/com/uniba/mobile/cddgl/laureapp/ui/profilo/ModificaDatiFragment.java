@@ -1,9 +1,10 @@
-package com.uniba.mobile.cddgl.laureapp;
+package com.uniba.mobile.cddgl.laureapp.ui.profilo;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -11,16 +12,26 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.databinding.FragmentModificaDatiBinding;
+import com.uniba.mobile.cddgl.laureapp.databinding.FragmentRegistrationBinding;
+import com.uniba.mobile.cddgl.laureapp.ui.component.DatePickerFragment;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link profiloFragment#newInstance} factory method to
+ * Use the {@link ModificaDatiFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class profiloFragment extends Fragment {
+public class ModificaDatiFragment extends Fragment {
 
+    private BottomNavigationView navBar = null;
     private NavController navController;
+    private FragmentModificaDatiBinding binding;
+
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -32,7 +43,7 @@ public class profiloFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public profiloFragment() {
+    public ModificaDatiFragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +53,11 @@ public class profiloFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment profiloFragment.
+     * @return A new instance of fragment ModificaDatiFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static profiloFragment newInstance(String param1, String param2) {
-        profiloFragment fragment = new profiloFragment();
+    public static ModificaDatiFragment newInstance(String param1, String param2) {
+        ModificaDatiFragment fragment = new ModificaDatiFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,16 +78,34 @@ public class profiloFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profilo, container, false);
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.INVISIBLE);
+
+        binding = FragmentModificaDatiBinding.inflate(inflater, container, false);
+        return  binding.getRoot();
+        //return inflater.inflate(R.layout.fragment_modifica_dati, container, false);
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.navController = NavHostFragment.findNavController(this);
-        Button navigation_ModificaDati = view.findViewById(R.id.navigation_ModificaDati);
-        navigation_ModificaDati.setOnClickListener(view1 -> navController.navigate(R.id.navigation_ModificaDati));
+
+        final EditText dobEditText = binding.birthDayProfile;
+
+        dobEditText.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment(R.layout.fragment_registration);
+            datePicker.show(getParentFragmentManager(), "date picker");
+        });
+
+
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.VISIBLE);
+    }
 }

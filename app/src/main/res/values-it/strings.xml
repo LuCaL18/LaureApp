@@ -1,6 +1,12 @@
 <resources>
+    <string name="name_profile">Nome -> %s</string>
+    <string name="surname_profile">Cognome -> %s</string>
+    <string name="birth_day_profile">Data di nascita -> %s</string>
+    <string name="bio_profile">Biografia -> %s</string>
+    <string name="role_profile">Ruolo -> %s</string>
+
+
     <string name="app_name">LaureApp</string>
-    <string name="app_name_upperCase"><b>LAURE</b>APP</string>
     <string name="content_description_notification">Mostra notifiiche</string>
     <string name="action_sign_in">Registrazione</string>
     <string name="action_sign_in_short">Registrazione</string>
@@ -9,6 +15,7 @@
     <string name="login_failed">"Login fallito"</string>
     <string name="registration_failed">"Registrazione fallita"</string>
     <string name="login">login</string>
+    <string name="guest">ospite</string>
     <string name="sign_up">Registrazione</string>
     <string name="login_guest"><u>Entra come GUEST</u></string>
     <string name="favorite">Preferiti</string>
@@ -126,7 +133,6 @@
 
     <!--    TITLE NAVIGATION BAR-->
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifiche</string>
     <string name="title_chat">Chat</string>
     <string name="user_profile">User Profilo</string>

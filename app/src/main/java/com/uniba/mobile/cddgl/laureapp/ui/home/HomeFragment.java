@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment {
         NavController navController = NavHostFragment.findNavController(this);
 
         if (actionBar != null) {
-            actionBar.setTitle(R.string.app_name_upperCase);
+            actionBar.setTitle(R.string.app_name);
         }
 
         homeViewModel.readTask();

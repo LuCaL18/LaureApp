@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp.ui.dashboard;
+package com.uniba.mobile.cddgl.laureapp.ui.task.dashboard;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

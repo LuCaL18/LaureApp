@@ -4,9 +4,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ModificaDatiFragment">
+    tools:context=".ui.profilo.ModificaDatiFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+
+    <EditText
+        android:id="@+id/name_profile"
+        android:layout_width="338dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:autofillHints="@string/name"
+        android:hint="@string/name"
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.102" />
+
+    <EditText
+        android:id="@+id/surname_profile"
+        android:layout_width="338dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:autofillHints="@string/surname"
+        android:hint="@string/surname"
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_profile" />
+
+
+    <RadioGroup
+        android:id="@+id/radio_group_role_profile"
+        android:layout_width="338dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/surname_profile">
+
+        <RadioButton
+            android:id="@+id/radio_button_student_profile"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/role_student" />
+
+        <RadioButton
+            android:id="@+id/radio_button_professor_profile"
+            android:layout_width="169dp"
+            android:layout_height="wrap_content"
+            android:text="@string/role_professor" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/birthDay_profile"
+        android:layout_width="338dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:autofillHints="@string/birth_day"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:hint="@string/birth_day"
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionDone"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group_role_profile" />
+
+    <EditText
+        android:id="@+id/bio_profile"
+        android:layout_width="338dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:autofillHints="@string/bio"
+        android:hint="@string/bioHint"
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
+        android:maxLength="200"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/birthDay_profile" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
