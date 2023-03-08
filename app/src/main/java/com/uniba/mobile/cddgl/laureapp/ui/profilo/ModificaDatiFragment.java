@@ -13,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentModificaDatiBinding;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentRegistrationBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.component.DatePickerFragment;
@@ -30,6 +32,9 @@ public class ModificaDatiFragment extends Fragment {
     private BottomNavigationView navBar = null;
     private NavController navController;
     private FragmentModificaDatiBinding binding;
+
+    private final int RADIO_BUTTON_STUDENT_EDIT = R.id.radio_button_student_profile ;
+    private final int RADIO_BUTTON_PROFESSOR_EDIT = R.id.radio_button_professor_profile;
 
 
 
@@ -83,7 +88,6 @@ public class ModificaDatiFragment extends Fragment {
 
         binding = FragmentModificaDatiBinding.inflate(inflater, container, false);
         return  binding.getRoot();
-        //return inflater.inflate(R.layout.fragment_modifica_dati, container, false);
 
     }
 
@@ -102,10 +106,22 @@ public class ModificaDatiFragment extends Fragment {
 
     }
 
+    private RoleUser getRoleFromRadioButtonEdit() {
+        RadioGroup radioGroupRole = binding.radioGroupRoleProfile ;
+        switch (radioGroupRole.getCheckedRadioButtonId()) {
+            case RADIO_BUTTON_PROFESSOR_EDIT:
+                return RoleUser.PROFESSOR;
+            case RADIO_BUTTON_STUDENT_EDIT:
+            default:
+                return RoleUser.STUDENT;
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.VISIBLE);
+        binding = null;
     }
 }
