@@ -83,11 +83,16 @@ public class MainActivity extends AppCompatActivity {
     private LoggedInUser user;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        applySettings();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        applySettings();
 
         try {
 
@@ -126,39 +131,31 @@ public class MainActivity extends AppCompatActivity {
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    boolean isSelected;
+                    boolean isSelected = true;
                     switch (item.getItemId()) {
                         case LISTA_TASK:
                             navController.navigate(R.id.nav_lista_task);
-                            isSelected = true;
                             break;
                         case CLASSIFICA_TESI:
                             navController.navigate(R.id.nav_classifica_tesi);
-                            isSelected = true;
                             break;
                         case CHAT:
                             navController.navigate(R.id.nav_chat_list_fragment);
-                            isSelected = true;
                             break;
                         case TICKET:
                             navController.navigate(R.id.nav_ticket);
-                            isSelected = true;
                             break;
                         case BOOKING:
                             navController.navigate(R.id.nav_bookingListFragment);
-                            isSelected = true;
                             break;
                         case LOGOUT:
                             logout();
-                            isSelected = true;
                             break;
                         case MEETING:
                             navController.navigate(R.id.ricevimento);
-                            isSelected = true;
                             break;
                         case SETTINGS:
                             navController.navigate(R.id.fragment_settings);
-                            isSelected = true;
                         default:
                             isSelected = false;
                     }
@@ -344,8 +341,8 @@ public class MainActivity extends AppCompatActivity {
         defaultLanguage = sharedPreferences.getString("language", systemLanguage);
 
         // Apply the saved settings to your app
-        applyTheme(defaultTheme);
         applyLanguage(defaultLanguage);
+        applyTheme(defaultTheme);
     }
 
     private void applyTheme(String theme) {
@@ -361,7 +358,6 @@ public class MainActivity extends AppCompatActivity {
         Locale.setDefault(locale);
         Configuration configuration = getResources().getConfiguration();
         configuration.setLocale(locale);
-        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
     }
 
     public String getDefaultTheme() {

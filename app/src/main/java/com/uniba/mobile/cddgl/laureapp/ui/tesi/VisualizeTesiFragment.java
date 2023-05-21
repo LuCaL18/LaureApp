@@ -234,7 +234,7 @@ public class VisualizeTesiFragment extends Fragment {
         TextView averageTextView = root.findViewById(R.id.tv_constraint_average);
         averageTextView.setText(String.valueOf(thesis.getMediaVoto()));
 
-        if(thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
+        if (thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
             root.findViewById(R.id.layout_exam_n).setVisibility(View.GONE);
         } else {
             TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
@@ -354,7 +354,7 @@ public class VisualizeTesiFragment extends Fragment {
         scopeTextView.setText(thesis.getAmbito());
 
 
-        if(thesis.getChiavi() == null) {
+        if (thesis.getChiavi() == null) {
             root.findViewById(R.id.layout_search_key).setVisibility(View.GONE);
         } else {
             TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
@@ -479,7 +479,7 @@ public class VisualizeTesiFragment extends Fragment {
 
                                     if (classification.getTesi().contains(thesis.getId())) {
 
-                                        if(menuTesi != null) {
+                                        if (menuTesi != null) {
                                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                                         }
                                         isFavourite = true;
@@ -495,7 +495,7 @@ public class VisualizeTesiFragment extends Fragment {
 
                     if (getTesiList().contains(thesis.getId())) {
 
-                        if(menuTesi != null) {
+                        if (menuTesi != null) {
                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                         }
 
@@ -519,7 +519,7 @@ public class VisualizeTesiFragment extends Fragment {
                     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                         menu.clear();
 
-                        if(finalMenuToVisualize == null) {
+                        if (finalMenuToVisualize == null) {
                             return;
                         }
 
@@ -540,7 +540,7 @@ public class VisualizeTesiFragment extends Fragment {
 
                                 String id = mainViewModel.getIdUser();
 
-                                if(id == null) {
+                                if (id == null) {
                                     RequestLoginDialog requestLoginDialog = new RequestLoginDialog();
                                     requestLoginDialog.show(getParentFragmentManager(), "RequestLoginDialogFragment");
 
@@ -882,9 +882,14 @@ public class VisualizeTesiFragment extends Fragment {
                     List<String> newList = new ArrayList<>();
 
                     for (String tesi : classification.getTesi()) {
-                        if (!tesi.equals(thesis.getId())) {
-                            newList.add(tesi);
+                        try {
+                            if (!tesi.equals(thesis.getId())) {
+                                newList.add(tesi);
+                            }
+                        } catch (NullPointerException e) {
+                            Log.e("NEW FAVOURITES LIST", "Exception during add new List: " + e.getMessage());
                         }
+
                     }
 
                     classification.setTesi(newList);
@@ -1115,7 +1120,7 @@ public class VisualizeTesiFragment extends Fragment {
         skillsTextView.setText(thesis.getSkill());
 
         thesis.setEsami(esamiNecessari);
-        if(thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
+        if (thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
             root.findViewById(R.id.layout_exam_n).setVisibility(View.GONE);
         } else {
             root.findViewById(R.id.layout_exam_n).setVisibility(View.VISIBLE);
@@ -1140,7 +1145,7 @@ public class VisualizeTesiFragment extends Fragment {
         TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
         scopeTextView.setText(thesis.getAmbito());
 
-        if(keyWords.isEmpty()) {
+        if (keyWords.isEmpty()) {
             root.findViewById(R.id.layout_search_key).setVisibility(View.GONE);
         } else {
             TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
