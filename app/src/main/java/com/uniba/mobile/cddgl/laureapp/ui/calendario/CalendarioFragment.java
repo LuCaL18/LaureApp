@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,8 @@ public class CalendarioFragment extends Fragment {
     private EditText riepilogo;
     private EditText titolo;
     private ArrayList<String> taskList = new ArrayList<>();
-    private boolean canSave = false;
+    private boolean canSaveTitolo = false;
+    private boolean canSaveOrario = false;
     private String tesiSelezionata;
     private long time;
     private List<String> taskRic = new ArrayList<>();
@@ -112,7 +114,6 @@ public class CalendarioFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Seleziona le tesi in cui il campo relatore o correlatore corrisponde all'ID del relatore loggato
-        NavController navController = NavHostFragment.findNavController(this);
 
         CompactCalendarView calendario = binding.compactcalendarView;
         calendario.setUseThreeLetterAbbreviation(true);
@@ -148,12 +149,12 @@ public class CalendarioFragment extends Fragment {
                 @Override
                 public void afterTextChanged(Editable s) {
                     if (s.length() < 10) {
-                            binding.salva.setBackgroundColor(getResources().getColor(R.color.grey_app));
-                            canSave = false;
-                        }
+                            canSaveTitolo = false;
+                            canSave();
+                            }
                     else{
-                        binding.salva.setBackgroundColor(getResources().getColor(R.color.primary_green));
-                        canSave = true;
+                        canSaveTitolo = true;
+                        canSave();
                     }
                 }
             };
@@ -163,7 +164,7 @@ public class CalendarioFragment extends Fragment {
         binding.salva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(canSave==true){
+                if(canSaveTitolo ==true){
                     caricaRicevimento();
                     Toast.makeText(getContext(), "Salvato", Toast.LENGTH_SHORT).show();
                 }
@@ -281,6 +282,16 @@ public class CalendarioFragment extends Fragment {
 
     }
 
+    private void canSave() {
+        if(canSaveOrario && canSaveTitolo){
+            binding.salva.setBackgroundColor(getResources().getColor(R.color.primary_green));
+        }
+        else{
+            binding.salva.setBackgroundColor(getResources().getColor(R.color.grey_app));
+        }
+
+    }
+
     private void caricaRicevimento() {
 
             hour= hour*60*60*1000;
@@ -351,6 +362,7 @@ public class CalendarioFragment extends Fragment {
 
     private void aggiungiRicevimento(Ricevimento value, View view, Date date) {
 
+
         LinearLayout linearLayoutT = view.findViewById(R.id.ricevimentoLayout);
 
         TextView spazio = new TextView(getContext());
@@ -359,36 +371,43 @@ public class CalendarioFragment extends Fragment {
 
         TextView titolo = new TextView(getContext());
         titolo.setText(value.getTitolo());
-        titolo.setTextSize(25);
+        titolo.setTextSize(28);
         titolo.setTypeface(null, Typeface.BOLD_ITALIC);
         titolo.setTextColor(getResources().getColor(R.color.primary_green));
+        titolo.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayoutT.addView(titolo);
 
         TextView tesi = new TextView(getContext());
         tesi.setText("TESI: "+value.getNomeTesi());
-        tesi.setTextSize(20);
+        tesi.setTextSize(25);
+        tesi.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayoutT.addView(tesi);
 
 
         TextView orario = new TextView(getContext());
-        orario.setText("ORARIO: "+convertMtoD(value.getTime(), true));
-        orario.setTextSize(18);
+        orario.setText("ORARIO: "+convertMtoH(value.getTime()));
+        orario.setTextSize(25);
+        orario.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayoutT.addView(orario);
 
         if(dataPassata(date.getYear() + 1900, date.getMonth() + 1, date.getDate())) {
             TextView riepilogo = new TextView(getContext());
             riepilogo.setText("RIEPILOGO: "+value.getRiepilogo());
-            riepilogo.setTextSize(18);
+            riepilogo.setTextSize(20);
+            riepilogo.setGravity(Gravity.CENTER_HORIZONTAL);
             linearLayoutT.addView(riepilogo);
         }
 
         TextView task = new TextView(getContext());
         task.setText("TASK:");
+        task.setTextSize(25);
+        task.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayoutT.addView(task);
         for (String tasks: value.getTask()) {
             TextView taskT = new TextView(view.getContext());
             taskT.setText(tasks);
-            taskT.setTextSize(18);
+            taskT.setTextSize(20);
+            taskT.setGravity(Gravity.CENTER_HORIZONTAL);
             linearLayoutT.addView(taskT);
         }
 
@@ -451,6 +470,12 @@ public class CalendarioFragment extends Fragment {
         return obj.format(res);
     }
 
+    public String convertMtoH(long millis){
+        Date res = new Date(millis);
+        SimpleDateFormat obj = new SimpleDateFormat("HH:mm");
+        return obj.format(res);
+    }
+
     private String convertDateClicked(Date dateClicked) {
         DateFormat obj = new SimpleDateFormat("dd MM yyyy");
         return obj.format(dateClicked);
@@ -460,9 +485,11 @@ public class CalendarioFragment extends Fragment {
         TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+                canSaveOrario=true;
                 hour=selectedHour;
                 minute=selectedMinute;
                 orarioT.setText(hour+":"+minute);
+                canSave();
             }
         };
         timePickerDialog = new TimePickerDialog(getContext(), onTimeSetListener, hour, minute,true);

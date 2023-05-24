@@ -1,11 +1,12 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
+import static android.app.Activity.RESULT_OK;
 import static java.lang.Integer.parseInt;
 
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -72,17 +73,20 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
     private Spinner ambitoSpinner;
     private SeekBar mediaSeek, settimaneSeek;
     private List<PersonaTesi> co_relatori = new ArrayList<>();
-    private int n_settimane, textmedia;
+    private int n_settimane = 0;
+    private int textmedia;
     public List<String> keywordList = new ArrayList<>();
     public List<Filtri> filtriList = new ArrayList<>();
     public List<String> ambitiList = new ArrayList<>();
+    public List<String> nuove_key = new ArrayList<>();
     private List<String> keywordSelezionate = new ArrayList<>();
     private LoggedInUser relatoreObj;
     private PersonaTesi relatorePrincipaleObj;
     private boolean trovato;
-    private Drawable yourDrawable;
-    private final int GALLERY_REQ_CODE=1000;
     private ImageView addImage;
+    private ListAdapter listAdapter;
+    private static final int GALLERY_REQUEST_CODE = 100;
+
     public TesiFragment() {
         // Required empty public constructor
     }
@@ -120,11 +124,11 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iGallery = new Intent(Intent.ACTION_PICK);
-                iGallery.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                getActivity().startActivity(iGallery);
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
             }
         });
+
 
         /*Imposta la sezione relativa all'aggiunta dei relatori*/
         ImageView b_aggiungi_relatore = binding.aggiungiRelatore;
@@ -161,7 +165,7 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
             filtriRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot documentSnapshots) {
-                    paroleChiave.setText("PAROLE CHIAVE");
+                    paroleChiave.setText("Parole chiave");
                     keywordListView.clearChoices();
                     keywordSelezionate.clear();
                     filtriList = documentSnapshots.toObjects(Filtri.class);
@@ -172,8 +176,8 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
                             android.R.layout.simple_spinner_dropdown_item, ambitiList);
                     ambitoSpinner.setAdapter(adapter);
 
-                    ListAdapter listAdapter = new ArrayAdapter<>(getContext(),
-                            android.R.layout.simple_list_item_1,
+                    listAdapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_list_item_multiple_choice,
                             keywordList
                     );
                     keywordListView.setAdapter(listAdapter);
@@ -182,12 +186,11 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             if(!keywordListView.isItemChecked(position)){
-                                keywordListView.getChildAt(position).setBackgroundColor(Color.WHITE);
+                                keywordListView.getChildAt(position);
                             }
                             else{
-                                keywordListView.getChildAt(position).setBackgroundColor(Color.LTGRAY);
                             }
-                            paroleChiave.setText("PAROLE CHIAVE (" + keywordListView.getCheckedItemCount()+")");
+                            paroleChiave.setText("Parole chiave (" + keywordListView.getCheckedItemCount()+")");
                         }
 
                     });
@@ -199,7 +202,7 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
                     rimuoviVincoli(parentLayout);
                     int i = 0;
                     int j = 0;
-                    while (j < keywordListView.getCheckedItemCount() && i<keywordListView.getChildCount()) {
+                    while (j < keywordListView.getCheckedItemCount() && i<keywordListView.getCount()) {
                         if (keywordListView.isItemChecked(i)) {
                             keywordSelezionate.add(keywordListView.getItemAtPosition(i).toString());
                             j++;
@@ -229,8 +232,13 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
         salva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                caricaTesi();
-                navController.navigate(R.id.action_tesiFragmant_to_navigation_home);
+                if(eDescrizione.getText().length()<1 || eNomeTesi.getText().length()<1 || textAmbito == null){
+                    Toast.makeText(getContext(), "Riempire tutti i campi", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    caricaTesi();
+                    navController.navigate(R.id.action_tesiFragmant_to_navigation_home);
+                }
             }
         });
     }
@@ -295,7 +303,7 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
             public void onStopTrackingTouch(SeekBar settimane) {}
         });
 
-        keywordListView = vincoliPopup.findViewById(R.id.keywordsList);
+        keywordListView = vincoliPopup.findViewById(R.id.multiply);
         voto = vincoliPopup.findViewById(R.id.voto);
         mediaSeek = vincoliPopup.findViewById(R.id.media);
 
@@ -310,6 +318,36 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
 
             @Override
             public void onStopTrackingTouch(SeekBar media) {}
+        });
+
+        addKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean findit = false;
+                if(!eNuovakey.getText().toString().equals("")){
+                    for (String key: keywordList) {
+                        if(key.equals(eNuovakey.getText().toString())){
+                            findit=true;
+                            break;
+                        }
+                    }
+                    if (findit){
+                        Toast.makeText(getContext(),"Chiave esistente", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        keywordList.add(eNuovakey.getText().toString());
+                        listAdapter = new ArrayAdapter<>(getContext(),
+                                android.R.layout.simple_list_item_multiple_choice,
+                                keywordList
+                        );
+                        keywordListView.setAdapter(listAdapter);
+                        keywordListView.setSelection(keywordListView.getCount());
+                        paroleChiave.setText("Parole chiave");
+                        Toast.makeText(getContext(), "Lista aggiornata", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else Toast.makeText(getContext(), "Inserire una chiave", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -413,13 +451,14 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
     private View impostaVerifica(View relatorePopup) {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
+        tastiLayout.removeView(verifica);
         verifica = new Button(this.getContext());
         verifica.setLayoutParams(params);
         verifica.setTextSize(20);
         verifica.setTextColor(Color.WHITE);
         verifica.setBackgroundColor(save.getShadowColor());
         verifica.setText("Verifica email");
-        LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
         trovato = false;
         verifica.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -450,14 +489,14 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
                                 }
                             }
                         });
-                if(trovato==false) {
-                    Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake_animation);
-                    popup_email.startAnimation(shake);
-                }
             }
         });
         tastiLayout.removeView(modifica);
         tastiLayout.addView(verifica);
+        if(trovato==false && popup_email.getText().toString().length()>0) {
+            Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake_animation);
+            popup_email.startAnimation(shake);
+        }
         return verifica;
     }
 
@@ -476,6 +515,22 @@ public class TesiFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            addImage.setImageURI(selectedImageUri);
+            int height = 550;
+            int width = 550;
+            ViewGroup.LayoutParams layoutParams = addImage.getLayoutParams();
+            layoutParams.width = width;
+            layoutParams.height = height;
+
+            addImage.setLayoutParams(layoutParams);
+        }
     }
 
 }

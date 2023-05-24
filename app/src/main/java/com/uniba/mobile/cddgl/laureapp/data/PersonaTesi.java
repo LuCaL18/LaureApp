@@ -8,16 +8,16 @@ public class PersonaTesi implements Serializable {
     private String id;
     private String displayName;
     private String email;
-    private List<Integer> permessi;
+    private List<Integer> permissions;
 
     public PersonaTesi() {
     }
 
-    public PersonaTesi(String id, String displayName, String email, List<Integer> permessi) {
+    public PersonaTesi(String id, String displayName, String email, List<Integer> permissions) {
         this.id = id;
         this.displayName = displayName;
         this.email = email;
-        this.permessi = permessi;
+        this.permissions = permissions;
     }
 
     public PersonaTesi(String id, String displayName, String email) {
@@ -50,12 +50,12 @@ public class PersonaTesi implements Serializable {
         this.email = email;
     }
 
-    public List<Integer> getPermessi() {
-        return permessi;
+    public List<Integer> getPermissions() {
+        return permissions;
     }
 
-    public void setPermessi(List<Integer> permessi) {
-        this.permessi = permessi;
+    public void setPermissions(List<Integer> permissions) {
+        this.permissions = permissions;
     }
 
     @Override

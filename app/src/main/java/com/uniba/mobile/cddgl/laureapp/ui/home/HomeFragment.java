@@ -34,8 +34,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
+import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentHomeBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.home.menu.HomeMenu;
 
@@ -254,9 +254,9 @@ public class HomeFragment extends Fragment {
                                         break;
                                 }
                                 Tesi tesi = documentSnapshot.toObject(Tesi.class);
-                                tesi.setId_tesi(documentSnapshot.getId());
+                                tesi.setId(documentSnapshot.getId());
 
-                                String nome = tesi.getNome_tesi();
+                                String nome = tesi.getNomeTesi();
                                 String descrizione = tesi.getDescrizione();
 
                                 counter++;

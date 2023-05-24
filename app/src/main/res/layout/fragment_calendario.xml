@@ -33,14 +33,16 @@
         android:outlineAmbientShadowColor="@color/primary_green"
         app:layout_constraintTop_toBottomOf="@id/mese"
         android:layout_marginTop="5dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:scrollIndicators="bottom"
+        android:scrollbars="horizontal"/>
 
     <Button
         android:id="@+id/addRicevimentoB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/compactcalendar_view"
-        android:text="@string/aggiungi"/>
+        android:text="@string/aggiungi"
+        app:layout_constraintTop_toBottomOf="@id/compactcalendar_view" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -110,7 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="50dp"
-            android:hint="Breve titolo"
+            android:hint="min 10 caratteri"
             android:textSize="20sp"
             android:visibility="visible"/>
 

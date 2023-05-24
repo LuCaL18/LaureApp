@@ -7,12 +7,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -286,20 +286,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode==RESULT_OK){
-            if(requestCode==1000){
-                final View tesi = getLayoutInflater().inflate(R.layout.fragment_tesi, null);
-                ImageView addImage = tesi.findViewById(R.id.addImage);
-                addImage.setBackground(null);
-                addImage.setImageURI(null);
-                addImage.setImageURI(data.getData());
-                ImageView img = new ImageView(tesi.getContext());
-                LinearLayout layout = tesi.findViewById(R.id.layout_vert);
-                img.setImageURI(data.getData());
-                layout.addView(img);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == 1) {
+            final Bundle extras = data.getExtras();
+            if (extras != null) {
+                Bitmap newTesiPic = extras.getParcelable("data");
+                final View vincoliPopup = getLayoutInflater().inflate(R.layout.fragment_tesi, null);
+                ImageView image = vincoliPopup.findViewById(R.id.addImage);
+                image.setImageBitmap(newTesiPic);
             }
         }
     }

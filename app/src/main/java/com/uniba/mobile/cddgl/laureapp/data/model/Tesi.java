@@ -11,7 +11,6 @@ import io.reactivex.rxjava3.annotations.NonNull;
 
 public class Tesi implements Serializable, Cloneable {
 
-    private List<String> listTask;
     private String id;
     private String nomeTesi;
     private String imageTesi;
@@ -58,13 +57,6 @@ public class Tesi implements Serializable, Cloneable {
         this.created_at = System.currentTimeMillis();
     }
 
-    public List<String> getListTask() {
-        return listTask;
-    }
-
-    public void setListTask(List<String> listTask) {
-        this.listTask = listTask;
-    }
 
     public String getId() {
         return id;
@@ -205,7 +197,6 @@ public class Tesi implements Serializable, Cloneable {
     @Override
     public String toString() {
         return "Tesi{" +
-                "listTask=" + listTask +
                 ", id='" + id + '\'' +
                 ", nomeTesi='" + nomeTesi + '\'' +
                 ", imageTesi='" + imageTesi + '\'' +
