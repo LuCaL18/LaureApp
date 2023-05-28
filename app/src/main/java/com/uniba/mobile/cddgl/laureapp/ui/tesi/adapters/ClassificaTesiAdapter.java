@@ -8,23 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.TesiListViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- *
  * Adapter che funge da complementare a ListaTaskFragment per la
  * visualizzazione della lista dei task visibili all'utente
- *
  */
 
 public class ClassificaTesiAdapter extends BaseAdapter {
@@ -35,14 +29,16 @@ public class ClassificaTesiAdapter extends BaseAdapter {
     private List<Tesi> mDataList;
     private final VisualizeThesisViewModel thesisViewModel;
 
-    public ClassificaTesiAdapter(Context context, VisualizeThesisViewModel model) {
+    private final TesiListViewModel tesiListViewModel;
+
+    public ClassificaTesiAdapter(Context context, VisualizeThesisViewModel model, TesiListViewModel tesiListViewModel) {
         mContext = context;
         mDataList = new ArrayList<>();
         thesisViewModel = model;
+        this.tesiListViewModel = tesiListViewModel;
     }
 
     /**
-     *
      * Metodo per il recupero della dimensione della lista di tesi
      *
      * @return
@@ -53,7 +49,6 @@ public class ClassificaTesiAdapter extends BaseAdapter {
     }
 
     /**
-     *
      * Metodo per il recupero della posizione di una specifica tesi nel mDataList
      *
      * @param position
@@ -65,7 +60,6 @@ public class ClassificaTesiAdapter extends BaseAdapter {
     }
 
     /**
-     *
      * Metodo per il recupero del numero della posizione della tesi
      *
      * @param position
@@ -77,15 +71,14 @@ public class ClassificaTesiAdapter extends BaseAdapter {
     }
 
     /**
-     *
      * Metodo "getView" per la visualizzazione del layout relativo a classifica tesi, in cui
      * oltre alla visualizzazione della lista di tesi della classifica è possibile effettuare
      * alcune operazioni tramite degli imageButton, ovvero:
-     *
-     *   1. VISUALIZZAZIONE: l'utente ha la possibilità di visualizzare la tesi selezionata
-     *                       con tutti i suoi dettagli
-     *   2. ELIMINAZIONE   : l'utente ha la possibilità di rimuovere la tesi selezionata
-     *                       dalla classifica
+     * <p>
+     * 1. VISUALIZZAZIONE: l'utente ha la possibilità di visualizzare la tesi selezionata
+     * con tutti i suoi dettagli
+     * 2. ELIMINAZIONE   : l'utente ha la possibilità di rimuovere la tesi selezionata
+     * dalla classifica
      *
      * @param position
      * @param convertView
@@ -128,18 +121,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
 
                 Tesi tesi = mDataList.get(position);
                 mDataList.remove(tesi);
-
-                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                    return;
-                }
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                String studenteId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DocumentReference classificaRef = db.collection("tesi_classifiche").document(studenteId);
-                Map<String, Object> updates = new HashMap<>();
-                updates.put("tesi", getIdOfThesis(mDataList));
-
-                classificaRef.update(updates);
+                tesiListViewModel.removeTesiFromTesiList(tesi);
             }
         });
 
@@ -151,9 +133,7 @@ public class ClassificaTesiAdapter extends BaseAdapter {
 
 
     /**
-     *
      * Metodo per istanziare gli elementi del layout
-     *
      */
     private static class ViewHolder {
         TextView textView1;
@@ -179,7 +159,6 @@ public class ClassificaTesiAdapter extends BaseAdapter {
     }
 
     /**
-     *
      * Metodo per l'aggiornamento della classifica tesi
      *
      * @param mDataList
@@ -191,18 +170,6 @@ public class ClassificaTesiAdapter extends BaseAdapter {
 
     public List<Tesi> getmDataList() {
         return mDataList;
-    }
-
-
-    private List<String> getIdOfThesis(List<Tesi> tesiList) {
-
-        List<String> listId = new ArrayList<>();
-
-        for (Tesi tesi : tesiList) {
-            listId.add(tesi.getId());
-        }
-
-        return listId;
     }
 }
 

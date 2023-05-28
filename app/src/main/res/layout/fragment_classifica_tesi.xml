@@ -1,47 +1,56 @@
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="?actionBarSize"
+    android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/menuButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="12dp"
-        android:backgroundTint="@color/color_hole_graph"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_baseline_filter_list_24"
-        tools:ignore="MissingConstraints" />
 
-    <ImageButton
-        android:id="@+id/shareClassifica"
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="338dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="4dp"
-        android:backgroundTint="@color/color_hole_graph"
-        app:layout_constraintEnd_toStartOf="@+id/menuButton"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_baseline_share_24"
-        tools:ignore="MissingConstraints" />
+        android:layout_gravity="center">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filters_classifica_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:chipSpacingHorizontal="4dp"
+            app:chipSpacingVertical="8dp"
+            app:flow_horizontalAlign="start"
+            app:flow_verticalAlign="top"
+            app:singleLine="true" />
+
+    </HorizontalScrollView>
 
     <ListView
         android:id="@+id/classifica_tesi"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareClassifica"
-        app:layout_constraintVertical_bias="0.0"
+        android:layout_height="wrap_content"
         tools:listitem="@layout/classifica_tesi">
 
     </ListView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/text_no_tesi_available_classifica"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/there_are_no_theses_in_your_ranking"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
 

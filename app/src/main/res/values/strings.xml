@@ -25,6 +25,7 @@
     <string name="edit">Edit</string>
     <string name="allow">Allow</string>
     <string name="next">Continue</string>
+    <string name="ok">OK</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -257,6 +258,7 @@
     <string name="task_graph">Task: \n%s</string>
 
     <string name="tempistiche">Timeline</string>
+    <string name="months">months</string>
     <string name="mesi_2"><![CDATA[<2 mesi]]></string>
     <string name="mesi_3"><![CDATA[<3 mesi]]></string>
     <string name="mesi_4"><![CDATA[<4 mesi]]></string>
@@ -314,16 +316,35 @@
     <string name="languages">Languages</string>
     <string name="settings">Settings</string>
 
+    <!--FILTER TITLE -->
+    <string name="default_title">Default</string>
+    <string name="ambito">Ambito</string>
+    <string name="chiave">Chiave</string>
+    <string name="media_voto">Media Voto</string>
+    <string name="tesi_a_z">Tesi A-Z</string>
+    <string name="tesi_z_a">Tesi Z-A</string>
+    <string name="relatore_a_z">Relatore A-Z</string>
+    <string name="relatore_z_a">Relatore Z-A</string>
+    <string name="tempistiche_title">Tempistiche</string>
+    <string name="filter_for_scope">Filter by scope</string>
+    <string name="select_an_option">Select one of the following options:</string>
+    <string name="filter_by_key">Filter by key</string>
+    <string name="insert_key_word_filter">Enter the search field for the key:</string>
+    <string name="filter_by_minimum_grade">Filtra per voto minimo</string>
+    <string name="Filter_by_minimum_execution_time">Filter by minimum execution time</string>
+    <string name="there_are_no_theses_in_your_ranking">There are no theses in your ranking</string>
+
     <!-- SPINNER-->
     <string-array name="ambiti">
-        <item>Informatica</item>
-        <item>Scienze biologiche</item>
-        <item>Astronomia</item>
-        <item>Arte</item>
-        <item>Medicina</item>
-        <item>Cultura</item>
-        <item>Finanza</item>
-        <item>Politica</item>
+        <item name="informatica">Information technology</item>
+        <item name="biologia">Biology</item>
+        <item name="astronomia">Astronomy</item>
+        <item name="arte">Art</item>
+        <item name="medicina">Medicine</item>
+        <item name="giurisprudenza">Jurisprudence</item>
+        <item name="finanza">Finance</item>
+        <item name="economia">Economy</item>
+        <item name="ingegneria">Engineering</item>
     </string-array>
 
     <string-array name="available_languages">

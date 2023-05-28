@@ -9,6 +9,24 @@
     android:orientation="vertical"
     tools:context=".ui.tesi.ListaTesiFragment">
 
+    <HorizontalScrollView
+        android:layout_width="338dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filtersContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:chipSpacingHorizontal="4dp"
+            app:chipSpacingVertical="8dp"
+            app:flow_horizontalAlign="start"
+            app:flow_verticalAlign="top"
+            app:singleLine="true" />
+
+    </HorizontalScrollView>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"

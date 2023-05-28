@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/search_tesi_classifica"
+        android:title="@string/search"
+        android:icon="@drawable/ic_search_24dp"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+    <item android:id="@+id/share_tesi_classifica"
+        android:title="@string/share_classifica"
+        android:icon="@drawable/ic_baseline_share_24"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/filter_tesi_classifica"
+        android:title="@string/filters"
+        android:icon="@drawable/ic_baseline_filter_list_24"
+        app:showAsAction="ifRoom" />
+</menu>
