@@ -688,16 +688,20 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
         });
 
         tesiListViewModel.getTesiList().observe(getViewLifecycleOwner(), tesiList1 -> {
-            if (tesiList == null) {
+
+            Log.d("tesiViewModel", tesiList1.toString());
+            if (tesiList1 == null) {
                 return;
-            } else if (tesiList.isEmpty()) {
-                filteredList.addAll(tesiList);
+            } else if (tesiList1.isEmpty()) {
+                tesiList = tesiList1;
+                filteredList.addAll(tesiList1);
                 filterListTesi();
                 adapter.setmDataList(filteredList);
                 view.findViewById(R.id.text_no_tesi_available_classifica).setVisibility(View.VISIBLE);
                 listView.setVisibility(View.GONE);
             } else {
-                filteredList.addAll(tesiList);
+                tesiList = tesiList1;
+                filteredList.addAll(tesiList1);
                 filterListTesi();
                 adapter.setmDataList(filteredList);
                 view.findViewById(R.id.text_no_tesi_available_classifica).setVisibility(View.GONE);
@@ -751,13 +755,13 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
         try {
             SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
             SharedPreferences.Editor mEdit1 = sp.edit();
-            Set<String> set = new HashSet<>();
+            List<String> list = new ArrayList<>();
 
             for (Tesi tesi : tesiList) {
-                set.add(tesi.getId());
+                list.add(tesi.getId());
             }
 
-            mEdit1.putStringSet(TESI_LIST_KEY_PREF, set);
+            mEdit1.putString(TESI_LIST_KEY_PREF, new Gson().toJson(list));
             return mEdit1.commit();
         } catch (Exception e) {
             Log.e("ClassificaTesiFragment", e.getMessage());
@@ -768,11 +772,18 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
 
     public ArrayList<String> getTesiList() {
         SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+        String listJson = sp.getString(TESI_LIST_KEY_PREF, null);
 
-        //NOTE: if shared preference is null, the method return empty Hashset and not null
-        Set<String> set = sp.getStringSet(TESI_LIST_KEY_PREF, new HashSet<>());
+        // Converti la stringa JSON nella mappa originale
+        if (listJson != null) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
 
-        return new ArrayList<>(set);
+            return gson.fromJson(listJson, type);
+        }
+
+        return new ArrayList<>();
     }
 
     @Override

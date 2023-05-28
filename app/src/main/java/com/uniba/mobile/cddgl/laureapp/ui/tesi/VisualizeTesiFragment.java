@@ -1,9 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
 import static android.app.Activity.RESULT_OK;
-import static android.view.MotionEvent.ACTION_HOVER_ENTER;
-import static android.view.MotionEvent.ACTION_HOVER_EXIT;
-import static android.view.MotionEvent.ACTION_HOVER_MOVE;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_INTERNET_PERMISSION;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_READ_EXTERNAL_STORAGE;
 import static com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment.LIST_TASK_PERMISSION_CREATE;
@@ -12,7 +9,6 @@ import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.SHA
 import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.TESI_LIST_KEY_PREF;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -28,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -60,6 +55,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -67,6 +63,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
@@ -91,13 +88,11 @@ import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.UploadFileDialogFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 
-import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class VisualizeTesiFragment extends Fragment {
 
@@ -1214,20 +1209,34 @@ public class VisualizeTesiFragment extends Fragment {
             SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
             SharedPreferences.Editor mEdit1 = sp.edit();
 
-            Set<String> set = new HashSet<>(tesiList);
+            List<String> list = new ArrayList<>(tesiList);
 
-            mEdit1.putStringSet(TESI_LIST_KEY_PREF, set);
+            mEdit1.putString(TESI_LIST_KEY_PREF, new Gson().toJson(list));
             return mEdit1.commit();
         } catch (Exception e) {
-            Log.e("VisualizeTesiFragment", e.getMessage());
+            Log.e("ClassificaTesiFragment", e.getMessage());
+
             return false;
         }
     }
 
     public ArrayList<String> getTesiList() {
-        SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
-        Set<String> set = sp.getStringSet(TESI_LIST_KEY_PREF, new HashSet<>());
-        return new ArrayList<>(set);
+        try {
+            SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+            String listJson = sp.getString(TESI_LIST_KEY_PREF, null);
+
+            // Converti la stringa JSON nella mappa originale
+            if (listJson != null) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+
+                return gson.fromJson(listJson, type);
+            }
+        } catch (Exception e) {
+            Log.e("getTesiList", e.getMessage());
+        }
+        return new ArrayList<>();
     }
 
     @Override

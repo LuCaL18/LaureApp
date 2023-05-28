@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private BroadcastReceiver downloadReceiver;
     private ShareContent shareContent;
-    private String defaultTheme, defaultLanguage;
+    private String defaultLanguage;
 
     @Nullable
     private LoggedInUser user;
@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Get the saved values from SharedPreferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        defaultTheme = sharedPreferences.getString("theme_enabled", themeDefault);
+        String defaultTheme = sharedPreferences.getString("theme_enabled", themeDefault);
         defaultLanguage = sharedPreferences.getString("language", systemLanguage);
 
         // Apply the saved settings to your app
@@ -358,14 +358,6 @@ public class MainActivity extends AppCompatActivity {
         Locale.setDefault(locale);
         Configuration configuration = getResources().getConfiguration();
         configuration.setLocale(locale);
-    }
-
-    public String getDefaultTheme() {
-        return defaultTheme;
-    }
-
-    public String getDefaultLanguage() {
-        return defaultLanguage;
     }
 
     @Override
