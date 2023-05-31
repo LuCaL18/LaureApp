@@ -2,12 +2,17 @@ package com.uniba.mobile.cddgl.laureapp.data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 public class PersonaTesi implements Serializable {
 
     private String id;
     private String displayName;
     private String email;
+
+    @Nullable
     private List<Integer> permissions;
 
     public PersonaTesi() {
@@ -50,12 +55,26 @@ public class PersonaTesi implements Serializable {
         this.email = email;
     }
 
+    @Nullable
     public List<Integer> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Integer> permissions) {
+    public void setPermissions(@Nullable List<Integer> permissions) {
         this.permissions = permissions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PersonaTesi that = (PersonaTesi) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
@@ -64,6 +83,7 @@ public class PersonaTesi implements Serializable {
                 "id='" + id + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", email='" + email + '\'' +
+                ", permissions=" + permissions +
                 '}';
     }
 }

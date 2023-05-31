@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen app:layout="@layout/preferences"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="General"
+        android:layout="@layout/custom_preference_category">
+
+        <ListPreference
+            android:defaultValue="light"
+            android:entries="@array/available_theme"
+            android:entryValues="@array/available_theme"
+            android:icon="@drawable/ic_baseline_brightness_medium_24"
+            android:key="theme"
+            android:layout="@layout/custom_list_preferences"
+            android:minHeight="48dp"
+            android:title="Theme" />
+
+        <ListPreference
+            android:defaultValue="en"
+            android:entries="@array/available_languages"
+            android:entryValues="@array/available_languages_values"
+            android:icon="@drawable/ic_baseline_language_24"
+            android:key="language"
+            android:title="Language"
+            android:layout="@layout/custom_list_preferences"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

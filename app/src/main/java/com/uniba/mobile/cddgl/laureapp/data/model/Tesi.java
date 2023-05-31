@@ -1,13 +1,13 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.NonNull;
+
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import io.reactivex.rxjava3.annotations.NonNull;
 
 public class Tesi implements Serializable, Cloneable {
 
@@ -32,13 +32,7 @@ public class Tesi implements Serializable, Cloneable {
     public Tesi() {
     }
 
-    public Tesi(String nomeTesi, List<PersonaTesi> coRelatori,
-                PersonaTesi relatore, String descrizione,
-                String ambito, List<String> chiavi, String skill,
-                int tempistiche, List<String> esami,
-                float mediaVoto, List<String> documents,
-                PersonaTesi student, String note) {
-
+    public Tesi(String nomeTesi, List<PersonaTesi> coRelatori, PersonaTesi relatore, String descrizione, String ambito, List<String> chiavi, String skill, int tempistiche, List<String> esami, float mediaVoto, List<String> documents, PersonaTesi student, String note) {
         this.id = UUID.randomUUID().toString();
         this.nomeTesi = nomeTesi;
         this.coRelatori = coRelatori;
@@ -56,7 +50,6 @@ public class Tesi implements Serializable, Cloneable {
         isAssigned = false;
         this.created_at = System.currentTimeMillis();
     }
-
 
     public String getId() {
         return id;
@@ -170,11 +163,11 @@ public class Tesi implements Serializable, Cloneable {
         this.student = student;
     }
 
-    public Boolean getAssigned() {
+    public Boolean getIsAssigned() {
         return isAssigned;
     }
 
-    public void setAssigned(Boolean assigned) {
+    public void setIsAssigned(Boolean assigned) {
         isAssigned = assigned;
     }
 
@@ -225,13 +218,12 @@ public class Tesi implements Serializable, Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Tesi tesi = (Tesi) o;
         return id.equals(tesi.id);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

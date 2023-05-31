@@ -23,6 +23,7 @@ import com.google.firebase.storage.StorageReference;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.DownloadedFile;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewHolder.DocumentViewHolder;
 
@@ -36,6 +37,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
     private final VisualizeThesisViewModel thesisModel;
     private final boolean permissionDelete;
     private final Context context;
+    private VisualizeTesiFragment tesiFragment;
 
     public DocumentAdapter(Context context, List<String> documents, java.lang.String idThesis, VisualizeThesisViewModel model) {
         this.context = context;
@@ -45,12 +47,13 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
         this.permissionDelete = false;
     }
 
-    public DocumentAdapter(Context context, List<String> documents, java.lang.String idThesis, VisualizeThesisViewModel model, boolean permissionDelete) {
-        this.context = context;
+    public DocumentAdapter(VisualizeTesiFragment requiredFragment, List<String> documents, java.lang.String idThesis, VisualizeThesisViewModel model, boolean permissionDelete) {
+        this.context = requiredFragment.getContext();
         this.documents = documents;
         this.thesisModel = model;
         this.idThesis = idThesis;
         this.permissionDelete = permissionDelete;
+        this.tesiFragment = requiredFragment;
     }
 
     @NonNull
@@ -81,7 +84,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(context.getString(R.string.title_dialog_delete_document));
                 builder.setMessage(context.getString(R.string.message_dialog_delete_document, document));
-                builder.setPositiveButton(context.getString(R.string.yes_text), (dialog, which) -> deleteDocument(document, position));
+                builder.setPositiveButton(context.getString(R.string.yes_text), (dialog, which) -> deleteDocument(document));
                 builder.setNegativeButton(context.getString(R.string.no_text), null);
                 builder.create().show();
             });
@@ -125,33 +128,14 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
         notifyDataSetChanged();
     }
 
-    private void deleteDocument(String filename, int position) {
+    private void deleteDocument(String filename) {
         FirebaseStorage.getInstance().getReference().child("documents/" + idThesis + "/" + filename)
                 .delete()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-
-                        List<String> newList = documents;
-                        newList.remove(position);
-
-                        Map<String, Object> updates = new HashMap<>();
-                        updates.put("documents", newList);
-
-                        FirebaseFirestore.getInstance().collection("tesi")
-                                .document(thesisModel.getThesis().getValue().getId())
-                                .update(updates).addOnCompleteListener(task1 -> {
-                                    if (task1.isSuccessful()) {
-                                        this.setDocuments(newList);
-
-                                        Tesi tesi = thesisModel.getThesis().getValue();
-                                        tesi.setDocuments(newList);
-
-                                        thesisModel.getThesis().setValue(tesi);
-                                    }
-                                });
+                        tesiFragment.removeDocument(filename);
                     }
                 });
-
     }
 
 }

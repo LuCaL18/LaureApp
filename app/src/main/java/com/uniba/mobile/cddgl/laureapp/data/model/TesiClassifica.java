@@ -1,18 +1,44 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ *
+ * Classe TesiClassifica in cui sono raccolte le classifiche personalizzate di ogni singolo utente
+ *
+ */
+
 public class TesiClassifica implements Serializable {
 
+    /* Lista di tesi che raccoglie tutte le tesi da inserire nella classifica */
+    private List<String> tesi;
+    /* Stringa che rappresenta l'id dello studente all'interno del database */
     private String studentId;
-    private List<Tesi> tesi;
 
     public TesiClassifica() {
+        //
     }
 
-    public TesiClassifica(String studentId, List<Tesi> tesi) {
-        this.studentId = studentId;
+    /**
+     *
+     * Costruttore della classe
+     *
+     * consente di istanziare una nuova classifica con all'interno una o più tesi preferite
+     *
+     * Pre-condizioni: deve esistere una lista di tesi istanziata con almeno una tesi e l'id dello
+     *                 studente deve essere rintracciato all'interno del database
+     * Post-condizioni: viene creato l'oggetto classificaTesi
+     *
+     * I campi che saranno oggetto di attenzione all'interno del costruttore sono:
+     *
+     * tesi      : lista di tesi non vuote
+     * studenteId: stringa identificatore univoco dello studente
+     *
+     */
+    public TesiClassifica(List<String> tesi, String studentId) {
         this.tesi = tesi;
     }
 
@@ -24,12 +50,40 @@ public class TesiClassifica implements Serializable {
         this.studentId = studentId;
     }
 
-    public List<Tesi> getTesi() {
+    /**
+     *
+     * Getter and Setter relativi
+     * a studenteId e tesi
+     *
+     * */
+    @PropertyName("tesi")
+    public List<String> getTesi() {
         return tesi;
     }
 
-    public void setTesi(List<Tesi> tesi) {
+    @PropertyName("tesi")
+    public void setTesi(List<String> tesi) {
         this.tesi = tesi;
+    }
+
+    /**
+     *
+     * Metodo che assegna una nuova tesi da aggiungere alla classifica
+     *
+     * @param tesi: oggetto di tipo tesi precedentemente istanziato da aggiungere alla lista di tesi personalizzata
+     */
+    public void addTesi(String idTesi) {
+        tesi.add(idTesi);
+    }
+
+    /**
+     *
+     * Metodo che rimuove una tesi già presente nella classifica dalla lista di tesi
+     *
+     * @param tesiRemove: oggetto di tipo tesi precedentemente istanziato e inserito nella lista tesi da rimuovere dalla classifica
+     */
+    public void removeTesi(String idTesi) {
+        tesi.remove(idTesi);
     }
 
     @Override

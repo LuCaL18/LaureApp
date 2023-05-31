@@ -192,6 +192,11 @@ public class ChatFragment extends Fragment {
                 super.onDataChanged();
 
                 int lastMessagePosition = this.getItemCount() - 1;
+
+                if(lastMessagePosition < 0) {
+                    return;
+                }
+
                 int viewType = getItemViewType(lastMessagePosition);
                 int lastVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 

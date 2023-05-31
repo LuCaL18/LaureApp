@@ -16,19 +16,15 @@
             android:id="@+id/action_navigation_home_to_tesiFragmant"
             app:destination="@id/tesiFragmant" />
         <action
+            android:id="@+id/action_navigation_home_to_visualizeTesiFragment"
+            app:destination="@id/visualizeTesiFragment" />
+        <action
             android:id="@+id/action_navigation_home_to_nav_lista_tesi"
             app:destination="@id/nav_lista_tesi" />
         <action
             android:id="@+id/action_navigation_home_to_calendario"
             app:destination="@id/calendario" />
     </fragment>
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.notifications.NotificationsFragment"
@@ -45,13 +41,8 @@
             app:destination="@id/bookingFragment" />
     </fragment>
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-    <fragment
         android:id="@+id/tesiFragmant"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.TesiFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.TesiFragment"
         android:label="@string/crea_tesi"
         tools:layout="@layout/fragment_tesi" >
         <action
@@ -67,6 +58,9 @@
         android:id="@+id/nav_lista_task"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment"
         android:label="ListaTask" >
+        <action
+            android:id="@+id/action_nav_lista_task_to_nav_new_task"
+            app:destination="@id/nav_new_task" />
     </fragment>
     <fragment
         android:id="@+id/nav_visualizza_task"
@@ -74,15 +68,23 @@
         android:label="VisualizzaTask" >
     </fragment>
     <fragment
-        android:id="@+id/nav_lista_tesi"
+        android:id="@+id/navigation_lista_tesi"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.ListaTesiFragment"
         android:label="@string/lista_tesi"
-        tools:layout="@layout/fragment_lista_tesi" />
+        tools:layout="@layout/fragment_lista_tesi" >
+        <action
+            android:id="@+id/action_navigation_lista_tesi_to_visualizeTesiFragment"
+            app:destination="@id/visualizeTesiFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_classifica_tesi"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment"
         android:label="@string/classifica_tesi"
-        tools:layout="@layout/fragment_classifica_tesi" />
+        tools:layout="@layout/fragment_classifica_tesi" >
+        <action
+            android:id="@+id/action_nav_classifica_tesi_to_visualizeTesiFragment"
+            app:destination="@id/visualizeTesiFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.chat.ChatFragment"
@@ -91,7 +93,7 @@
     <fragment
         android:id="@+id/nav_chat_list_fragment"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.chat.ChatListFragment"
-        android:label="ChatListFragment" >
+        android:label="@string/chat_list" >
         <action
             android:id="@+id/action_chatListFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
@@ -118,6 +120,9 @@
         <action
             android:id="@+id/action_visualizeTesiFragment_to_ticketFragment"
             app:destination="@id/ticketFragment" />
+        <action
+            android:id="@+id/action_visualizeTesiFragment_to_nav_lista_task"
+            app:destination="@id/nav_lista_task" />
     </fragment>
     <fragment
         android:id="@+id/nav_bookingListFragment"
@@ -160,4 +165,8 @@
         android:name="com.uniba.mobile.cddgl.laureapp.ui.calendario.VisualizzaRicevimentoFragment"
         android:label="Ricevimento"
         tools:layout="@layout/fragment_visualizza_ricevimento" />
+    <fragment
+        android:id="@+id/fragment_settings"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.settings.SettingsFragment"
+        android:label="@string/settings" />
 </navigation>

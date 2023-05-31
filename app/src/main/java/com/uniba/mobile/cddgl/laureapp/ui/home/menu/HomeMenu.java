@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.ui.home.HomeFragment;
 
 
@@ -20,15 +21,23 @@ public class HomeMenu implements MenuProvider {
 
     private final MutableLiveData<Menu> menu = new MutableLiveData<>();
     private final NavController navController;
+    private final RoleUser role;
 
-    public HomeMenu(NavController navController) {
+    public HomeMenu(NavController navController, RoleUser role) {
         this.navController = navController;
+        this.role = role;
     }
 
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         menu.clear();
         menuInflater.inflate(R.menu.app_bar_home, menu);
+
+        if (!role.equals(RoleUser.PROFESSOR)) {
+            MenuItem menuItem = menu.findItem(HomeFragment.CREATE_TESI_APP_BAR);
+            menuItem.setVisible(false);
+        }
+
         this.menu.setValue(menu);
     }
 
@@ -39,13 +48,8 @@ public class HomeMenu implements MenuProvider {
                 navController.navigate(R.id.action_navigation_home_to_navigation_notifications);
                 return true;
             }
-            case R.id.favorite: {
-                navController.navigate(R.id.visualizeTesiFragment);
-                return true;
-            }
-            case R.id.crea: {
+            case HomeFragment.CREATE_TESI_APP_BAR:
                 navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
-            }
             default:
                 return false;
         }

@@ -12,7 +12,7 @@
         android:layout_marginTop="18dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="410dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="18dp"
             android:orientation="horizontal">
@@ -45,6 +45,7 @@
                 android:id="@+id/share_tesi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
                 app:srcCompat="@android:drawable/ic_menu_share"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
@@ -52,6 +53,7 @@
                 android:id="@+id/visualizzaTesi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
                 app:srcCompat="@android:drawable/ic_menu_view"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
@@ -59,6 +61,7 @@
                 android:id="@+id/addTesi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
                 android:src="@android:drawable/ic_input_add"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 

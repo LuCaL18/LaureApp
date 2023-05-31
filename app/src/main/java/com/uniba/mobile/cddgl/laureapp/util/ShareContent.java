@@ -1,6 +1,5 @@
 package com.uniba.mobile.cddgl.laureapp.util;
 
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -74,15 +73,15 @@ public class ShareContent {
         return null;
     }
 
-    @SuppressLint("StringFormatMatches")
     public Intent shareThesisData(Tesi tesi) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.thesis_data));
         emailIntent.putExtra(Intent.EXTRA_TITLE, context.getString(R.string.title).toUpperCase());
         emailIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.data_shared_data,
-                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getRelatore().getDisplayName(), tesi.getTempistiche(),
-                tesi.getMediaVoto(), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
+                tesi.getNomeTesi(), tesi.getDescrizione(), tesi.getRelatore().getDisplayName(),
+                tesi.getTempistiche() + " " + context.getString(R.string.weeks),
+                String.valueOf(tesi.getMediaVoto()), tesi.getEsami(), tesi.getSkill(), tesi.getNote()));
         return emailIntent;
     }
 

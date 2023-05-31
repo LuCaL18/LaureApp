@@ -2,6 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <item
+        android:id="@+id/tesi_calendar"
+        android:contentDescription="@string/click_to_calendar_tesi"
+        android:icon="@drawable/ic_baseline_calendar_month_24"
+        android:title="@string/calendar"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/list_task"
+        android:contentDescription="@string/click_to_list_task"
+        android:icon="@drawable/ic_baseline_playlist_play_24"
+        android:title="@string/list_task"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/share_thesis"
         android:contentDescription="@string/content_description_share"

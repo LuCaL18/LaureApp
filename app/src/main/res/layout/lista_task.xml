@@ -28,7 +28,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nome Task"
-                    android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
@@ -38,6 +37,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="Scadenza" />
+
+                <TextView
+                    android:id="@+id/tesiTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Tesi" />
+
+                <TextView
+                    android:id="@+id/studenteTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Studente" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -52,6 +65,7 @@
                 android:id="@+id/visualizza_task1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/color_hole_graph"
                 app:srcCompat="@android:drawable/ic_menu_view"
                 tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 

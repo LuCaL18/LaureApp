@@ -1,19 +1,22 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class ChatData {
+public class ChatData implements Serializable {
 
     private String id;
     private String name;
-    private HashMap<String, Boolean> members;
+    private List<String> members;
 
     public ChatData() {
     }
 
-    public ChatData(String id, HashMap<String, Boolean> members, String name) {
+    public ChatData(String id, List<String> members, String name) {
         this.id = id;
         this.members = members;
         this.name = name;
@@ -27,11 +30,11 @@ public class ChatData {
         this.id = id;
     }
 
-    public  HashMap<String, Boolean> getMembers() {
+    public List<String> getMembers() {
         return members;
     }
 
-    public void setMembers( HashMap<String, Boolean> members) {
+    public void setMembers( List<String> members) {
         this.members = members;
     }
 
