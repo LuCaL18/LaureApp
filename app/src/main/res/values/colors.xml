@@ -16,5 +16,6 @@
     <color name="grey_graph">#7C7C7C</color>
     <color name="blue_graph">#0666DA</color>
     <color name="green_graph">#0C8F40</color>
+    <color name="dark">#121212</color>
 
 </resources>
