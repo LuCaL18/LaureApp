@@ -40,6 +40,7 @@ public class TesiClassifica implements Serializable {
      */
     public TesiClassifica(List<String> tesi, String studentId) {
         this.tesi = tesi;
+        this.studentId = studentId;
     }
 
     public String getStudentId() {
@@ -69,8 +70,6 @@ public class TesiClassifica implements Serializable {
     /**
      *
      * Metodo che assegna una nuova tesi da aggiungere alla classifica
-     *
-     * @param tesi: oggetto di tipo tesi precedentemente istanziato da aggiungere alla lista di tesi personalizzata
      */
     public void addTesi(String idTesi) {
         tesi.add(idTesi);
@@ -79,8 +78,6 @@ public class TesiClassifica implements Serializable {
     /**
      *
      * Metodo che rimuove una tesi già presente nella classifica dalla lista di tesi
-     *
-     * @param tesiRemove: oggetto di tipo tesi precedentemente istanziato e inserito nella lista tesi da rimuovere dalla classifica
      */
     public void removeTesi(String idTesi) {
         tesi.remove(idTesi);

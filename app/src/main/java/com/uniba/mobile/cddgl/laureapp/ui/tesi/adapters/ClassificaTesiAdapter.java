@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewHolder.ClassificaTesiViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.TesiListViewModel;
 
 import java.util.ArrayList;
@@ -23,19 +24,16 @@ import java.util.List;
 
 public class ClassificaTesiAdapter extends BaseAdapter {
 
-    /* Contesto dello stato della classifica tesi */
     private final Context mContext;
-    /* Lista delle tesi da visualizzare a schermo */
-    private List<Tesi> mDataList;
     private final VisualizeThesisViewModel thesisViewModel;
-
     private final TesiListViewModel tesiListViewModel;
+    private final List<Tesi> mDataList;
 
     public ClassificaTesiAdapter(Context context, VisualizeThesisViewModel model, TesiListViewModel tesiListViewModel) {
         mContext = context;
-        mDataList = new ArrayList<>();
         thesisViewModel = model;
         this.tesiListViewModel = tesiListViewModel;
+        mDataList = new ArrayList<>();
     }
 
     /**
@@ -87,59 +85,22 @@ public class ClassificaTesiAdapter extends BaseAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /* Creazione della viewHolder responsabile della gestione della visualizzazione del layout */
-        ViewHolder viewHolder;
-        /* Recupero degli elementi del layout classifica tesi */
+        ClassificaTesiViewHolder viewHolder;
+
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.classifica_tesi, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.textView1 = convertView.findViewById(R.id.nometesi2);
-            viewHolder.textView2 = convertView.findViewById(R.id.descrizione_tesi);
-            viewHolder.imageButton1 = convertView.findViewById(R.id.visualizza_Tesi_classifica);
-            viewHolder.imageButton2 = convertView.findViewById(R.id.deleteTesi);
+            viewHolder = new ClassificaTesiViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ClassificaTesiViewHolder) convertView.getTag();
         }
-        Tesi tesi = mDataList.get(position);
-        /* Recupero dei dati relativi al nome tesi e descrizione */
-        if (tesi != null && tesi.getNomeTesi() != null && tesi.getDescrizione() != null) {
-            viewHolder.textView1.setText(tesi.getNomeTesi());
-            viewHolder.textView2.setText(tesi.getDescrizione());
-        }
-        /* imabeButton per permettere la visualizzazione a dettaglio della tesi selezionata */
-        viewHolder.imageButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                thesisViewModel.getThesis().setValue(tesi);
-            }
-        });
 
-        viewHolder.imageButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Tesi tesi = mDataList.get(position);
-                mDataList.remove(tesi);
-                tesiListViewModel.removeTesiFromTesiList(tesi);
-            }
-        });
+        viewHolder.bind(mDataList.get(position), thesisViewModel, tesiListViewModel);
 
         //make draggable view
         convertView.setLongClickable(true);
 
         return convertView;
-    }
-
-
-    /**
-     * Metodo per istanziare gli elementi del layout
-     */
-    private static class ViewHolder {
-        TextView textView1;
-        TextView textView2;
-        ImageButton imageButton1;
-        ImageButton imageButton2;
     }
 
     public void addTheses(List<Tesi> tesi) {
@@ -158,13 +119,9 @@ public class ClassificaTesiAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    /**
-     * Metodo per l'aggiornamento della classifica tesi
-     *
-     * @param mDataList
-     */
     public void setmDataList(List<Tesi> mDataList) {
-        this.mDataList = mDataList;
+        this.mDataList.clear();
+        this.mDataList.addAll(mDataList);
         notifyDataSetChanged();
     }
 

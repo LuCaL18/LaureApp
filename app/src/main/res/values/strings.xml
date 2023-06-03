@@ -207,7 +207,7 @@
     <string name="necessary_exams">Necessary exams</string>
     <string name="skills_and_competences">Skills and competences</string>
     <string name="booking">Booking</string>
-    <string name="write_here_your_motivation">Write here your motivation...</string>
+    <string name="write_here_your_motivation">Write here your motivation…</string>
     <string name="motivation_for_unfulfilled_constraints">Motivation for unfulfilled constraints</string>
     <string name="constraints_checks_the_constraints_satisfied">Checks the constraints satisfied</string>
     <string name="booking_successfully_saved">Booking successfully saved</string>
@@ -285,7 +285,7 @@
     <string name="required_skills_and_competences">Required skills and competences</string>
     <string name="requested_grade_average">Requested grade average</string>
     <string name="timeline_value_weeks">%s weeks</string>
-    <string name="es_programming_in_java">ES. Programming in java...</string>
+    <string name="es_programming_in_java">ES. Programming in java…</string>
     <string name="search_keys">Search keys</string>
     <string name="scopes">Scopes</string>
     <string name="search_words">Search words</string>
@@ -315,6 +315,7 @@
     <string name="dark_mode">Dark mode</string>
     <string name="languages">Languages</string>
     <string name="settings">Settings</string>
+    <string name="confirm_registration">Confirm registration</string>
 
     <!--FILTER TITLE -->
     <string name="default_title">Default</string>
@@ -333,6 +334,7 @@
     <string name="filter_by_minimum_grade">Filtra per voto minimo</string>
     <string name="Filter_by_minimum_execution_time">Filter by minimum execution time</string>
     <string name="there_are_no_theses_in_your_ranking">There are no theses in your ranking</string>
+    <string name="there_are_no_task_assigned">There are no task assigned</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">

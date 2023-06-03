@@ -1,9 +1,21 @@
 package com.uniba.mobile.cddgl.laureapp.util;
 
-import android.content.Context;
-import android.content.res.Resources;
+import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.SHARED_PREFS_NAME;
+import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.TESI_LIST_KEY_PREF;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.util.Log;
+
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.R;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utility {
 
@@ -64,6 +76,25 @@ public class Utility {
             default:
                 return "";
         }
+    }
+
+    public static ArrayList<String> getTesiList(Context context) {
+        try {
+            SharedPreferences sp = context.getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+            String listJson = sp.getString(TESI_LIST_KEY_PREF, null);
+
+            // Converti la stringa JSON nella mappa originale
+            if (listJson != null) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+
+                return gson.fromJson(listJson, type);
+            }
+        } catch (Exception e) {
+            Log.e("getTesiList", e.getMessage());
+        }
+        return new ArrayList<>();
     }
 
 }

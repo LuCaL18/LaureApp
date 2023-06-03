@@ -156,6 +156,7 @@ public class BookingListFragment extends Fragment {
         bookingTabLayout.selectTab(bookingTabLayout.getTabAt(currentTab));
 
         if (currentTab == TAB_OPEN) {
+            bookingListRecyclerView.setAdapter(adapterOpen);
             adapterOpen.getSnapshots().addChangeEventListener(changeEventListenerOpen);
         }
 
@@ -251,7 +252,7 @@ public class BookingListFragment extends Fragment {
         try {
             adapterAccepted.stopListening();
             adapterOpen.stopListening();
-            adapterRefused.startListening();
+            adapterRefused.stopListening();
         } catch (Exception e) {
             Log.w("BookingListFragment", e.getMessage());
         }

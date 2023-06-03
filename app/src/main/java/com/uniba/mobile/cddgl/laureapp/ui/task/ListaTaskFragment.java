@@ -93,6 +93,7 @@ public class ListaTaskFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_lista_task, container, false);
 
         Query query;
+        listView = view.findViewById(R.id.lista_task);
 
         if (getArguments() != null) {
             idThesis = getArguments().getString(LIST_TASK_TESI_KEY);
@@ -104,10 +105,7 @@ public class ListaTaskFragment extends Fragment {
             query = FirebaseFirestore.getInstance().collection("task").whereArrayContains("studenteId", user.getId());
         } else {
             query = null;
-            //TODO: gestire lista vuota guest
         }
-
-        listView = view.findViewById(R.id.lista_task);
 
         dataList = new ArrayList<>();
         adapter = new ListaTaskAdapter(getActivity(), dataList, user);
@@ -158,6 +156,11 @@ public class ListaTaskFragment extends Fragment {
             };
 
             requireActivity().addMenuProvider(providerMenu);
+        }
+
+        if(adapter.getmDataList().isEmpty()) {
+            listView.setVisibility(View.GONE);
+            view.findViewById(R.id.text_no_task_available).setVisibility(View.VISIBLE);
         }
     }
 

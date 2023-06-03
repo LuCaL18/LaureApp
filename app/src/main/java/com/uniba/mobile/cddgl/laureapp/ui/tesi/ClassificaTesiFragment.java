@@ -83,6 +83,8 @@ import java.util.stream.Collectors;
 
 public class ClassificaTesiFragment extends Fragment implements SearchView.OnQueryTextListener {
 
+    private static final String CLASS_ID = "ClassificaTesiFragment";
+
     public static final String SHARED_PREFS_NAME = "MY_SHARED_PREF";
     public static final String TESI_LIST_KEY_PREF = "list_tesi_pref";
     private static final String FILTERS_KEY = "filters_ranking";
@@ -715,33 +717,42 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
             tesiList = new ArrayList<>();
             tesiListViewModel.getTesiList().setValue(tesiList);
         } else {
-            FirebaseFirestore.getInstance().collection("tesi").whereIn("id", thesisId)
-                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            List<Tesi> thesisList = new ArrayList<>();
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                for (String id : thesisId) {
-                                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                                        // Convert each document snapshot to a Thesis object
-                                        Tesi thesis = document.toObject(Tesi.class);
-                                        if (id.equals(thesis.getId())) {
-                                            thesisList.add(thesisId.indexOf(thesis.getId()), thesis);
+            try {
+                FirebaseFirestore.getInstance().collection("tesi").whereIn("id", thesisId)
+                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                List<Tesi> thesisList = new ArrayList<>();
+                                try {
+
+                                    if (!queryDocumentSnapshots.isEmpty()) {
+                                        for (String id : thesisId) {
+                                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                                // Convert each document snapshot to a Thesis object
+                                                Tesi thesis = document.toObject(Tesi.class);
+                                                if (thesis != null && id != null && id.equals(thesis.getId())) {
+                                                    thesisList.add(thesisId.indexOf(thesis.getId()), thesis);
+                                                }
+                                            }
                                         }
                                     }
+                                }catch (Exception e) {
+                                    Log.e(CLASS_ID, "Error during fetchDataTesi --> " + e);
+                                } finally {
+                                    tesiList = thesisList;
+                                    tesiListViewModel.getTesiList().setValue(tesiList);
                                 }
                             }
-
-                            tesiList = thesisList;
-                            tesiListViewModel.getTesiList().setValue(tesiList);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("Classifica tesi", e.getMessage());
-                        }
-                    });
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(CLASS_ID, e.getMessage());
+                            }
+                        });
+            } catch (Exception e) {
+                Log.e(CLASS_ID, "Error during fetchDataTesi --> " + e);
+            }
         }
     }
 

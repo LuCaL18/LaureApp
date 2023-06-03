@@ -138,6 +138,7 @@ public class TicketListFragment extends Fragment {
         ticketTabLayout.selectTab(ticketTabLayout.getTabAt(currentTab));
 
         if (currentTab == TAB_OPENED) {
+            ticketListRecyclerView.setAdapter(adapterOpen);
             adapterOpen.getSnapshots().addChangeEventListener(changeEventListenerOpened);
         }
 

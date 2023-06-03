@@ -913,7 +913,7 @@ public class VisualizeTesiFragment extends Fragment {
             } else {
                 List<String> newTesiList = new ArrayList<>();
                 newTesiList.add(thesis.getId());
-                classificaDocument.set(new TesiClassifica(newTesiList, mainViewModel.getIdUser()))
+                classificaDocument.set(new TesiClassifica(newTesiList, user.getId()))
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 menuItem.setIcon(R.drawable.ic_favorite_24dp);
