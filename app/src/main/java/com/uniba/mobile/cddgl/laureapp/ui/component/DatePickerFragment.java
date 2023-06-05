@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.uniba.mobile.cddgl.laureapp.R;
@@ -23,6 +24,12 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     public DatePickerFragment(int contentLayoutId) {
         layout = contentLayoutId;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override

@@ -15,26 +15,19 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.ChatData;
-import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.impl.ChatItemClickCallbackImpl;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.viewHolder.ChatViewHolder;
-
-import java.util.ArrayList;
 
 public class ChatListFragment extends Fragment {
 
@@ -47,6 +40,7 @@ public class ChatListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireParentFragment());
         chatViewModel = viewModelProvider.get(ChatViewModel.class);
@@ -100,7 +94,7 @@ public class ChatListFragment extends Fragment {
         NavController navController = NavHostFragment.findNavController(this);
 
         chatViewModel.getMembers().observe(getViewLifecycleOwner(), loggedInUsers -> {
-            if(loggedInUsers == null) {
+            if (loggedInUsers == null) {
                 return;
             }
             navController.navigate(R.id.action_chatListFragment_to_chatFragment);
@@ -120,14 +114,17 @@ public class ChatListFragment extends Fragment {
         super.onDestroyView();
         adapter.stopListening();
         chatViewModel.getMembers().removeObservers(getViewLifecycleOwner());
+        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
+        navigationView.getMenu().findItem(MainActivity.CHAT).setChecked(false);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        navBar.setVisibility(View.VISIBLE);
-        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
-        navigationView.getMenu().findItem(MainActivity.CHAT).setChecked(false);
+        if (navBar != null) {
+            navBar.setVisibility(View.VISIBLE);
+        }
+
         navBar = null;
         adapter = null;
         options = null;

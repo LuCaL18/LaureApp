@@ -80,8 +80,11 @@ public class ListaTaskFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         user = mainViewModel.getUser().getValue();
+        dataList = new ArrayList<>();
     }
 
     /**
@@ -98,49 +101,47 @@ public class ListaTaskFragment extends Fragment {
         /* Creazione della view responsabile della gestione della visualizzazione del layout */
         View view = inflater.inflate(R.layout.fragment_lista_task, container, false);
 
-        Query query;
-        listView = view.findViewById(R.id.lista_task);
-
-        if (getArguments() != null) {
-            thesis = (Tesi) getArguments().getSerializable(LIST_TASK_TESI_KEY);
-            permissionCreate = Boolean.parseBoolean(getArguments().getString(LIST_TASK_PERMISSION_CREATE));
-            query = FirebaseFirestore.getInstance().collection("task").whereEqualTo("tesiId", thesis.getId());
-        } else if (user.getRole().equals(RoleUser.PROFESSOR)) {
-            loadThesisRelator();
-            query = FirebaseFirestore.getInstance().collection("task").whereArrayContains("relators", user.getId());
-        } else if (user.getRole().equals(RoleUser.STUDENT)) {
-            query = FirebaseFirestore.getInstance().collection("task").whereEqualTo("studenteId", user.getId());
-        } else {
-            query = null;
-        }
-
-        dataList = new ArrayList<>();
         adapter = new ListaTaskAdapter(getActivity(), dataList, user);
 
-        listView.setAdapter(adapter);
+        if(listTesi.isEmpty() && thesis == null) {
 
-        if (query != null) {
-            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+            Query query;
+            if (getArguments() != null) {
+                thesis = (Tesi) getArguments().getSerializable(LIST_TASK_TESI_KEY);
+                permissionCreate = Boolean.parseBoolean(getArguments().getString(LIST_TASK_PERMISSION_CREATE));
+                query = FirebaseFirestore.getInstance().collection("task").whereEqualTo("tesiId", thesis.getId());
+            } else if (user.getRole().equals(RoleUser.PROFESSOR)) {
+                loadThesisRelator();
+                query = FirebaseFirestore.getInstance().collection("task").whereArrayContains("relators", user.getId());
+            } else if (user.getRole().equals(RoleUser.STUDENT)) {
+                query = FirebaseFirestore.getInstance().collection("task").whereEqualTo("studenteId", user.getId());
+            } else {
+                query = null;
+            }
 
-                    if (queryDocumentSnapshots != null) {
-                        dataList.clear();
-                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                            Task task = doc.toObject(Task.class);
-                            dataList.add(task);
+            if (query != null) {
+                query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            return;
                         }
 
-                        setEmptyMessage(view);
-                        adapter.setmDataList(dataList);
-                    }
+                        if (queryDocumentSnapshots != null) {
+                            dataList.clear();
+                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                Task task = doc.toObject(Task.class);
+                                dataList.add(task);
+                            }
 
-                }
-            });
+                            setEmptyMessage(view);
+                            adapter.setmDataList(dataList);
+                        }
+
+                    }
+                });
+            }
         }
         return view;
     }
@@ -150,6 +151,8 @@ public class ListaTaskFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = NavHostFragment.findNavController(this);
 
+        listView = view.findViewById(R.id.lista_task);
+        listView.setAdapter(adapter);
         providerMenu = new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {

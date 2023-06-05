@@ -58,7 +58,6 @@ public class NewTaskFragment extends Fragment {
 
     private BottomNavigationView navBar;
 
-    private LoggedInUser user;
     private Spinner tesiSpinner;
     private TextView studenteTextView;
     private boolean creationFromTesi = false;
@@ -66,9 +65,8 @@ public class NewTaskFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        user = mainViewModel.getUser().getValue();
         this.tesiList = new ArrayList<>();
 
         Bundle bundle = getArguments();

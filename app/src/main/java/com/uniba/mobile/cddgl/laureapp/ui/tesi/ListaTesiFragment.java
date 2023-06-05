@@ -110,6 +110,7 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         allTesiList = new ArrayList<>();
         personalTesiList = new ArrayList<>();

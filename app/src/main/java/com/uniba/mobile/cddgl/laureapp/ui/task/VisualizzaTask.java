@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,61 +38,55 @@ public class VisualizzaTask extends Fragment {
     public static final String STUDENT_TASK = "student_task";
     public static final String TESI_TASK = "tesi_task";
 
-    /* Oggetto di tipo LoggedInUser per memorizzare l'users attualmente loggato */
-    private LoggedInUser user;
-
     private BottomNavigationView navBar;
 
     private Task task;
+    private String studentTask;
+    private String tesiTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        user = mainViewModel.getUser().getValue();
-    }
-
-    /**
-     * Metodo 'onCreateView' in cui avviene la gestione di tutte le operazioni: dalla visualizzazione
-     * a schermo delle varie componenti del layout e all'eventuale modifica dell'attributo STATO di
-     * un task se l'utente loggato è un PROFESSOR
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.visualizza_task, container, false);
         Bundle bundle = getArguments();
 
         if (bundle != null && bundle.getSerializable(TASK_TO_VISUALIZE) != null) {
             task = (Task) bundle.getSerializable(TASK_TO_VISUALIZE);
+            studentTask = bundle.getString(STUDENT_TASK);
+            tesiTask = bundle.getString(TESI_TASK);
+        }
+    }
 
-            TextView title = root.findViewById(R.id.nometask2);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.visualizza_task, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if(task != null) {
+            TextView title = view.findViewById(R.id.nometask2);
             title.setText(task.getNomeTask());
 
-            setupCardView(root, R.id.tv_descrizione3, task.getDescrizione());
-            setupCardView(root, R.id.tv_stato3, task.getStato().toString());
-            setupCardView(root, R.id.tv_scadenza3, task.getScadenza());
+            setupCardView(view, R.id.tv_descrizione3, task.getDescrizione());
+            setupCardView(view, R.id.tv_stato3, task.getStato().toString());
+            setupCardView(view, R.id.tv_scadenza3, task.getScadenza());
 
-            String studentTask = bundle.getString(STUDENT_TASK);
             if (studentTask != null) {
-                setupCardView(root, R.id.tv_studente_task, studentTask);
+                setupCardView(view, R.id.tv_studente_task, studentTask);
             }
 
-            String tesiTask = bundle.getString(TESI_TASK);
             if (tesiTask != null) {
-                setupCardView(root, R.id.tv_tesi, tesiTask);
+                setupCardView(view, R.id.tv_tesi, tesiTask);
             }
 
-            ImageButton editStatoTask = root.findViewById(R.id.edit_task_state);
+            ImageButton editStatoTask = view.findViewById(R.id.edit_task_state);
             editStatoTask.setOnClickListener(v -> showEditStatoDialog());
-
         }
-        return root;
+
     }
 
     private void setupCardView(View root, int textViewId, String text) {

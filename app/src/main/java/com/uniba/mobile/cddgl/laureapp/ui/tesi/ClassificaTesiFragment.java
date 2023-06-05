@@ -124,6 +124,42 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
     private SearchView searchView;
     private TesiListViewModel tesiListViewModel;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        user = mainViewModel.getUser().getValue();
+
+        currentFilters = new HashMap<>();
+        filteredList = new ArrayList<>();
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            CollectionReference mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
+            mCollection.whereEqualTo("studentId", currentUser.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    tesiList = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        TesiClassifica classificaTesi = doc.toObject(TesiClassifica.class);
+                        fetchDataTesi(classificaTesi.getTesi());
+                    }
+                }
+            });
+        } else {
+            fetchDataTesi(getTesiList());
+        }
+    }
+
     /**
      * Metodo "onCreateView" che si occupa della creazione della view che visualizzerà il
      * layout relativo alla classifica tesi, presenta al suo interno l'implementazione
@@ -148,10 +184,8 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
         /* Creazione della view responsabile della gestione della visualizzazione del layout */
         View view = inflater.inflate(R.layout.fragment_classifica_tesi, container, false);
 
-        currentFilters = new HashMap<>();
-        filteredList = new ArrayList<>();
         // Recupera la stringa JSON dalla memoria locale utilizzando SharedPreferences
-        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
         String mappaJson = sharedPreferences.getString(FILTERS_KEY, null);
         // Converti la stringa JSON nella mappa originale
         if (mappaJson != null) {
@@ -164,133 +198,6 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
 
         thesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
         tesiListViewModel = new ViewModelProvider(requireActivity()).get(TesiListViewModel.class);
-        filtersContainer = view.findViewById(R.id.filters_classifica_container);
-
-        listView = view.findViewById(R.id.classifica_tesi);
-        /* Rimozione della navBar dallo schermo */
-        navBar = getActivity().findViewById(R.id.nav_view);
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        adapter = new ClassificaTesiAdapter(getContext(), thesisViewModel, tesiListViewModel);
-        listView.setAdapter(adapter);
-
-        if (currentUser != null) {
-            CollectionReference mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
-            mCollection.whereEqualTo("studentId", currentUser.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    tesiList = new ArrayList<>();
-
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        TesiClassifica classificaTesi = doc.toObject(TesiClassifica.class);
-                        fetchDataTesi(classificaTesi.getTesi());
-                    }
-                }
-            });
-        } else {
-            fetchDataTesi(getTesiList());
-        }
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    view.startDragAndDrop(data, shadowBuilder, null, 0);
-                } else {
-                    view.startDrag(data, shadowBuilder, null, 0);
-                }
-
-                return true;
-            }
-        });
-
-        listView.setOnDragListener(new View.OnDragListener() {
-
-            int previousPos = -1;
-
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        listView.setNestedScrollingEnabled(false);
-                        previousPos = listView.pointToPosition((int) event.getX(), (int) event.getY());
-                        return true;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        // highlight list item
-                        return true;
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        int currentPos = listView.pointToPosition((int) event.getX(), (int) event.getY());
-                        if (currentPos != AdapterView.INVALID_POSITION) {
-                            if (currentPos != previousPos) {
-                                // update the list item position
-                                Tesi currentItem = (Tesi) adapter.getItem(currentPos);
-
-                                adapter.removeItem(currentItem);
-                                adapter.insertItem(previousPos, currentItem);
-
-                                previousPos = currentPos;
-                            }
-                        }
-                        return true;
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        // unhighlight list item
-                        return true;
-                    case DragEvent.ACTION_DROP:
-                        filteredList = adapter.getmDataList();
-                        return true;
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        listView.setNestedScrollingEnabled(true);
-                        return true;
-                }
-                return false;
-            }
-        });
-
-
-        if (menuProvider == null) {
-            ClassificaTesiFragment queryTextListener = this;
-            menuProvider = new MenuProvider() {
-                @Override
-                public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                    menu.clear();
-                    menuInflater.inflate(R.menu.app_bar_classifica, menu);
-                    MenuItem searchItem = menu.findItem(R.id.search_tesi_classifica);
-                    searchView = (SearchView) searchItem.getActionView();
-                    searchView.setQueryHint(getString(R.string.search_hint));
-                    searchView.setOnQueryTextListener(queryTextListener);
-                }
-
-                @Override
-                public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-
-                    switch (menuItem.getItemId()) {
-                        case SEARCH_ITEM_MENU:
-                            searchView.setQuery("", false);
-                            adapter.setmDataList(filteredList);
-                            return true;
-
-                        case FILTER_ITEM_MENU:
-                            setFilter(requireActivity().findViewById(FILTER_ITEM_MENU));
-                            return true;
-                        case SHARE_ITEM_MENU:
-                            shareClassifica();
-                        default:
-                            return false;
-                    }
-                }
-            };
-            requireActivity().addMenuProvider(menuProvider);
-        }
         return view;
     }
 
@@ -677,8 +584,109 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mainViewModel.getUser().observe(getViewLifecycleOwner(), loggedInUser -> user = loggedInUser);
+        filtersContainer = view.findViewById(R.id.filters_classifica_container);
+
+        listView = view.findViewById(R.id.classifica_tesi);
+        /* Rimozione della navBar dallo schermo */
+        navBar = requireActivity().findViewById(R.id.nav_view);
+
+        adapter = new ClassificaTesiAdapter(getContext(), thesisViewModel, tesiListViewModel);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    view.startDragAndDrop(data, shadowBuilder, null, 0);
+                } else {
+                    view.startDrag(data, shadowBuilder, null, 0);
+                }
+
+                return true;
+            }
+        });
+
+        listView.setOnDragListener(new View.OnDragListener() {
+
+            int previousPos = -1;
+
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                        listView.setNestedScrollingEnabled(false);
+                        previousPos = listView.pointToPosition((int) event.getX(), (int) event.getY());
+                        return true;
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        // highlight list item
+                        return true;
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                        int currentPos = listView.pointToPosition((int) event.getX(), (int) event.getY());
+                        if (currentPos != AdapterView.INVALID_POSITION) {
+                            if (currentPos != previousPos) {
+                                // update the list item position
+                                Tesi currentItem = (Tesi) adapter.getItem(currentPos);
+
+                                adapter.removeItem(currentItem);
+                                adapter.insertItem(previousPos, currentItem);
+
+                                previousPos = currentPos;
+                            }
+                        }
+                        return true;
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        // unhighlight list item
+                        return true;
+                    case DragEvent.ACTION_DROP:
+                        filteredList = adapter.getmDataList();
+                        return true;
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        listView.setNestedScrollingEnabled(true);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+
+        if (menuProvider == null) {
+            ClassificaTesiFragment queryTextListener = this;
+            menuProvider = new MenuProvider() {
+                @Override
+                public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                    menu.clear();
+                    menuInflater.inflate(R.menu.app_bar_classifica, menu);
+                    MenuItem searchItem = menu.findItem(R.id.search_tesi_classifica);
+                    searchView = (SearchView) searchItem.getActionView();
+                    searchView.setQueryHint(getString(R.string.search_hint));
+                    searchView.setOnQueryTextListener(queryTextListener);
+                }
+
+                @Override
+                public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+
+                    switch (menuItem.getItemId()) {
+                        case SEARCH_ITEM_MENU:
+                            searchView.setQuery("", false);
+                            adapter.setmDataList(filteredList);
+                            return true;
+
+                        case FILTER_ITEM_MENU:
+                            setFilter(requireActivity().findViewById(FILTER_ITEM_MENU));
+                            return true;
+                        case SHARE_ITEM_MENU:
+                            shareClassifica();
+                        default:
+                            return false;
+                    }
+                }
+            };
+            requireActivity().addMenuProvider(menuProvider);
+        }
 
         NavController navController = NavHostFragment.findNavController(this);
         thesisViewModel.getThesis().observe(getViewLifecycleOwner(), tesi -> {
@@ -759,7 +767,9 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
     @Override
     public void onResume() {
         super.onResume();
-        navBar.setVisibility(View.GONE);
+        if(navBar != null) {
+            navBar.setVisibility(View.GONE);
+        }
     }
 
     public boolean saveListofThesis(List<Tesi> tesiList) {
@@ -814,7 +824,10 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        navBar.setVisibility(View.VISIBLE);
+        if(navBar != null) {
+            navBar.setVisibility(View.VISIBLE);
+        }
+
         requireActivity().removeMenuProvider(menuProvider);
         NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
         navigationView.getMenu().findItem(MainActivity.CLASSIFICA_TESI).setChecked(false);
