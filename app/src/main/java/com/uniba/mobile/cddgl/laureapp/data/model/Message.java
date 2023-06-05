@@ -1,10 +1,13 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.Keep;
+
 public class Message {
     private String senderId;
     private String message;
     private long timestamp;
 
+    @Keep
     public Message() {
         // Default constructor required for calls to DataSnapshot.getValue(Message.class)
     }

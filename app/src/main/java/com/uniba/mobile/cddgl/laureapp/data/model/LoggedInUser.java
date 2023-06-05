@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.Keep;
+
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 
 import java.io.Serializable;
@@ -24,6 +26,7 @@ public class LoggedInUser implements Serializable {
 
 
     // NON CANCELLARE SERVE A FIREBASE
+    @Keep
     public LoggedInUser() {}
 
     public LoggedInUser(String id) {

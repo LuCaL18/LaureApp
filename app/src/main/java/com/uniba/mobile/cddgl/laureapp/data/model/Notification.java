@@ -1,5 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
 import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
@@ -20,6 +21,7 @@ public class Notification {
     @Nullable
     private String nameChat;
 
+    @Keep
     public Notification() {}
 
     public Notification(String receiveId, String senderName, String body) {

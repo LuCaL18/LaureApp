@@ -1,5 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
 import com.uniba.mobile.cddgl.laureapp.data.TicketState;
@@ -25,6 +26,7 @@ public class Ticket implements Serializable {
     @Nullable
     private Long timestampReceiver;
 
+    @Keep
     public Ticket() {
     }
 

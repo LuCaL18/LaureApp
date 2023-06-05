@@ -140,7 +140,12 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_lista_tesi, container, false);
+        return inflater.inflate(R.layout.fragment_lista_tesi, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ListView listView = view.findViewById(R.id.listatesi);
 
         filtersContainer = view.findViewById(R.id.filtersContainer);
@@ -294,6 +299,12 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
             }
         }
 
+        if (currentTab == TAB_ALL) {
+            listView.setAdapter(adapterAll);
+        } else {
+            listView.setAdapter(adapterPersonal);
+        }
+
         TabLayout listTesiTabLayout = view.findViewById(R.id.tab_layout);
         listTesiTabLayout.selectTab(listTesiTabLayout.getTabAt(currentTab));
         listTesiTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -333,18 +344,6 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
             }
         });
 
-        if (currentTab == TAB_ALL) {
-            listView.setAdapter(adapterAll);
-        } else {
-            listView.setAdapter(adapterPersonal);
-        }
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         NavController navController = NavHostFragment.findNavController(this);
         visualizeThesisViewModel.getThesis().observe(getViewLifecycleOwner(), tesi -> {

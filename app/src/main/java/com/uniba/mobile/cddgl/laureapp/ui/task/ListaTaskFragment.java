@@ -1,6 +1,8 @@
 package com.uniba.mobile.cddgl.laureapp.ui.task;
 
-import android.content.Intent;
+import static com.uniba.mobile.cddgl.laureapp.ui.task.NewTaskFragment.TESI_LIST_NEW_TASK;
+import static com.uniba.mobile.cddgl.laureapp.ui.task.NewTaskFragment.TESI_NEW_TASK;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.CollectionReference;
@@ -32,14 +35,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
-import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.QRCodeDialogFragment;
-import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment;
+import com.uniba.mobile.cddgl.laureapp.ui.task.adapter.ListaTaskAdapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ import java.util.List;
  */
 
 public class ListaTaskFragment extends Fragment {
+
+    private static final String CLASS_ID = "ListaTaskFragment";
 
     public static final String LIST_TASK_TESI_KEY = "idThesis";
     public static final String LIST_TASK_PERMISSION_CREATE = "permission_create";
@@ -66,9 +69,12 @@ public class ListaTaskFragment extends Fragment {
     private BottomNavigationView navBar;
     private boolean permissionCreate;
     private MenuProvider providerMenu;
-    private String idThesis;
+    private Tesi thesis;
 
     private LoggedInUser user;
+
+    private List<Tesi> listTesi = new ArrayList<>();
+    private Menu menuNewTask;
 
 
     @Override
@@ -96,13 +102,14 @@ public class ListaTaskFragment extends Fragment {
         listView = view.findViewById(R.id.lista_task);
 
         if (getArguments() != null) {
-            idThesis = getArguments().getString(LIST_TASK_TESI_KEY);
+            thesis = (Tesi) getArguments().getSerializable(LIST_TASK_TESI_KEY);
             permissionCreate = Boolean.parseBoolean(getArguments().getString(LIST_TASK_PERMISSION_CREATE));
-            query = FirebaseFirestore.getInstance().collection("task").whereEqualTo("idTesi", idThesis);
+            query = FirebaseFirestore.getInstance().collection("task").whereEqualTo("tesiId", thesis.getId());
         } else if (user.getRole().equals(RoleUser.PROFESSOR)) {
+            loadThesisRelator();
             query = FirebaseFirestore.getInstance().collection("task").whereArrayContains("relators", user.getId());
         } else if (user.getRole().equals(RoleUser.STUDENT)) {
-            query = FirebaseFirestore.getInstance().collection("task").whereArrayContains("studenteId", user.getId());
+            query = FirebaseFirestore.getInstance().collection("task").whereEqualTo("studenteId", user.getId());
         } else {
             query = null;
         }
@@ -120,8 +127,18 @@ public class ListaTaskFragment extends Fragment {
                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    dataList.clear();
-                    adapter.setmDataList(dataList);
+
+                    if (queryDocumentSnapshots != null) {
+                        dataList.clear();
+                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                            Task task = doc.toObject(Task.class);
+                            dataList.add(task);
+                        }
+
+                        setEmptyMessage(view);
+                        adapter.setmDataList(dataList);
+                    }
+
                 }
             });
         }
@@ -133,41 +150,99 @@ public class ListaTaskFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = NavHostFragment.findNavController(this);
 
-        if (permissionCreate) {
-            providerMenu = new MenuProvider() {
-                @Override
-                public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                    menu.clear();
-                    menuInflater.inflate(R.menu.app_bar_list_task, menu);
+        providerMenu = new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menu.clear();
+                menuInflater.inflate(R.menu.app_bar_list_task, menu);
+                menuNewTask = menu;
+
+                if (permissionCreate) {
+                    menu.findItem(ADD_TASK).setVisible(true);
+                } else {
+                    menu.findItem(ADD_TASK).setVisible(false);
                 }
+            }
 
-                @Override
-                public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                    if (menuItem.getItemId() == ADD_TASK) {
-                        Bundle bundleTask = new Bundle();
-                        bundleTask.putString(LIST_TASK_TESI_KEY, idThesis);
-
-                        navController.navigate(R.id.action_nav_lista_task_to_nav_new_task);
-                        return true;
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == ADD_TASK) {
+                    Bundle bundleTask = new Bundle();
+                    if (thesis != null) {
+                        bundleTask.putSerializable(TESI_NEW_TASK, thesis);
+                    } else {
+                        bundleTask.putSerializable(TESI_LIST_NEW_TASK, (Serializable) listTesi);
                     }
 
-                    return false;
+                    navController.navigate(R.id.action_nav_lista_task_to_nav_new_task, bundleTask);
+                    return true;
+
                 }
-            };
 
-            requireActivity().addMenuProvider(providerMenu);
-        }
+                return false;
+            }
 
-        if(adapter.getmDataList().isEmpty()) {
+            @Override
+            public void onPrepareMenu(@NonNull Menu menu) {
+                if (permissionCreate) {
+                    menu.findItem(ADD_TASK).setVisible(true);
+                } else {
+                    menu.findItem(ADD_TASK).setVisible(false);
+                }
+            }
+        };
+
+        requireActivity().addMenuProvider(providerMenu);
+    }
+
+    private void setEmptyMessage(View view) {
+        if (adapter.getmDataList().isEmpty()) {
             listView.setVisibility(View.GONE);
             view.findViewById(R.id.text_no_task_available).setVisibility(View.VISIBLE);
+        } else {
+            listView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.text_no_task_available).setVisibility(View.GONE);
         }
+    }
+
+    private void loadThesisRelator() {
+
+        CollectionReference tesiReference = FirebaseFirestore.getInstance().collection("tesi");
+        Query queryProf = tesiReference.whereEqualTo("relatore.id", user.getId()).whereNotEqualTo("student", null);
+
+        Query queryCoRelatori = tesiReference.whereArrayContains("coRelatori", new PersonaTesi(user.getId(), user.getDisplayName(), user.getEmail(), null)).whereNotEqualTo("student", null);
+
+        com.google.android.gms.tasks.Task<QuerySnapshot> query1Task = queryProf.get();
+        com.google.android.gms.tasks.Task<QuerySnapshot> query2Task = queryCoRelatori.get();
+
+
+        Tasks.whenAllSuccess(query1Task, query2Task)
+                .addOnSuccessListener(objects -> {
+                    for (Object object : objects) {
+                        QuerySnapshot querySnapshot = (QuerySnapshot) object;
+
+                        for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                            Tesi tesi = doc.toObject(Tesi.class);
+                            if (tesi == null) {
+                                continue;
+                            }
+
+                            listTesi.add(tesi);
+                        }
+
+                        permissionCreate = !listTesi.isEmpty();
+                        providerMenu.onPrepareMenu(menuNewTask);
+                    }
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(getActivity(), getString(R.string.an_error_occured), Toast.LENGTH_SHORT).show();
+                    Log.e(CLASS_ID, "Unable fetch thesis for professor: " + e.getMessage());
+                });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar = requireActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
     }
 

@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.data;
 
+import androidx.annotation.Keep;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +17,7 @@ public class PersonaTesi implements Serializable {
     @Nullable
     private List<Integer> permissions;
 
+    @Keep
     public PersonaTesi() {
     }
 

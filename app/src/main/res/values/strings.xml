@@ -335,6 +335,11 @@
     <string name="Filter_by_minimum_execution_time">Filter by minimum execution time</string>
     <string name="there_are_no_theses_in_your_ranking">There are no theses in your ranking</string>
     <string name="there_are_no_task_assigned">There are no task assigned</string>
+    <string name="thesis">Thesis</string>
+    <string name="an_error_occured">An error occurred</string>
+    <string name="successfull">Successfull</string>
+    <string name="failed">Failed</string>
+    <string name="task_name">Task name</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">

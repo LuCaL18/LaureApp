@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.EditText;
+
 import androidx.fragment.app.DialogFragment;
+
 import com.uniba.mobile.cddgl.laureapp.R;
 
 import java.text.SimpleDateFormat;
@@ -43,23 +45,25 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String dateString = dateFormat.format(c.getTime());
 
-        EditText dateField;
+        EditText dateField = null;
 
-        switch(layout) {
-            case FRAGMENT_REGISTRATION:
-                dateField = getParentFragment().getView().findViewById(R.id.birthDay);
-                break;
-            case FRAGMENT_RICEVIMENTO:
-                dateField = getParentFragment().getView().findViewById(R.id.dataE);
-                break;
-            case FRAGMENT_NEWTASK:
-                dateField = getParentFragment().getView().findViewById(R.id.scadenza);
-                break;
-            default:
-                dateField = null;
+        if (getParentFragment() != null && getParentFragment().getView() != null) {
+            switch (layout) {
+                case FRAGMENT_REGISTRATION:
+                    dateField = getParentFragment().getView().findViewById(R.id.birthDay);
+                    break;
+                case FRAGMENT_RICEVIMENTO:
+                    dateField = getParentFragment().getView().findViewById(R.id.dataE);
+                    break;
+                case FRAGMENT_NEWTASK:
+                    dateField = getParentFragment().getView().findViewById(R.id.scadenza);
+                    break;
+                default:
+                    break;
+            }
         }
 
-        if( dateField != null) {
+        if (dateField != null) {
             dateField.setError(null);
             dateField.setText(dateString);
         }

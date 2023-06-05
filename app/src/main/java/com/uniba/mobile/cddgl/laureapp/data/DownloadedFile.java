@@ -2,6 +2,8 @@ package com.uniba.mobile.cddgl.laureapp.data;
 
 import android.app.DownloadManager;
 
+import androidx.annotation.Keep;
+
 public class DownloadedFile {
 
     private String filename;
@@ -13,6 +15,7 @@ public class DownloadedFile {
         this.request = request;
     }
 
+    @Keep
     public DownloadedFile() {}
 
     public String getFilename() {

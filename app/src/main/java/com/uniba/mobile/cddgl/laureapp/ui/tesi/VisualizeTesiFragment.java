@@ -524,6 +524,10 @@ public class VisualizeTesiFragment extends Fragment {
                         if (isFavourite) {
                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                         }
+
+                        if (finalMenuToVisualize == R.menu.app_bar_visualize_thesis_prof && thesis.getStudent() == null) {
+                            menuTesi.findItem(LIST_TASK_THESIS).setVisible(false);
+                        }
                     }
 
                     @Override
@@ -567,7 +571,7 @@ public class VisualizeTesiFragment extends Fragment {
                                 return true;
                             case VisualizeTesiFragment.LIST_TASK_THESIS:
                                 Bundle bundleTask = new Bundle();
-                                bundleTask.putString(LIST_TASK_TESI_KEY, thesis.getId());
+                                bundleTask.putSerializable(LIST_TASK_TESI_KEY, thesis);
 
                                 boolean permissionCreateTask = (thesis.getRelatore().getId().equals(loggedInUser.getId()) ||
                                         thesis.getCoRelatori().contains(new PersonaTesi(loggedInUser.getId())));

@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.Keep;
+
 import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
@@ -18,6 +20,7 @@ public class TesiClassifica implements Serializable {
     /* Stringa che rappresenta l'id dello studente all'interno del database */
     private String studentId;
 
+    @Keep
     public TesiClassifica() {
         //
     }

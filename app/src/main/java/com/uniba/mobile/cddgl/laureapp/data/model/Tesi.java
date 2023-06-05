@@ -1,5 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
@@ -29,6 +30,7 @@ public class Tesi implements Serializable, Cloneable {
     private String note;
     private long created_at;
 
+    @Keep
     public Tesi() {
     }
 

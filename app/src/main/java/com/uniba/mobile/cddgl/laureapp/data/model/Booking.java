@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.Keep;
+
 import com.uniba.mobile.cddgl.laureapp.data.BookingConstraints;
 import com.uniba.mobile.cddgl.laureapp.data.BookingState;
 
@@ -26,6 +28,7 @@ public class Booking implements Serializable {
     @Nullable
     private String motivation;
 
+    @Keep
     public Booking() {
     }
 

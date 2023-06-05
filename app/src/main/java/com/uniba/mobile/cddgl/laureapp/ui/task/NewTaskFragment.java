@@ -10,34 +10,29 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.TaskState;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
+import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.ui.component.DatePickerFragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Fragment che si occupa della gestione della creazione di un nuovo task
@@ -46,32 +41,52 @@ import java.util.Map;
 
 public class NewTaskFragment extends Fragment {
 
+    private static final String CLASS_ID = "NewTaskFragment";
+
+    public static final String TESI_NEW_TASK = "tesi_new_task";
+
+    public static final String TESI_LIST_NEW_TASK = "tesi_list_new_task";
+
     /* Istanza per avviare il collegamento con firebase */
     private FirebaseFirestore db;
     /* EditText da visualizzare a schermo */
     private EditText nometaskEditText, descrizioneEditText, scadenzaEditText;
-    /* Button per completare l'operazione di creazione task */
-    private Button addtaskButton;
-    /* CollectionReference per il recupero di tutte le tesi istanziate su firebase */
-    private CollectionReference tesiReference;
     /* Lista di tesi di backup da utilizzare durante le operazioni */
-    public List<Tesi> tesiBackup;
+    public List<Tesi> tesiList;
     /* Lista di users di backup da utilizzare durante le operazioni */
-    public List<PersonaTesi> personaBackup;
+    public PersonaTesi studenteTask;
 
     private BottomNavigationView navBar;
 
-    public NewTaskFragment() {
-        //
-    }
-
-    public static NewTaskFragment newInstance() {
-        return new NewTaskFragment();
-    }
+    private LoggedInUser user;
+    private Spinner tesiSpinner;
+    private TextView studenteTextView;
+    private boolean creationFromTesi = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        user = mainViewModel.getUser().getValue();
+        this.tesiList = new ArrayList<>();
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Tesi tesi = (Tesi) bundle.getSerializable(TESI_NEW_TASK);
+
+            if (tesi != null) {
+                studenteTask = tesi.getStudent();
+                tesiList.add(tesi);
+                creationFromTesi = true;
+            }
+
+            if (bundle.getSerializable(TESI_LIST_NEW_TASK) != null) {
+                tesiList = (List<Tesi>) bundle.getSerializable(TESI_LIST_NEW_TASK);
+                creationFromTesi = false;
+            }
+
+        }
     }
 
     /**
@@ -89,175 +104,124 @@ public class NewTaskFragment extends Fragment {
         /* Creazione della view responsabile della gestione della visualizzazione del layout */
         View view = inflater.inflate(R.layout.fragment_new_task, container, false);
 
-        /* Istanza del database */
-        db = FirebaseFirestore.getInstance();
+        try {
+            /* Istanza del database */
+            db = FirebaseFirestore.getInstance();
 
-        /* Chiamata alle varie componenti del layout tramite findViewById */
-        nometaskEditText = view.findViewById(R.id.nometask);
+            /* Chiamata alle varie componenti del layout tramite findViewById */
+            nometaskEditText = view.findViewById(R.id.nometask);
 
-        descrizioneEditText = view.findViewById(R.id.descrizione);
+            descrizioneEditText = view.findViewById(R.id.descrizione);
 
-        /* Spiiner relativi allo stato, tesi e studenteù */
-        Spinner statoSpinner = view.findViewById(R.id.stato);
-        Spinner tesiSpinner = view.findViewById(R.id.tesi_spinner);
-        Spinner studenteSpinner = view.findViewById(R.id.studente_spinner);
-        scadenzaEditText = view.findViewById(R.id.scadenza);
-        addtaskButton = view.findViewById(R.id.addtask_button);
+            /* Spiiner relativi allo stato, tesi e studenteù */
+            Spinner statoSpinner = view.findViewById(R.id.stato);
+            tesiSpinner = view.findViewById(R.id.tesi_spinner);
+            studenteTextView = view.findViewById(R.id.studente_spinner);
+            scadenzaEditText = view.findViewById(R.id.scadenza);
 
-        tesiReference = FirebaseFirestore.getInstance().collection("tesi");
+            /* Adapter per creazione dello spinner relativo allo stato del task */
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.stato_array, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            statoSpinner.setAdapter(adapter);
 
-        /* Adapter per creazione dello spinner relativo allo stato del task */
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.stato_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        statoSpinner.setAdapter(adapter);
+            if (creationFromTesi) {
+                studenteTextView.setText(studenteTask.getDisplayName());
 
-        /* Recupera l'ID del relatore attualmente loggato */
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String relatoreId = currentUser.getUid();
-
-        /* Seleziona le tesi in cui il campo relatore o correlatore corrisponde all'ID del relatore loggato */
-        List<String> tesiList = new ArrayList<>();
-        List<Tesi> tesiList2 = new ArrayList<>();
-
-        /* Definizione istanza delle liste di backup */
-        tesiBackup = new ArrayList<>();
-        personaBackup = new ArrayList<>();
-
-        /* Utilizzo della tesiReeference per il recupero delle istanze degli users presenti nel database */
-        tesiReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    Tesi tesi = doc.toObject(Tesi.class);
-
-                    /* List che contiene tutte le informazioni relativi ai relatori associati a quella specifica tesi recuperata dal firebase */
-                    List<PersonaTesi> coRelatore = tesi.getCoRelatori();
-                    if (coRelatore.isEmpty()) {
-                        for (PersonaTesi p : coRelatore) {
-                            /* Se il coRelatore coincide con l'utente loggato, procedere al salvataggio della tesi nelle liste */
-                            if (p.getId().equals(relatoreId)) {
-                                tesiList.add(tesi.getNomeTesi());
-                                tesiList2.add(tesi);
-                                tesiBackup.add(tesi);
-                            }
-                        }
-                    }
-
-                    /* Se il relatore coincide con l'utente loggato, procedere al salvataggio della tesi nelle liste */
-                    if (tesi.getRelatore().getId().equals(relatoreId)) {
-                        tesiList.add(tesi.getNomeTesi());
-                        tesiList2.add(tesi);
-                        tesiBackup.add(tesi);
-                    }
-                }
-
-                /* Creazione dell'adapter per la lista delle tesi di cui l'utente
-                   loggato è relatore o coRelatore in cui associare il task */
-                ArrayAdapter<String> tesiAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, tesiList);
+                ArrayAdapter<String> tesiAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, Collections.singletonList(tesiList.get(0).getNomeTesi()));
                 tesiAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 tesiSpinner.setAdapter(tesiAdapter);
 
-                /* Quando viene selezionata una tesi dal primo spinner, recuperare l'ID della tesi selezionata */
-                tesiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        /* Recupero della tesi scelta */
-                        String tesiNome = (String) parent.getItemAtPosition(position);
-
-                        /* Lista degli studenti da popolare */
-                        List<String> studentiList = new ArrayList<>();
-                        List<PersonaTesi> studentiList2 = new ArrayList<>();
-                        personaBackup = studentiList2;
-
-                        for (Tesi tesi : tesiList2) {
-                            if (tesi.getNomeTesi().equals(tesiNome)) {
-                                // String tesiId = tesi.getId();
-                                /* Seleziona gli studenti associati alla tesi selezionata */
-                                studentiList2.add(tesi.getStudent());
-
-                                for (PersonaTesi studente : studentiList2) {
-                                    studentiList.add(studente.getDisplayName());
-                                }
-
-                                /* Popola il secondo spinner con i dati degli studenti selezionati */
-                                ArrayAdapter<String> studentiAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, studentiList);
-                                studentiAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                studenteSpinner.setAdapter(studentiAdapter);
-                                break;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        // Do nothing
-                    }
-                });
+                tesiSpinner.setSelection(0);
+                tesiSpinner.setEnabled(false);
+            } else {
+                loadThesisUser();
             }
-        });
-        /* Visualizzazione del calendario per assegnare la data limite entro cui completare il task */
-        scadenzaEditText.setOnClickListener(v -> {
-            /* Chiamata al datePicker gestore della visualizzazione e dell'utilizzo del calendario */
-            DialogFragment datePicker = new DatePickerFragment(R.layout.fragment_new_task);
-            datePicker.show(getParentFragmentManager(), "date picker");
-            addtaskButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    /* Recupero dei dati inseriti e inserimento all'interno del firebase nella raccolta task */
-                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                    String relatoreId = currentUser.getUid();
-                    String nometask = nometaskEditText.getText().toString();
-                    String descrizione = descrizioneEditText.getText().toString();
-                    String scadenza = scadenzaEditText.getText().toString();
-                    String stato = statoSpinner.getSelectedItem().toString();
-                    String tesi = tesiSpinner.getSelectedItem().toString();
-                    String studente = studenteSpinner.getSelectedItem().toString();
-                    String tesiId = null;
-                    String studenteId = null;
-                    for (Tesi t : tesiBackup) {
-                        /* Verifico se la tesi salvata nella lista di backup è equivalente all'id della tesi selezionata */
-                        if (t.getNomeTesi().equals(tesi)) {
-                            tesiId = t.getId();
-                        }
-                    }
-                    for (PersonaTesi p : personaBackup) {
-                        /* Verifico se la persona salvata nella lista di backup è equivalente all'id dello studente */
-                        if (p.getDisplayName().equals(studente)) {
-                            studenteId = p.getId();
-                        }
-                    }
-                    Map<String, Object> listaTask = new HashMap<>();
-                    listaTask.put("nomeTask", nometask);
-                    listaTask.put("stato", stato);
-                    listaTask.put("descrizione", descrizione);
-                    listaTask.put("scadenza", scadenza);
-                    listaTask.put("relatore", relatoreId);
-                    listaTask.put("tesiId", tesiId);
-                    listaTask.put("studenteId", studenteId);
-                    /* Salvataggio del nuovo task nel database */
-                    db.collection("task")
-                            .add(listaTask)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Toast.makeText(getContext(), "successfull", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
+
+            /* Visualizzazione del calendario per assegnare la data limite entro cui completare il task */
+            scadenzaEditText.setOnClickListener(v -> {
+                /* Chiamata al datePicker gestore della visualizzazione e dell'utilizzo del calendario */
+                DialogFragment datePicker = new DatePickerFragment(R.layout.fragment_new_task);
+                datePicker.show(getParentFragmentManager(), "date picker");
             });
-        });
+
+
+            /* Button per completare l'operazione di creazione task */
+            Button addtaskButton = view.findViewById(R.id.addtask_button);
+
+            addtaskButton.setOnClickListener(view1 -> {
+                String nometask = nometaskEditText.getText().toString();
+                String descrizione = descrizioneEditText.getText().toString();
+                String scadenza = scadenzaEditText.getText().toString();
+                String stato = statoSpinner.getSelectedItem().toString();
+                String tesi = tesiSpinner.getSelectedItem().toString();
+                String tesiId = null;
+                List<String> relators = new ArrayList<>();
+
+                for (Tesi t : tesiList) {
+                    /* Verifico se la tesi salvata nella lista di backup è equivalente all'id della tesi selezionata */
+                    if (t.getNomeTesi().equals(tesi)) {
+                        tesiId = t.getId();
+
+                        relators.add(t.getRelatore().getId());
+                        relators.addAll(t.getCoRelatori().stream().map(PersonaTesi::getId).collect(Collectors.toList()));
+                    }
+                }
+
+                Task task = new Task(studenteTask.getId(), relators, descrizione, nometask, scadenza, TaskState.valueOf(stato), tesiId);
+
+                /* Salvataggio del nuovo task nel database */
+                db.collection("task")
+                        .add(task)
+                        .addOnSuccessListener(documentReference -> Toast.makeText(getContext(), getString(R.string.successfull), Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), getString(R.string.failed), Toast.LENGTH_SHORT).show());
+            });
+        } catch (Exception e) {
+            Toast.makeText(getContext(), getString(R.string.an_error_occured), Toast.LENGTH_SHORT).show();
+            Log.e(CLASS_ID, "Error during onCreateView --> ", e);
+        }
+
         /* Ritorno la view da mostrare a schermo */
         return view;
+    }
+
+    private void loadThesisUser() {
+        /* Seleziona le tesi in cui il campo relatore o correlatore corrisponde all'ID del relatore loggato */
+        List<String> tesiNameList = new ArrayList<>();
+
+        for (Tesi tesi : tesiList) {
+            tesiNameList.add(tesi.getNomeTesi());
+        }
+
+        /* Creazione dell'adapter per la lista delle tesi di cui l'utente loggato è relatore o coRelatore in cui associare il task */
+        ArrayAdapter<String> tesiAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, tesiNameList);
+        tesiAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        tesiSpinner.setAdapter(tesiAdapter);
+
+        /* Quando viene selezionata una tesi dal primo spinner, recuperare l'ID della tesi selezionata */
+        tesiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                /* Recupero della tesi scelta */
+                String tesiNome = (String) parent.getItemAtPosition(position);
+
+                for (Tesi tesi : tesiList) {
+                    if (tesi.getNomeTesi().equals(tesiNome)) {
+                        if (tesi.getStudent() != null) {
+                            studenteTask = tesi.getStudent();
+                        }
+
+                        studenteTextView.setText(studenteTask.getDisplayName());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
     }
 
     @Override
@@ -265,14 +229,18 @@ public class NewTaskFragment extends Fragment {
         super.onResume();
 
         /* Rimozione della navBar dal layout */
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.GONE);
+        navBar = requireActivity().findViewById(R.id.nav_view);
+        if (navBar != null) {
+            navBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        navBar.setVisibility(View.VISIBLE);
-        navBar = null;
+        if (navBar != null) {
+            navBar.setVisibility(View.VISIBLE);
+            navBar = null;
+        }
     }
 }
