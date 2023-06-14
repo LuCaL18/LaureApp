@@ -28,7 +28,7 @@ import java.util.Date;
 
 public class ShareContent {
 
-    private static final String AUTHORITY = "com.uniba.mobile.cddgl.laureapp.service.AppFileProvider";
+    public static final String AUTHORITY = "com.uniba.mobile.cddgl.laureapp.service.AppFileProvider";
     private final Context context;
 
     public ShareContent(Context context) {

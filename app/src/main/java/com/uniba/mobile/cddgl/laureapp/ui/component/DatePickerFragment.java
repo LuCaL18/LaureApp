@@ -20,6 +20,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     private static final int FRAGMENT_REGISTRATION = R.layout.fragment_registration;
     private static final int FRAGMENT_RICEVIMENTO = R.layout.fragment_ricevimento;
     private static final int FRAGMENT_NEWTASK = R.layout.fragment_new_task;
+    private static final int FRAGMENT_EDIT_PROFILE = R.layout.fragment_edit_profile;
     private final int layout;
 
     public DatePickerFragment(int contentLayoutId) {
@@ -65,6 +66,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                 case FRAGMENT_NEWTASK:
                     dateField = getParentFragment().getView().findViewById(R.id.scadenza);
                     break;
+                case FRAGMENT_EDIT_PROFILE:
+                    dateField = getParentFragment().getView().findViewById(R.id.birth_date_edit_text);
                 default:
                     break;
             }

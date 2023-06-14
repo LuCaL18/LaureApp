@@ -98,7 +98,7 @@
     <string name="modificare_tesi">Modificare tesi</string>
     <string name="cancella">CANCELLA</string>
     <string name="aggiungi">AGGIUNGI</string>
-    <string name="email">EMAIL</string>
+    <string name="email">Email</string>
     <string name="cognome">COGNOME</string>
     <string name="nome">NOME</string>
     <string name="vedi_tutte">Vedi tutte</string>
@@ -340,6 +340,7 @@
     <string name="successfull">Successfull</string>
     <string name="failed">Failed</string>
     <string name="task_name">Task name</string>
+    <string name="profile">Profile</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">
@@ -368,4 +369,21 @@
         <item>light</item>
         <item>night</item>
     </string-array>
+    <string name="camera_permission_denied">Camera permission denied</string>
+    <string name="access_media_gallery_denied">Access to media gallery permission denied</string>
+    <string name="role">Role</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="edit_profile_label">Edit Profile</string>
+    <string name="edit_profile_success">User profile successfully updated</string>
+    <string name="update_user_failed">Failed to update user profile</string>
+    <string name="edit_password">Edit Password</string>
+    <string name="password_changed_successfully">Password successfully changed</string>
+    <string name="password_changed_failed">Unable to change password</string>
+    <string name="wrong_old_password_entered">Wrong old password entered</string>
+    <string name="required_new_passord_length">The new password must have at least 5 characters</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="select_image">Select Image</string>
+    <string name="take_picture">Take a picture</string>
 </resources>

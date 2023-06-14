@@ -187,11 +187,10 @@ public class ListaTaskFragment extends Fragment {
 
             @Override
             public void onPrepareMenu(@NonNull Menu menu) {
-                if (permissionCreate) {
-                    menu.findItem(ADD_TASK).setVisible(true);
-                } else {
-                    menu.findItem(ADD_TASK).setVisible(false);
+                if(menu.findItem(ADD_TASK) == null) {
+                    return;
                 }
+                menu.findItem(ADD_TASK).setVisible(permissionCreate);
             }
         };
 

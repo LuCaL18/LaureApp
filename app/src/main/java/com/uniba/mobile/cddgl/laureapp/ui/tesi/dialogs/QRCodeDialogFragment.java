@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -135,7 +134,7 @@ public class QRCodeDialogFragment extends DialogFragment {
                     .setPositiveButton(getString(R.string.next), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(),
+                            requestPermissions(
                                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                     REQUEST_WRITE_STORAGE_PERMISSION);
                         }

@@ -13,9 +13,12 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.R;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Utility {
 
@@ -95,6 +98,35 @@ public class Utility {
             Log.e("getTesiList", e.getMessage());
         }
         return new ArrayList<>();
+    }
+
+    public static Map<String, Object> getObjectProperties(Object obj) {
+        Map<String, Object> properties = new HashMap<>();
+
+        // Ottenere la classe dell'oggetto
+        Class<?> clazz = obj.getClass();
+
+        // Ottenere tutti i campi della classe, inclusi quelli ereditati
+        Field[] fields = clazz.getDeclaredFields();
+
+        // Iterare sui campi e recuperare le proprietà
+        for (Field field : fields) {
+            field.setAccessible(true); // Per accedere ai campi privati
+
+            String propertyName = field.getName();
+            Object propertyValue = null;
+
+            try {
+                propertyValue = field.get(obj);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            // Aggiungere la proprietà alla mappa
+            properties.put(propertyName, propertyValue);
+        }
+
+        return properties;
     }
 
 }
