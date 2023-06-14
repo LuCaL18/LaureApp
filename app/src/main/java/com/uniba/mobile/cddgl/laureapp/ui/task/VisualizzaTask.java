@@ -14,15 +14,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
-import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 
 /**
@@ -101,7 +97,7 @@ public class VisualizzaTask extends Fragment {
         AlertDialog dialog = builder.create();
 
         ListView listViewStato = dialogView.findViewById(R.id.listview_stato);
-        String[] stati = {"NEW", "STARTED", "COMPLETED", "CLOSED"};
+        String[] stati = getContext().getResources().getStringArray(R.array.stato_array);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, stati);
         listViewStato.setAdapter(adapter);
 

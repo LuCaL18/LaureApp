@@ -213,14 +213,14 @@ public class MainActivity extends AppCompatActivity {
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_text_view)).setText(loggedInUser.getEmail());
 
             try {
-                if (loggedInUser.getPhotoUrl() != null && navigationView.findViewById(R.id.navigation_header_image_view) != null) {
+                if (loggedInUser.getPhotoUrl() != null) {
                     Glide.with(this).load(loggedInUser.getPhotoUrl())
                             .apply(new RequestOptions()
                                     .placeholder(R.mipmap.ic_user_round)
                                     .error(R.mipmap.ic_user_round)
                                     .transform(new CircleCrop())
                                     .skipMemoryCache(true))
-                            .into((ImageView) navigationView.findViewById(R.id.navigation_header_image_view));
+                            .into((ImageView) navigationView.getHeaderView(0).findViewById(R.id.navigation_header_image_view));
                 }
             } catch (RuntimeException e) {
                 Log.e("Main Activity", e.getMessage());
