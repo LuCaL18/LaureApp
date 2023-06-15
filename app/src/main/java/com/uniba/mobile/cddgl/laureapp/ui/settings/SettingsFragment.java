@@ -3,6 +3,7 @@ package com.uniba.mobile.cddgl.laureapp.ui.settings;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -32,7 +33,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.preferences, container, false);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -82,6 +83,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        final RecyclerView rv = getListView(); // This holds the PreferenceScreen's items
+        // Set the top margin (adjust the value as needed)
+
+        int actionBarHeight = 0;
+        // Get the height of the action bar
+        TypedValue typedValue = new TypedValue();
+        if (getContext().getTheme().resolveAttribute(com.google.android.material.R.attr.actionBarSize, typedValue, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
+        }
+
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rv.getLayoutParams();
+        layoutParams.topMargin = actionBarHeight;
+        rv.setLayoutParams(layoutParams);
+
         String systemLanguage = getResources().getConfiguration().getLocales().get(0).getLanguage();
         int systemTheme = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
@@ -96,13 +111,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         String language = sharedPreferences.getString("language", systemLanguage);
 
         themePreference.setValue(theme);
+        themePreference.setSummary(themeDefault);
         languagePreference.setValue(language);
+        languagePreference.setSummary(language);
     }
 
     private void applyTheme(String theme) {
         if (theme.equals("night")) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else if (theme.equals("light")) {
+        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
     }
@@ -112,7 +129,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         Locale.setDefault(locale);
         Configuration configuration = getResources().getConfiguration();
         configuration.setLocale(locale);
-        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+        // Restart the activity to apply the language change
+        requireActivity().recreate();
     }
 
     @Override

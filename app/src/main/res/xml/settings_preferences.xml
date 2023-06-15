@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen app:layout="@layout/preferences"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ListPreference
-        app:key="theme"
-        app:title="App Theme"
-        app:entries="@array/available_theme"
-        app:entryValues="@array/available_theme" />
+    <PreferenceCategory
+        android:title="General"
+        android:layout="@layout/custom_preference_category">
 
-    <ListPreference
-        android:key="language"
-        android:title="@string/languages"
-        android:entries="@array/available_languages"
-        android:entryValues="@array/available_languages_values"/>
+        <ListPreference
+            android:defaultValue="light"
+            android:entries="@array/available_theme"
+            android:entryValues="@array/available_theme"
+            android:icon="@drawable/ic_baseline_brightness_medium_24"
+            android:key="theme"
+            android:layout="@layout/custom_list_preferences"
+            android:minHeight="48dp"
+            android:title="Theme" />
+
+        <ListPreference
+            android:defaultValue="en"
+            android:entries="@array/available_languages"
+            android:entryValues="@array/available_languages_values"
+            android:icon="@drawable/ic_baseline_language_24"
+            android:key="language"
+            android:title="Language"
+            android:layout="@layout/custom_list_preferences"/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

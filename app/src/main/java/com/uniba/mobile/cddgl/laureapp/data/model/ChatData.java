@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.data.model;
 
+import androidx.annotation.Keep;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ public class ChatData implements Serializable {
     private String name;
     private List<String> members;
 
+    @Keep
     public ChatData() {
     }
 

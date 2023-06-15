@@ -1,0 +1,34 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/ambito2"
+        android:title="@string/ambito"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/chiave2"
+        android:title="@string/chiave"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/mediaVoto2"
+        android:title="@string/media_voto"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tempistiche2"
+        android:title="@string/tempistiche_title"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tesi_a_z2"
+        android:title="@string/tesi_a_z"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tesi_z_a2"
+        android:title="@string/tesi_z_a"
+        app:showAsAction="ifRoom" />
+
+</menu>

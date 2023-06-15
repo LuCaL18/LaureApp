@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/selector_item_background">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="18dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="209dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:orientation="vertical">
@@ -28,8 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tesi"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -37,33 +36,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Relatore" />
+                    android:text="Relatore"
+                    android:textColor="?attr/colorPrimaryInverse" />
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/share_tesi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_menu_share"
-                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/visualizzaTesi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_menu_view"
-                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="20dp">
 
-            <ImageButton
-                android:id="@+id/addTesi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_input_add"
-                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+                    <ImageButton
+                        android:id="@+id/share_tesi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/colorOnPrimary"
+                        app:srcCompat="@drawable/ic_baseline_share_24" />
+
+                    <ImageButton
+                        android:id="@+id/addTesi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_toStartOf="@id/share_tesi"
+                        android:backgroundTint="?attr/colorOnPrimary"
+                        android:src="@drawable/ic_baseline_favorite_border_24" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

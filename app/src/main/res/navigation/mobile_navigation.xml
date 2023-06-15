@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/tesiFragmant"
-        android:name="com.uniba.mobile.cddgl.laureapp.TesiFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.TesiFragment"
         android:label="@string/crea_tesi"
         tools:layout="@layout/fragment_tesi" >
         <action
@@ -151,4 +151,17 @@
         android:id="@+id/fragment_settings"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.settings.SettingsFragment"
         android:label="@string/settings" />
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.profile.ProfileFragment"
+        android:label="@string/profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.profile.EditProfileFragment"
+        android:label="@string/edit_profile_label"
+        tools:layout="@layout/fragment_edit_profile" />
 </navigation>

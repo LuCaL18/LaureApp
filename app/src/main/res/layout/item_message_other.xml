@@ -11,7 +11,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:contentDescription="@string/user_profile"
-        app:srcCompat="@mipmap/ic_user"
+        app:srcCompat="@mipmap/ic_user_round"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

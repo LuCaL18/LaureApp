@@ -1,158 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:orientation="vertical"
     tools:context=".ui.task.NewTaskFragment">
 
-    <TextView
-        android:id="@+id/nometask_testo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="15dp"
-        android:text="Nome Task"
-        android:textColor="@color/primary_green"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/nometask"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/barra1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="91dp"
-        app:layout_constraintBottom_toTopOf="@id/nometask_testo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:gravity="center"
+        android:orientation="vertical">
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/nometask"
-        android:layout_width="311dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="15dp"
-        android:hint="nome task"
-        app:layout_constraintBottom_toTopOf="@+id/stato_testo"
-        app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/nometask_testo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/task_name"
+                android:textColor="@color/primary_green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/stato_testo"
-        android:layout_width="wrap_content"
-        android:layout_height="27dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="15dp"
-        android:text="Stato"
-        android:textColor="@color/primary_green"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/stato"
-        app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nometask"
+                android:layout_width="330dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/task_name" />
 
-    <Spinner
-        android:id="@+id/stato"
-        android:layout_width="160dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="15dp"
-        android:entries="@array/stato_array"
-        app:layout_constraintBottom_toTopOf="@+id/descrizione_testo"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/descrizione_testo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
-        android:layout_marginBottom="15dp"
-        android:text="Descrizione"
-        android:textColor="@color/primary_green"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/descrizione"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/barra3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="91dp"
-        app:layout_constraintBottom_toTopOf="@+id/nometask_testo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/stato_testo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stato"
+                android:textColor="@color/primary_green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/descrizione"
-        android:layout_width="304dp"
-        android:layout_height="71dp"
-        android:layout_marginStart="38dp"
-        android:layout_marginBottom="15dp"
-        android:hint="descrizione"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/scadenza_testo"
-        app:layout_constraintStart_toStartOf="parent" />
+            <Spinner
+                android:id="@+id/stato"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:entries="@array/stato_array"
+                android:minHeight="48dp" />
 
-    <TextView
-        android:id="@+id/scadenza_testo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
-        android:layout_marginBottom="15dp"
-        android:text="Scadenza"
-        android:textColor="@color/primary_green"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/scadenza"
-        app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/barra4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
-        app:layout_constraintBottom_toTopOf="@+id/nometask_testo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/tesi_testo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/thesis"
+                android:textColor="@color/primary_green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/scadenza"
-        android:layout_width="305dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginBottom="15dp"
-        android:hint="@string/scadenza"
-        android:inputType="date"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/addtask_button"
-        app:layout_constraintStart_toStartOf="parent" />
+            <Spinner
+                android:id="@+id/tesi_spinner"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:entries="@array/tesi_array"
+                android:minHeight="48dp" />
 
-    <Button
-        android:id="@+id/addtask_button"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="132dp"
-        android:layout_marginEnd="142dp"
-        android:layout_marginBottom="92dp"
-        android:text="ADD TASK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/studente_tesi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/student"
+                android:textColor="@color/primary_green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/studente_spinner"
+                android:layout_width="330dp"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/descrizione_testo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/descrizione"
+                android:textColor="@color/primary_green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/descrizione"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="@string/descrizione"
+                android:inputType="textMultiLine"
+                android:minHeight="48dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/scadenza_testo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scadenza"
+                android:textColor="@color/primary_green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/scadenza"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/scadenza"
+                android:inputType="date"
+                android:minHeight="48dp"
+                android:selectAllOnFocus="true" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/addtask_button"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/add_task"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

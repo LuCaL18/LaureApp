@@ -37,6 +37,7 @@ import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,17 +78,21 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private BroadcastReceiver downloadReceiver;
     private ShareContent shareContent;
-    private String defaultTheme, defaultLanguage;
 
     @Nullable
     private LoggedInUser user;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        applySettings();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        applySettings();
 
         try {
 
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             // Passing each menu ID as a set of Ids because each
             // menu should be considered as top level destinations.
             appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_home,
-                    R.id.navigation_lista_tesi)
+                    R.id.navigation_lista_tesi, R.id.navigation_profile)
                     .setOpenableLayout(drawer)
                     .build();
 
@@ -126,39 +131,31 @@ public class MainActivity extends AppCompatActivity {
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    boolean isSelected;
+                    boolean isSelected = true;
                     switch (item.getItemId()) {
                         case LISTA_TASK:
                             navController.navigate(R.id.nav_lista_task);
-                            isSelected = true;
                             break;
                         case CLASSIFICA_TESI:
                             navController.navigate(R.id.nav_classifica_tesi);
-                            isSelected = true;
                             break;
                         case CHAT:
                             navController.navigate(R.id.nav_chat_list_fragment);
-                            isSelected = true;
                             break;
                         case TICKET:
                             navController.navigate(R.id.nav_ticket);
-                            isSelected = true;
                             break;
                         case BOOKING:
                             navController.navigate(R.id.nav_bookingListFragment);
-                            isSelected = true;
                             break;
                         case LOGOUT:
                             logout();
-                            isSelected = true;
                             break;
                         case MEETING:
                             navController.navigate(R.id.ricevimento);
-                            isSelected = true;
                             break;
                         case SETTINGS:
                             navController.navigate(R.id.fragment_settings);
-                            isSelected = true;
                         default:
                             isSelected = false;
                     }
@@ -206,7 +203,29 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Main Activity", e.getMessage());
         }
 
+        mainViewModel.getUser().observe(this, loggedInUser -> {
 
+            if(loggedInUser.getRole().equals(RoleUser.PROFESSOR)) {
+                navigationView.getMenu().findItem(CLASSIFICA_TESI).setVisible(false);
+            }
+
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.display_name_text_view)).setText(loggedInUser.getDisplayName());
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_text_view)).setText(loggedInUser.getEmail());
+
+            try {
+                if (loggedInUser.getPhotoUrl() != null) {
+                    Glide.with(this).load(loggedInUser.getPhotoUrl())
+                            .apply(new RequestOptions()
+                                    .placeholder(R.mipmap.ic_user_round)
+                                    .error(R.mipmap.ic_user_round)
+                                    .transform(new CircleCrop())
+                                    .skipMemoryCache(true))
+                            .into((ImageView) navigationView.getHeaderView(0).findViewById(R.id.navigation_header_image_view));
+                }
+            } catch (RuntimeException e) {
+                Log.e("Main Activity", e.getMessage());
+            }
+        });
     }
 
     @Nullable
@@ -253,26 +272,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
-        mainViewModel.getUser().observe(this, loggedInUser -> {
-
-            if(loggedInUser.getRole().equals(RoleUser.PROFESSOR)) {
-                navigationView.getMenu().findItem(CLASSIFICA_TESI).setVisible(false);
-            }
-
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.display_name_text_view)).setText(loggedInUser.getDisplayName());
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_text_view)).setText(loggedInUser.getEmail());
-
-            try {
-                if (loggedInUser.getPhotoUrl() != null) {
-                    Glide.with(this).load(loggedInUser.getPhotoUrl()).transform(new CircleCrop()).into((ImageView) navigationView.findViewById(R.id.navigation_header_image_view));
-                }
-            } catch (RuntimeException e) {
-                Log.e("Main Activity", "Unable set image profile user");
-            }
-        });
     }
 
     @Override
@@ -340,12 +340,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Get the saved values from SharedPreferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        defaultTheme = sharedPreferences.getString("theme_enabled", themeDefault);
-        defaultLanguage = sharedPreferences.getString("language", systemLanguage);
+        String defaultTheme = sharedPreferences.getString("theme_enabled", themeDefault);
+        String defaultLanguage = sharedPreferences.getString("language", systemLanguage);
 
         // Apply the saved settings to your app
-        applyTheme(defaultTheme);
         applyLanguage(defaultLanguage);
+        applyTheme(defaultTheme);
     }
 
     private void applyTheme(String theme) {
@@ -361,15 +361,6 @@ public class MainActivity extends AppCompatActivity {
         Locale.setDefault(locale);
         Configuration configuration = getResources().getConfiguration();
         configuration.setLocale(locale);
-        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-    }
-
-    public String getDefaultTheme() {
-        return defaultTheme;
-    }
-
-    public String getDefaultLanguage() {
-        return defaultLanguage;
     }
 
     @Override

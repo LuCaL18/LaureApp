@@ -1,9 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
 import static android.app.Activity.RESULT_OK;
-import static android.view.MotionEvent.ACTION_HOVER_ENTER;
-import static android.view.MotionEvent.ACTION_HOVER_EXIT;
-import static android.view.MotionEvent.ACTION_HOVER_MOVE;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_INTERNET_PERMISSION;
 import static com.uniba.mobile.cddgl.laureapp.MainActivity.REQUEST_READ_EXTERNAL_STORAGE;
 import static com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment.LIST_TASK_PERMISSION_CREATE;
@@ -12,7 +9,6 @@ import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.SHA
 import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.TESI_LIST_KEY_PREF;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -22,13 +18,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,7 +40,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -60,6 +55,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -67,6 +63,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
@@ -91,13 +88,11 @@ import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.UploadFileDialogFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 
-import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class VisualizeTesiFragment extends Fragment {
 
@@ -234,7 +229,7 @@ public class VisualizeTesiFragment extends Fragment {
         TextView averageTextView = root.findViewById(R.id.tv_constraint_average);
         averageTextView.setText(String.valueOf(thesis.getMediaVoto()));
 
-        if(thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
+        if (thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
             root.findViewById(R.id.layout_exam_n).setVisibility(View.GONE);
         } else {
             TextView examTextView = root.findViewById(R.id.tv_constraint_exam);
@@ -354,7 +349,7 @@ public class VisualizeTesiFragment extends Fragment {
         scopeTextView.setText(thesis.getAmbito());
 
 
-        if(thesis.getChiavi() == null) {
+        if (thesis.getChiavi() == null) {
             root.findViewById(R.id.layout_search_key).setVisibility(View.GONE);
         } else {
             TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
@@ -479,7 +474,7 @@ public class VisualizeTesiFragment extends Fragment {
 
                                     if (classification.getTesi().contains(thesis.getId())) {
 
-                                        if(menuTesi != null) {
+                                        if (menuTesi != null) {
                                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                                         }
                                         isFavourite = true;
@@ -495,7 +490,7 @@ public class VisualizeTesiFragment extends Fragment {
 
                     if (getTesiList().contains(thesis.getId())) {
 
-                        if(menuTesi != null) {
+                        if (menuTesi != null) {
                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                         }
 
@@ -519,7 +514,7 @@ public class VisualizeTesiFragment extends Fragment {
                     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                         menu.clear();
 
-                        if(finalMenuToVisualize == null) {
+                        if (finalMenuToVisualize == null) {
                             return;
                         }
 
@@ -528,6 +523,10 @@ public class VisualizeTesiFragment extends Fragment {
 
                         if (isFavourite) {
                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
+                        }
+
+                        if (finalMenuToVisualize == R.menu.app_bar_visualize_thesis_prof && thesis.getStudent() == null) {
+                            menuTesi.findItem(LIST_TASK_THESIS).setVisible(false);
                         }
                     }
 
@@ -540,7 +539,7 @@ public class VisualizeTesiFragment extends Fragment {
 
                                 String id = mainViewModel.getIdUser();
 
-                                if(id == null) {
+                                if (id == null) {
                                     RequestLoginDialog requestLoginDialog = new RequestLoginDialog();
                                     requestLoginDialog.show(getParentFragmentManager(), "RequestLoginDialogFragment");
 
@@ -572,7 +571,7 @@ public class VisualizeTesiFragment extends Fragment {
                                 return true;
                             case VisualizeTesiFragment.LIST_TASK_THESIS:
                                 Bundle bundleTask = new Bundle();
-                                bundleTask.putString(LIST_TASK_TESI_KEY, thesis.getId());
+                                bundleTask.putSerializable(LIST_TASK_TESI_KEY, thesis);
 
                                 boolean permissionCreateTask = (thesis.getRelatore().getId().equals(loggedInUser.getId()) ||
                                         thesis.getCoRelatori().contains(new PersonaTesi(loggedInUser.getId())));
@@ -727,7 +726,7 @@ public class VisualizeTesiFragment extends Fragment {
 
     private void checkAndRequestInternetPermission() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.INTERNET}, REQUEST_INTERNET_PERMISSION);
+            requestPermissions(new String[]{Manifest.permission.INTERNET}, REQUEST_INTERNET_PERMISSION);
         } else {
             // Permission has already been granted, continue with your code
             makeLinksClickable();
@@ -736,7 +735,7 @@ public class VisualizeTesiFragment extends Fragment {
 
     private void checkAndRequestReadExternalStorage() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
         } else {
             // Permission has already been granted, continue with your code
             pickImageFile();
@@ -792,9 +791,7 @@ public class VisualizeTesiFragment extends Fragment {
     }
 
     private void pickImageFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickFileLauncher.launch(intent);
     }
 
@@ -882,9 +879,14 @@ public class VisualizeTesiFragment extends Fragment {
                     List<String> newList = new ArrayList<>();
 
                     for (String tesi : classification.getTesi()) {
-                        if (!tesi.equals(thesis.getId())) {
-                            newList.add(tesi);
+                        try {
+                            if (!tesi.equals(thesis.getId())) {
+                                newList.add(tesi);
+                            }
+                        } catch (NullPointerException e) {
+                            Log.e("NEW FAVOURITES LIST", "Exception during add new List: " + e.getMessage());
                         }
+
                     }
 
                     classification.setTesi(newList);
@@ -913,7 +915,7 @@ public class VisualizeTesiFragment extends Fragment {
             } else {
                 List<String> newTesiList = new ArrayList<>();
                 newTesiList.add(thesis.getId());
-                classificaDocument.set(new TesiClassifica(mainViewModel.getIdUser(), newTesiList))
+                classificaDocument.set(new TesiClassifica(newTesiList, user.getId()))
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 menuItem.setIcon(R.drawable.ic_favorite_24dp);
@@ -1115,7 +1117,7 @@ public class VisualizeTesiFragment extends Fragment {
         skillsTextView.setText(thesis.getSkill());
 
         thesis.setEsami(esamiNecessari);
-        if(thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
+        if (thesis.getEsami() == null || thesis.getEsami().isEmpty()) {
             root.findViewById(R.id.layout_exam_n).setVisibility(View.GONE);
         } else {
             root.findViewById(R.id.layout_exam_n).setVisibility(View.VISIBLE);
@@ -1140,7 +1142,7 @@ public class VisualizeTesiFragment extends Fragment {
         TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
         scopeTextView.setText(thesis.getAmbito());
 
-        if(keyWords.isEmpty()) {
+        if (keyWords.isEmpty()) {
             root.findViewById(R.id.layout_search_key).setVisibility(View.GONE);
         } else {
             TextView searchWordsTextView = root.findViewById(R.id.tv_search_keys_words);
@@ -1209,20 +1211,34 @@ public class VisualizeTesiFragment extends Fragment {
             SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
             SharedPreferences.Editor mEdit1 = sp.edit();
 
-            Set<String> set = new HashSet<>(tesiList);
+            List<String> list = new ArrayList<>(tesiList);
 
-            mEdit1.putStringSet(TESI_LIST_KEY_PREF, set);
+            mEdit1.putString(TESI_LIST_KEY_PREF, new Gson().toJson(list));
             return mEdit1.commit();
         } catch (Exception e) {
-            Log.e("VisualizeTesiFragment", e.getMessage());
+            Log.e("ClassificaTesiFragment", e.getMessage());
+
             return false;
         }
     }
 
     public ArrayList<String> getTesiList() {
-        SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
-        Set<String> set = sp.getStringSet(TESI_LIST_KEY_PREF, new HashSet<>());
-        return new ArrayList<>(set);
+        try {
+            SharedPreferences sp = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+            String listJson = sp.getString(TESI_LIST_KEY_PREF, null);
+
+            // Converti la stringa JSON nella mappa originale
+            if (listJson != null) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+
+                return gson.fromJson(listJson, type);
+            }
+        } catch (Exception e) {
+            Log.e("getTesiList", e.getMessage());
+        }
+        return new ArrayList<>();
     }
 
     @Override
