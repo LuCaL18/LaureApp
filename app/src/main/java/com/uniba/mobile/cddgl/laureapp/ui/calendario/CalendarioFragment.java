@@ -592,4 +592,11 @@ public class CalendarioFragment extends Fragment {
         timePickerDialog.show();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(navBar!= null){
+            navBar.setVisibility(View.VISIBLE);
+        }
+    }
 }
