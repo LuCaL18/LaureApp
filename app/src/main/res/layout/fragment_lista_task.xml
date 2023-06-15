@@ -19,4 +19,21 @@
         app:layout_constraintVertical_bias="0.051"
         tools:listitem="@layout/lista_task"/>
 
+    <LinearLayout
+        android:id="@+id/text_no_task_available"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/there_are_no_task_assigned"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

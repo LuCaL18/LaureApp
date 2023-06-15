@@ -29,6 +29,8 @@ import java.util.regex.Pattern;
 
 public class LoginViewModel extends ViewModel {
 
+    public static final int MIN_LENGTH_PASSWORD = 5;
+
     private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private final MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
     private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
@@ -193,7 +195,7 @@ public class LoginViewModel extends ViewModel {
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
+        return password != null && password.trim().length() > MIN_LENGTH_PASSWORD;
     }
 
     public LoggedInUser getCurrentLoggedUser() {

@@ -16,7 +16,6 @@
         <item>NEW</item>
         <item>STARTED</item>
         <item>COMPLETED</item>
-        <item>END</item>
     </string-array>
     <string-array name="tesi_array">
     </string-array>

@@ -138,6 +138,7 @@ public class TicketListFragment extends Fragment {
         ticketTabLayout.selectTab(ticketTabLayout.getTabAt(currentTab));
 
         if (currentTab == TAB_OPENED) {
+            ticketListRecyclerView.setAdapter(adapterOpen);
             adapterOpen.getSnapshots().addChangeEventListener(changeEventListenerOpened);
         }
 
@@ -227,6 +228,8 @@ public class TicketListFragment extends Fragment {
         try {
             adapterClosed.stopListening();
             adapterOpen.stopListening();
+            NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
+            navigationView.getMenu().findItem(MainActivity.TICKET).setChecked(false);
         } catch (Exception e) {
             Log.w("TicketListFragment", e.getMessage());
         }
@@ -241,9 +244,9 @@ public class TicketListFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        navBar.setVisibility(View.VISIBLE);
-        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
-        navigationView.getMenu().findItem(MainActivity.TICKET).setChecked(false);
+        if(navBar != null) {
+            navBar.setVisibility(View.VISIBLE);
+        }
         navBar = null;
         changeEventListenerClosed = null;
         changeEventListenerOpened = null;

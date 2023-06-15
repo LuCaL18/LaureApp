@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +52,7 @@ import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
+import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.ListAdapterTesi;
 import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
@@ -110,6 +110,7 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         allTesiList = new ArrayList<>();
         personalTesiList = new ArrayList<>();
@@ -122,7 +123,8 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
         // Converti la stringa JSON nella mappa originale
         if (mappaJson != null) {
             Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, Set<String>>>() {}.getType();
+            Type type = new TypeToken<Map<String, Set<String>>>() {
+            }.getType();
 
             currentFilters = gson.fromJson(mappaJson, type);
         }
@@ -139,15 +141,20 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_lista_tesi, container, false);
+        return inflater.inflate(R.layout.fragment_lista_tesi, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ListView listView = view.findViewById(R.id.listatesi);
 
         filtersContainer = view.findViewById(R.id.filtersContainer);
 
         visualizeThesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
 
-        adapterAll = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel);
-        adapterPersonal = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel);
+        adapterAll = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel, user);
+        adapterPersonal = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel, user);
 
         CollectionReference tesiRef = FirebaseFirestore.getInstance().collection("tesi");
 
@@ -260,8 +267,23 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
                 }
             });
 
+            FirebaseFirestore.getInstance().collection("tesi_classifiche")
+                    .document(user.getId()).get().addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            TesiClassifica classification = documentSnapshot.toObject(TesiClassifica.class);
+                            if (classification != null) {
+                                adapterAll.setClassficaTesi(classification.getTesi());
+                                adapterPersonal.setClassficaTesi(classification.getTesi());
+                            }
+                        }
+                    });
+
         } else {
             personalTesiList = new ArrayList<>();
+
+            List<String> classificaGuest = Utility.getTesiList(getContext());
+            adapterAll.setClassficaTesi(classificaGuest);
+            adapterPersonal.setClassficaTesi(classificaGuest);
 
             if (currentTab == TAB_PERSONAL) {
                 currentTesiList.clear();
@@ -276,6 +298,12 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
                     listView.setVisibility(View.VISIBLE);
                 }
             }
+        }
+
+        if (currentTab == TAB_ALL) {
+            listView.setAdapter(adapterAll);
+        } else {
+            listView.setAdapter(adapterPersonal);
         }
 
         TabLayout listTesiTabLayout = view.findViewById(R.id.tab_layout);
@@ -317,18 +345,6 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
             }
         });
 
-        if (currentTab == TAB_ALL) {
-            listView.setAdapter(adapterAll);
-        } else {
-            listView.setAdapter(adapterPersonal);
-        }
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         NavController navController = NavHostFragment.findNavController(this);
         visualizeThesisViewModel.getThesis().observe(getViewLifecycleOwner(), tesi -> {
@@ -520,7 +536,7 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
         builder.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
             String inputText = inputField.getText().toString();
 
-            if(inputText.isEmpty()) return;
+            if (inputText.isEmpty()) return;
 
             Set<String> keyWordFilter = currentFilters.get(KEY_WORD_FILTER);
             if (keyWordFilter != null) {
@@ -547,11 +563,11 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
         Slider sliderBar;
         int filter;
 
-        if(TEMPISTICHE_FILTER.equals(filterKey)) {
+        if (TEMPISTICHE_FILTER.equals(filterKey)) {
             seekBarPopup = getLayoutInflater().inflate(R.layout.sidebar_tempistiche, null);
             resultText = seekBarPopup.findViewById(R.id.temp_value_sliderbar);
             filter = 3;
-            if(currentFilters.get(filterKey) != null) {
+            if (currentFilters.get(filterKey) != null) {
                 filter = Utility.getNumberFromString(currentFilters.get(filterKey).stream().findFirst().orElse(null), filter);
             }
 
@@ -559,10 +575,10 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
             sliderBar = seekBarPopup.findViewById(R.id.tempistiche_slider_bar_layout);
 
         } else {
-            seekBarPopup =  getLayoutInflater().inflate(R.layout.slidebar_layout, null);
+            seekBarPopup = getLayoutInflater().inflate(R.layout.slidebar_layout, null);
             resultText = seekBarPopup.findViewById(R.id.voto_edit_constraint_layout);
             filter = MIN_VOTO;
-            if(currentFilters.get(MEDIA_VOTO_FILTER) != null) {
+            if (currentFilters.get(MEDIA_VOTO_FILTER) != null) {
                 filter = Utility.getNumberFromString(currentFilters.get(MEDIA_VOTO_FILTER).stream().findFirst().orElse(null), filter);
             }
 
@@ -577,7 +593,7 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
         sliderBar.addOnChangeListener((slider, value, fromUser) -> {
 
-            if(TEMPISTICHE_FILTER.equals(filterKey)) {
+            if (TEMPISTICHE_FILTER.equals(filterKey)) {
                 resultText.setText(getString(R.string.timeline_value_weeks, String.valueOf(value)));
             } else {
                 resultText.setText(String.valueOf(value));
@@ -683,27 +699,27 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
             currentTesiList.addAll(personalTesiList);
         }
 
-        if(ambito != null && !ambito.isEmpty()) {
+        if (ambito != null && !ambito.isEmpty()) {
             currentTesiList = filterByAmbito(ambito, currentTesiList);
             isAtLeastFilter = true;
         }
 
-        if(tempisitiche != null && !tempisitiche.isEmpty()) {
+        if (tempisitiche != null && !tempisitiche.isEmpty()) {
             currentTesiList = filterByTempistiche(tempisitiche, currentTesiList);
             isAtLeastFilter = true;
         }
 
-        if(keyWord != null && !keyWord.isEmpty()) {
+        if (keyWord != null && !keyWord.isEmpty()) {
             currentTesiList = filterByKeyWord(keyWord, currentTesiList);
             isAtLeastFilter = true;
         }
 
-        if(mediaVoto != null && !mediaVoto.isEmpty()) {
+        if (mediaVoto != null && !mediaVoto.isEmpty()) {
             currentTesiList = filterByMediaVoto(mediaVoto, currentTesiList);
             isAtLeastFilter = true;
         }
 
-        if(isAtLeastFilter) {
+        if (isAtLeastFilter) {
             filtersContainer.setVisibility(View.VISIBLE);
         } else {
             filtersContainer.setVisibility(View.GONE);

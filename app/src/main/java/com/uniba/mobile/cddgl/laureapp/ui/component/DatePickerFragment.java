@@ -5,7 +5,10 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.EditText;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import com.uniba.mobile.cddgl.laureapp.R;
 
 import java.text.SimpleDateFormat;
@@ -16,10 +19,17 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     private static final int FRAGMENT_REGISTRATION = R.layout.fragment_registration;
     private static final int FRAGMENT_NEWTASK = R.layout.fragment_new_task;
+    private static final int FRAGMENT_EDIT_PROFILE = R.layout.fragment_edit_profile;
     private final int layout;
 
     public DatePickerFragment(int contentLayoutId) {
         layout = contentLayoutId;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -42,20 +52,24 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String dateString = dateFormat.format(c.getTime());
 
-        EditText dateField;
+        EditText dateField = null;
 
-        switch(layout) {
-            case FRAGMENT_REGISTRATION:
-                dateField = getParentFragment().getView().findViewById(R.id.birthDay);
-                break;
-            case FRAGMENT_NEWTASK:
+        if (getParentFragment() != null && getParentFragment().getView() != null) {
+            switch (layout) {
+                case FRAGMENT_REGISTRATION:
+                    dateField = getParentFragment().getView().findViewById(R.id.birthDay);
+                    break;
+                case FRAGMENT_NEWTASK:
                 dateField = getParentFragment().getView().findViewById(R.id.scadenza);
                 break;
-            default:
-                dateField = null;
+            case FRAGMENT_EDIT_PROFILE:
+                    dateField = getParentFragment().getView().findViewById(R.id.birth_date_edit_text);
+                default:
+                    break;
+            }
         }
 
-        if( dateField != null) {
+        if (dateField != null) {
             dateField.setError(null);
             dateField.setText(dateString);
         }

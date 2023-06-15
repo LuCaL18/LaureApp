@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/selector_item_background">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -40,22 +41,27 @@
                     android:text="Relatore" />
 
             </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/visualizza_Tesi_classifica"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/color_hole_graph"
-                app:srcCompat="@android:drawable/ic_menu_view"
-                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="20dp">
 
-            <ImageButton
-                android:id="@+id/deleteTesi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/color_hole_graph"
-                app:srcCompat="@android:drawable/ic_delete"
-                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+                    <ImageButton
+                        android:id="@+id/deleteTesi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/colorOnPrimary"
+                        app:srcCompat="@drawable/ic_baseline_cancel_24" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

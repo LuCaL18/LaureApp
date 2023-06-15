@@ -1,9 +1,24 @@
 package com.uniba.mobile.cddgl.laureapp.util;
 
-import android.content.Context;
-import android.content.res.Resources;
+import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.SHARED_PREFS_NAME;
+import static com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment.TESI_LIST_KEY_PREF;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.util.Log;
+
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.R;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Utility {
 
@@ -64,6 +79,54 @@ public class Utility {
             default:
                 return "";
         }
+    }
+
+    public static ArrayList<String> getTesiList(Context context) {
+        try {
+            SharedPreferences sp = context.getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
+            String listJson = sp.getString(TESI_LIST_KEY_PREF, null);
+
+            // Converti la stringa JSON nella mappa originale
+            if (listJson != null) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+
+                return gson.fromJson(listJson, type);
+            }
+        } catch (Exception e) {
+            Log.e("getTesiList", e.getMessage());
+        }
+        return new ArrayList<>();
+    }
+
+    public static Map<String, Object> getObjectProperties(Object obj) {
+        Map<String, Object> properties = new HashMap<>();
+
+        // Ottenere la classe dell'oggetto
+        Class<?> clazz = obj.getClass();
+
+        // Ottenere tutti i campi della classe, inclusi quelli ereditati
+        Field[] fields = clazz.getDeclaredFields();
+
+        // Iterare sui campi e recuperare le proprietà
+        for (Field field : fields) {
+            field.setAccessible(true); // Per accedere ai campi privati
+
+            String propertyName = field.getName();
+            Object propertyValue = null;
+
+            try {
+                propertyValue = field.get(obj);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            // Aggiungere la proprietà alla mappa
+            properties.put(propertyName, propertyValue);
+        }
+
+        return properties;
     }
 
 }

@@ -9,18 +9,18 @@ import androidx.lifecycle.ViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.Result;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
+import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +40,7 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<QuerySnapshot> lastTheses = new MutableLiveData<>();
     private final MutableLiveData<QuerySnapshot> thesesRole = new MutableLiveData<>();
     private final MutableLiveData<QuerySnapshot> thesesAmbito = new MutableLiveData<>();
+    private final MutableLiveData<Result> editUserResult = new MutableLiveData<>();
 
 
     public MainViewModel() {
@@ -64,24 +65,30 @@ public class MainViewModel extends ViewModel {
     public void fetchDataUser(String id) {
         db.collection("users").document(id).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                user.setValue(((DocumentSnapshot) task.getResult()).toObject(LoggedInUser.class));
+                user.setValue(task.getResult().toObject(LoggedInUser.class));
                 idUser = id;
             }
         });
     }
 
-    public void updateUser(Map<String, Object> updates) {
+    public void updateUser(LoggedInUser updatedUser) {
 
         if (user.getValue() == null) {
             Log.w(CLASSNAME, "User is null");
             return;
         }
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(user.getValue().getId());
-
-        userRef.updateChildren(updates)
-                .addOnSuccessListener(aVoid -> fetchDataUser(user.getValue().getId()))
-                .addOnFailureListener(e -> Log.e(CLASSNAME, "Unable updates user"));
+        Map<String, Object> updates = Utility.getObjectProperties(updatedUser);
+        DocumentReference userRef = db.collection("users").document(user.getValue().getId());
+        userRef.update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    fetchDataUser(user.getValue().getId());
+                    editUserResult.setValue(new Result.Success(R.string.edit_profile_success));
+                })
+                .addOnFailureListener(e -> {
+                    editUserResult.setValue(new Result.Error(e));
+                    Log.e(CLASSNAME, "Unable updates user");
+                });
     }
 
     public void readTask(RoleUser role, String userId) {
@@ -226,5 +233,9 @@ public class MainViewModel extends ViewModel {
 
     public MutableLiveData<QuerySnapshot> getThesesAmbito() {
         return thesesAmbito;
+    }
+
+    public MutableLiveData<Result> getEditUserResult() {
+        return editUserResult;
     }
 }

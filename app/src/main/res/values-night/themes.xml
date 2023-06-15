@@ -31,4 +31,5 @@
 
     <color name="legend_text_color">@color/grey_body</color>
     <color name="color_hole_graph">@color/black</color>
+    <color name="color_selector">@color/dark</color>
 </resources>

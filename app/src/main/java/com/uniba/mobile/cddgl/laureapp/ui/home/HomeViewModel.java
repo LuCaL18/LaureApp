@@ -36,6 +36,7 @@ public class HomeViewModel extends ViewModel {
         try {
             id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         } catch (Exception e) {
+            countNotification.setValue(0);
             return;
         }
 
@@ -47,7 +48,10 @@ public class HomeViewModel extends ViewModel {
                 return;
             }
 
-            int numDocuments = querySnapshot.size();
+            int numDocuments = 0;
+            if(querySnapshot != null) {
+                numDocuments = querySnapshot.size();
+            }
 
             countNotification.setValue(numDocuments);
             Log.d("HomeViewModel", "Number of documents in collection: " + numDocuments);

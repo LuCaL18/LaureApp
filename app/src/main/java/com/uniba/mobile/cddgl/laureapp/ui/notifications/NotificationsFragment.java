@@ -138,19 +138,28 @@ public class NotificationsFragment extends Fragment {
         super.onResume();
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
-        adapter.onAttachedToRecyclerView(notificationListRecyclerView);
+
+        if(adapter != null) {
+            adapter.onAttachedToRecyclerView(notificationListRecyclerView);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        adapter.onDetachedFromRecyclerView(notificationListRecyclerView);
+        if(adapter != null) {
+            adapter.onDetachedFromRecyclerView(notificationListRecyclerView);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        adapter.stopListening();
+
+        if(adapter != null) {
+            adapter.stopListening();
+        }
+
         chatViewModel.getMembers().removeObservers(getViewLifecycleOwner());
         binding = null;
     }

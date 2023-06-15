@@ -60,7 +60,7 @@ public class ConfirmRegistrationFragment extends Fragment {
                 user.reload().addOnSuccessListener(aVoid -> {
                     user = auth.getCurrentUser();
                     if (user != null) {
-                        if (user.isEmailVerified()) {
+                        if (user.isEmailVerified() && loginViewModel!= null) {
                             loginViewModel.confirmRegistration(user.getUid());
                         }
                     }

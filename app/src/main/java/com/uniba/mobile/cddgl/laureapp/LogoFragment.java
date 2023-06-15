@@ -104,7 +104,7 @@ public class LogoFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar = requireActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
     }
 

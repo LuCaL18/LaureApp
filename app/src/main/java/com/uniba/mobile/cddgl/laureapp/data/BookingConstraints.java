@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.data;
 
+import androidx.annotation.Keep;
+
 public class BookingConstraints {
 
     private boolean timelines;
@@ -7,6 +9,7 @@ public class BookingConstraints {
     private boolean necessaryExam;
     private boolean skills;
 
+    @Keep
     public BookingConstraints() {
     }
 

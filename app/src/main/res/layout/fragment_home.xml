@@ -18,7 +18,6 @@
             android:id="@+id/user_thesis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
             android:layout_marginEnd="15dp"
             android:text="@string/your_theses"
             android:padding="16dp"
@@ -30,8 +29,7 @@
         <HorizontalScrollView
             android:id="@+id/scrollViewUserThesis"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -41,25 +39,24 @@
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone"
                     android:id="@+id/card1_user_thesis">
                     <LinearLayout
                         android:id="@+id/tesi1_user_thesis"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img1_user_thesis"
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
-                            android:adjustViewBounds="true"
                             android:layout_margin="10dp"
+                            android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
-                            app:shapeAppearanceOverlay="@style/roundedImage"
-                            />
+                            android:src="@drawable/relatore"/>
                         <TextView
                             android:id="@+id/Nome_tesi1_user_thesis"
                             android:layout_width="match_parent"
@@ -86,27 +83,24 @@
                     android:layout_height="370dp"
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone"
                     android:id="@+id/card2_user_thesis">
                     <LinearLayout
                         android:id="@+id/tesi2_user_thesis"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img2_user_thesis"
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
-                            android:adjustViewBounds="true"
                             android:layout_margin="10dp"
+                            android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
-                            app:shapeAppearanceOverlay="@style/roundedImage"
-                            />
+                            android:src="@drawable/relatore" />
                         <TextView
                             android:id="@+id/Nome_tesi2_user_thesis"
                             android:layout_width="match_parent"
@@ -134,16 +128,15 @@
                     android:layout_height="370dp"
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone">
                     <LinearLayout
                         android:id="@+id/tesi3_user_thesis"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img3_user_thesis"
                             android:layout_width="match_parent"
@@ -181,7 +174,7 @@
             android:id="@+id/mostra_tesi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:text="@string/latest_entries"
             android:padding="16dp"
@@ -203,8 +196,7 @@
         <HorizontalScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -214,15 +206,16 @@
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone"
                     android:id="@+id/card1">
                     <LinearLayout
                         android:id="@+id/tesi1"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img1"
                             android:layout_width="match_parent"
@@ -259,17 +252,16 @@
                     android:layout_height="370dp"
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone"
                     android:id="@+id/card2">
                     <LinearLayout
                         android:id="@+id/tesi2"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img2"
                             android:layout_width="match_parent"
@@ -307,16 +299,15 @@
                     android:layout_height="370dp"
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone">
                     <LinearLayout
                         android:id="@+id/tesi3"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img3"
                             android:layout_width="match_parent"
@@ -354,7 +345,7 @@
             android:id="@+id/ambito_tesi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:text="@string/for_your_scope"
             android:padding="16dp"
@@ -376,8 +367,7 @@
         <HorizontalScrollView
             android:id="@+id/scrollView2_ambito_tesi"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -387,15 +377,16 @@
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone"
                     android:id="@+id/card1_ambito_tesi">
                     <LinearLayout
                         android:id="@+id/tesi1_ambito_tesi"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img1_ambito_tesi"
                             android:layout_width="match_parent"
@@ -432,17 +423,16 @@
                     android:layout_height="370dp"
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone"
                     android:id="@+id/card2_ambito_tesi">
                     <LinearLayout
                         android:id="@+id/tesi2_ambito_tesi"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img2_ambito_tesi"
                             android:layout_width="match_parent"
@@ -480,16 +470,15 @@
                     android:layout_height="370dp"
                     app:cardCornerRadius="20dp"
                     android:elevation="20dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     app:cardBackgroundColor="@color/primary_green"
                     android:visibility="gone">
                     <LinearLayout
                         android:id="@+id/tesi3_ambito_tesi"
-                        android:layout_width="250dp"
-                        android:layout_height="350dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp">
+                        android:padding="5dp">
                         <ImageView
                             android:id="@+id/img3_ambito_tesi"
                             android:layout_width="match_parent"

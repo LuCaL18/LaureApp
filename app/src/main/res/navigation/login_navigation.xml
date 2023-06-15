@@ -33,6 +33,6 @@
     <fragment
         android:id="@+id/confirmRegistrationFragment"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.login.registration.ConfirmRegistrationFragment"
-        android:label="fragment_confirm_registration"
+        android:label="@string/confirm_registration"
         tools:layout="@layout/fragment_confirm_registration" />
 </navigation>

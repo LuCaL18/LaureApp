@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,7 +40,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -524,6 +524,10 @@ public class VisualizeTesiFragment extends Fragment {
                         if (isFavourite) {
                             menuTesi.findItem(FAVORITE_THESIS).setIcon(R.drawable.ic_favorite_24dp);
                         }
+
+                        if (finalMenuToVisualize == R.menu.app_bar_visualize_thesis_prof && thesis.getStudent() == null) {
+                            menuTesi.findItem(LIST_TASK_THESIS).setVisible(false);
+                        }
                     }
 
                     @Override
@@ -567,7 +571,7 @@ public class VisualizeTesiFragment extends Fragment {
                                 return true;
                             case VisualizeTesiFragment.LIST_TASK_THESIS:
                                 Bundle bundleTask = new Bundle();
-                                bundleTask.putString(LIST_TASK_TESI_KEY, thesis.getId());
+                                bundleTask.putSerializable(LIST_TASK_TESI_KEY, thesis);
 
                                 boolean permissionCreateTask = (thesis.getRelatore().getId().equals(loggedInUser.getId()) ||
                                         thesis.getCoRelatori().contains(new PersonaTesi(loggedInUser.getId(), loggedInUser.getDisplayName(), loggedInUser.getEmail())));
@@ -722,7 +726,7 @@ public class VisualizeTesiFragment extends Fragment {
 
     private void checkAndRequestInternetPermission() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.INTERNET}, REQUEST_INTERNET_PERMISSION);
+            requestPermissions(new String[]{Manifest.permission.INTERNET}, REQUEST_INTERNET_PERMISSION);
         } else {
             // Permission has already been granted, continue with your code
             makeLinksClickable();
@@ -731,7 +735,7 @@ public class VisualizeTesiFragment extends Fragment {
 
     private void checkAndRequestReadExternalStorage() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
         } else {
             // Permission has already been granted, continue with your code
             pickImageFile();
@@ -787,9 +791,7 @@ public class VisualizeTesiFragment extends Fragment {
     }
 
     private void pickImageFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickFileLauncher.launch(intent);
     }
 
@@ -913,7 +915,7 @@ public class VisualizeTesiFragment extends Fragment {
             } else {
                 List<String> newTesiList = new ArrayList<>();
                 newTesiList.add(thesis.getId());
-                classificaDocument.set(new TesiClassifica(newTesiList, mainViewModel.getIdUser()))
+                classificaDocument.set(new TesiClassifica(newTesiList, user.getId()))
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 menuItem.setIcon(R.drawable.ic_favorite_24dp);

@@ -3,11 +3,15 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 
 public class Relatore extends PersonaTesi {
+import androidx.annotation.Keep;
+
+public class Relatore {
     private String id_relatore;
     private String email;
     private String nome;
     private String cognome;
 
+    @Keep
     public Relatore(){
         super();
     }

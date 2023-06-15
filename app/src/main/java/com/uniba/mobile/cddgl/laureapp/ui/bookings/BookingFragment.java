@@ -38,7 +38,6 @@ import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Booking;
 import com.uniba.mobile.cddgl.laureapp.data.model.ChatData;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
-import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
 
 import java.util.ArrayList;
@@ -47,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BookingFragment extends Fragment {
+
+    private static final String CLASS_ID = "BookingFragment";
 
     private static final int DELETE = R.id.delete_booking;
     private static final String BOOKING_KEY = "booking";
@@ -72,7 +73,7 @@ public class BookingFragment extends Fragment {
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         user = mainViewModel.getUser().getValue();
 
-        if(savedInstanceState != null && savedInstanceState.getSerializable(BOOKING_KEY) != null) {
+        if (savedInstanceState != null && savedInstanceState.getSerializable(BOOKING_KEY) != null) {
             booking = (Booking) savedInstanceState.getSerializable(BOOKING_KEY);
 
             return;
@@ -182,7 +183,7 @@ public class BookingFragment extends Fragment {
         bookingViewModel.setAlreadyRead(true);
         NavController navController = NavHostFragment.findNavController(this);
 
-        if(user.getRole().equals(RoleUser.STUDENT) && booking.getState().equals(BookingState.OPEN)) {
+        if (user.getRole().equals(RoleUser.STUDENT) && booking.getState().equals(BookingState.OPEN)) {
             providerMenu = new MenuProvider() {
                 @Override
                 public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
@@ -263,7 +264,7 @@ public class BookingFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         showToast(getString(R.string.response_sent_successfully));
-                        sendNotification(booking.getProfId());
+                        sendNotification(booking.getStudentId());
 
                         addStudentToThesis();
                         return;
@@ -287,7 +288,7 @@ public class BookingFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         showToast(getString(R.string.response_sent_successfully));
-                        sendNotification(booking.getProfId());
+                        sendNotification(booking.getStudentId());
 
                         resultBooking.setText(getText(R.string.you_have_refused_this_booking));
                         resultBooking.setTextColor(getResources().getColor(com.google.android.material.R.color.design_default_color_error));
@@ -384,16 +385,25 @@ public class BookingFragment extends Fragment {
         DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(booking.getIdThesis());
 
         chatRef.get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()) {
+            if (task.isSuccessful()) {
                 DocumentSnapshot result = task.getResult();
                 ChatData chat = result.toObject(ChatData.class);
 
-                chat.getMembers().add(booking.getStudentId());
+                if (chat != null) {
+                    chat.getMembers().add(booking.getStudentId());
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("members", chat.getMembers());
 
-                Map<String, Object> updates = new HashMap<>();
-                updates.put("members", chat.getMembers());
+                    chatRef.update(updates);
+                } else {
 
-                chatRef.update(updates);
+                    List<String> memeber = new ArrayList<>();
+                    memeber.add(booking.getProfId());
+                    memeber.add(booking.getStudentId());
+                    chat = new ChatData(booking.getIdThesis(), memeber, booking.getNameThesis());
+
+                    chatRef.set(chat).addOnFailureListener(e -> Log.e(CLASS_ID, "Unable set chat --> " + e));
+                }
             }
         });
     }
@@ -409,7 +419,7 @@ public class BookingFragment extends Fragment {
         super.onDestroyView();
         bookingViewModel.getBooking().setValue(null);
 
-        if(user.getRole().equals(RoleUser.STUDENT)) {
+        if (user.getRole().equals(RoleUser.STUDENT)) {
             requireActivity().removeMenuProvider(providerMenu);
         }
 
