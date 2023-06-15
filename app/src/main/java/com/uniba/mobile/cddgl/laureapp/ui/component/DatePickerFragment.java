@@ -18,7 +18,6 @@ import java.util.Locale;
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     private static final int FRAGMENT_REGISTRATION = R.layout.fragment_registration;
-    private static final int FRAGMENT_RICEVIMENTO = R.layout.fragment_ricevimento;
     private static final int FRAGMENT_NEWTASK = R.layout.fragment_new_task;
     private static final int FRAGMENT_EDIT_PROFILE = R.layout.fragment_edit_profile;
     private final int layout;
@@ -60,13 +59,10 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                 case FRAGMENT_REGISTRATION:
                     dateField = getParentFragment().getView().findViewById(R.id.birthDay);
                     break;
-                case FRAGMENT_RICEVIMENTO:
-                    dateField = getParentFragment().getView().findViewById(R.id.dataE);
-                    break;
                 case FRAGMENT_NEWTASK:
-                    dateField = getParentFragment().getView().findViewById(R.id.scadenza);
-                    break;
-                case FRAGMENT_EDIT_PROFILE:
+                dateField = getParentFragment().getView().findViewById(R.id.scadenza);
+                break;
+            case FRAGMENT_EDIT_PROFILE:
                     dateField = getParentFragment().getView().findViewById(R.id.birth_date_edit_text);
                 default:
                     break;

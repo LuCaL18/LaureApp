@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_navigation_home_to_visualizeTesiFragment"
             app:destination="@id/visualizeTesiFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_calendario"
+            app:destination="@id/calendario" />
     </fragment>
     <fragment
         android:id="@+id/navigation_notifications"
@@ -36,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/tesiFragmant"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.TesiFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.CreaTesiFragment"
         android:label="@string/crea_tesi"
         tools:layout="@layout/fragment_tesi" >
         <action
@@ -143,10 +146,22 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/ricevimento"
-        android:name="com.uniba.mobile.cddgl.laureapp.RicevimentoFragment"
-        android:label="fragment_ricevimento"
-        tools:layout="@layout/fragment_ricevimento" />
+        android:id="@+id/calendario"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.calendario.CalendarioFragment"
+        android:label="Calendario"
+        tools:layout="@layout/fragment_calendario" >
+        <action
+            android:id="@+id/action_calendario_to_nav_lista_task"
+            app:destination="@id/nav_lista_task" />
+        <action
+            android:id="@+id/action_calendario_self"
+            app:destination="@id/calendario" />
+    </fragment>
+    <fragment
+        android:id="@+id/visualizzaRicevimento"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.calendario.VisualizzaRicevimentoFragment"
+        android:label="Ricevimento"
+        tools:layout="@layout/fragment_visualizza_ricevimento" />
     <fragment
         android:id="@+id/fragment_settings"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.settings.SettingsFragment"

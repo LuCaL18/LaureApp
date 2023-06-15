@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                             logout();
                             break;
                         case MEETING:
-                            navController.navigate(R.id.ricevimento);
+                            navController.navigate(R.id.calendario);
                             break;
                         case SETTINGS:
                             navController.navigate(R.id.fragment_settings);

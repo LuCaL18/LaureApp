@@ -37,7 +37,6 @@ public class HomeMenu implements MenuProvider {
             MenuItem menuItem = menu.findItem(HomeFragment.CREATE_TESI_APP_BAR);
             menuItem.setVisible(false);
         }
-
         this.menu.setValue(menu);
     }
 
@@ -50,6 +49,7 @@ public class HomeMenu implements MenuProvider {
             }
             case HomeFragment.CREATE_TESI_APP_BAR:
                 navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
+                return true;
             default:
                 return false;
         }

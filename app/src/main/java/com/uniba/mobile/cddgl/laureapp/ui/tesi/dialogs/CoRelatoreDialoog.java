@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,7 +25,6 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,23 +163,23 @@ public class CoRelatoreDialoog {
         tastiLayout.addView(modifica);
     }
 
-    private List<Integer> checkPermessi() {
-        List<Integer> permessi = new ArrayList<>();
+    private List<String> checkPermessi() {
+        List<String> permessi = new ArrayList<>();
 
         if (permesso1.isChecked()) {
-            permessi.add(1);
+            permessi.add(permesso1.getText().toString());
         }
 
         if (permesso2.isChecked()) {
-            permessi.add(2);
+            permessi.add(permesso2.getText().toString());
         }
 
         if (permesso3.isChecked()) {
-            permessi.add(3);
+            permessi.add(permesso3.getText().toString());
         }
 
         if (permesso4.isChecked()) {
-            permessi.add(4);
+            permessi.add(permesso4.getText().toString());
         }
 
         return permessi;

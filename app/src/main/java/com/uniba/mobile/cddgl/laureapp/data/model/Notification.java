@@ -12,10 +12,10 @@ public class Notification {
     private String body;
     private long timestamp;
     private NotificationType type;
-
+    @Nullable
+    private String meetingId;
     @Nullable
     private String ticketId;
-
     @Nullable
     private String chatId;
     @Nullable
@@ -47,6 +47,15 @@ public class Notification {
         this.timestamp = timestamp;
         this.type = type;
         this.ticketId = ticketId;
+    }
+
+
+    public Notification(String receiveId, String senderName, long timestamp, NotificationType type, @Nullable String meetingId) {
+        this.receiveId = receiveId;
+        this.senderName = senderName;
+        this.timestamp = timestamp;
+        this.type = type;
+        this.meetingId = meetingId;
     }
 
     public String getSenderName() {
@@ -128,5 +137,14 @@ public class Notification {
                 ", chatId='" + chatId + '\'' +
                 ", nameChat='" + nameChat + '\'' +
                 '}';
+    }
+
+    @Nullable
+    public String getMeetingId() {
+        return meetingId;
+    }
+
+    public void setMeetingId(@Nullable String meetingId) {
+        this.meetingId = meetingId;
     }
 }
