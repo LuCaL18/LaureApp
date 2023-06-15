@@ -34,6 +34,10 @@ public class PersonaTesi implements Serializable {
         this.email = email;
     }
 
+    public PersonaTesi(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }

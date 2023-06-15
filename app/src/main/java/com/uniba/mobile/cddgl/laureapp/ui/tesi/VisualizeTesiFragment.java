@@ -574,7 +574,7 @@ public class VisualizeTesiFragment extends Fragment {
                                 bundleTask.putSerializable(LIST_TASK_TESI_KEY, thesis);
 
                                 boolean permissionCreateTask = (thesis.getRelatore().getId().equals(loggedInUser.getId()) ||
-                                        thesis.getCoRelatori().contains(new PersonaTesi(loggedInUser.getId(), loggedInUser.getDisplayName(), loggedInUser.getEmail())));
+                                        thesis.getCoRelatori().contains(new PersonaTesi(loggedInUser.getId())));
                                 bundleTask.putString(LIST_TASK_PERMISSION_CREATE, String.valueOf(permissionCreateTask));
 
                                 navController.navigate(R.id.action_visualizeTesiFragment_to_nav_lista_task, bundleTask);
