@@ -13,12 +13,12 @@ public class PersonaTesi implements Serializable {
     private String email;
 
     @Nullable
-    private List<Integer> permissions;
+    private List<String> permissions;
 
     public PersonaTesi() {
     }
 
-    public PersonaTesi(String id, String displayName, String email, List<Integer> permissions) {
+    public PersonaTesi(String id, String displayName, String email, List<String> permissions) {
         this.id = id;
         this.displayName = displayName;
         this.email = email;
@@ -56,11 +56,11 @@ public class PersonaTesi implements Serializable {
     }
 
     @Nullable
-    public List<Integer> getPermissions() {
+    public List<String> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(@Nullable List<Integer> permissions) {
+    public void setPermissions(@Nullable List<String> permissions) {
         this.permissions = permissions;
     }
 

@@ -28,25 +28,31 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.android.volley.Request;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Ricevimento;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentCalendarioBinding;
+import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -56,12 +62,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class CalendarioFragment extends Fragment {
 
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String relatoreEmail = currentUser.getEmail();
-    String relatoreId = currentUser.getUid();
+    String currentUserEmail = currentUser.getEmail();
+    String currentUserUid = currentUser.getUid();
+    private String guidString;
+    private String receiverId=null;
+    private BottomNavigationView navBar;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference ricevimentoRef = db.collection("ricevimento");
     private final CollectionReference tesiRef = db.collection("tesi");
@@ -75,6 +85,7 @@ public class CalendarioFragment extends Fragment {
     private List<String> tesiList = new ArrayList<>();
     private Spinner tesiSpinner;
     private ListView taskListView;
+    private TextView T_task;
     private EditText riepilogo;
     private EditText titolo;
     private ArrayList<String> taskList = new ArrayList<>();
@@ -91,6 +102,8 @@ public class CalendarioFragment extends Fragment {
     private int minute;
     private Button orario;
     private TimePickerDialog timePickerDialog;
+    private String relatoreId;
+    private String studenteId;
 
 
     public CalendarioFragment() {
@@ -106,9 +119,13 @@ public class CalendarioFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         binding = FragmentCalendarioBinding.inflate(inflater, container, false);
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
         return binding.getRoot();
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -126,6 +143,7 @@ public class CalendarioFragment extends Fragment {
         titolo = binding.titolo;
         orario = binding.orario;
         orarioT = binding.orarioT;
+        T_task = binding.taskSelected;
 
         orario.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +194,7 @@ public class CalendarioFragment extends Fragment {
 
         addR = binding.addRicevimentoB;
         addR.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (addR.getText().toString().equals("NASCONDI")) {
@@ -183,12 +202,16 @@ public class CalendarioFragment extends Fragment {
                     addR.setText("AGGIUNGI");
                 } else {
                     binding.addRicevimentoL.setVisibility(View.VISIBLE);
+                    if(taskListView.getCount()>0){
+                        taskListView.setVisibility(View.VISIBLE);
+                        T_task.setVisibility(View.VISIBLE);
+                    }
                     addR.setText("NASCONDI");
                 }
             }
         });
 
-            ricevimentoRef.whereEqualTo("relatore", relatoreEmail)
+            ricevimentoRef.whereEqualTo("relatore", currentUserUid)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -202,6 +225,21 @@ public class CalendarioFragment extends Fragment {
                             }
                         }
                     });
+
+            ricevimentoRef.whereEqualTo("studente", currentUserUid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Ricevimento ricevimentoObj = documentSnapshot.toObject(Ricevimento.class);
+                            ricevimentiMap.put(documentSnapshot.getId(),ricevimentoObj);
+                            long millis = ricevimentoObj.getTime();
+                            Event ev1 = new Event(Color.GREEN, millis, ricevimentoObj.getTitolo());
+                            calendario.addEvent(ev1);
+                        }
+                    }
+                });
 
             calendario.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -243,6 +281,7 @@ public class CalendarioFragment extends Fragment {
         tesiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int positionTesi, long idTesi) {
+                T_task.setVisibility(View.VISIBLE);
                 taskListView.clearChoices();
                 tesiSelezionata = tesiSpinner.getSelectedItem().toString();
                 for (int i=0; i<tesiBackup.size(); i++){
@@ -255,6 +294,9 @@ public class CalendarioFragment extends Fragment {
                             taskList.clear();
                                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                         taskList.add(documentSnapshot.toObject(Task.class).getNomeTask());
+                                    }
+                                    if(taskList.isEmpty()){
+                                        T_task.setVisibility(View.GONE);
                                     }
                                     arrayAdapter = new ArrayAdapter<>(getContext(),
                                             android.R.layout.simple_list_item_multiple_choice, taskList);
@@ -294,6 +336,20 @@ public class CalendarioFragment extends Fragment {
 
     private void caricaRicevimento() {
 
+        for (Tesi tesi : tesiBackup) {
+            if (tesi.getNomeTesi().equals(tesiSpinner.getSelectedItem().toString())) {
+                if(tesi.getStudent().getEmail().equals(currentUser.getEmail())){
+                    receiverId = tesi.getRelatore().getId();
+                }
+                else{
+                    receiverId = tesi.getStudent().getId();
+                }
+                relatoreId = tesi.getRelatore().getId();
+                studenteId = tesi.getStudent().getId();
+                break;  // Interrompi il ciclo una volta che hai trovato l'oggetto desiderato
+            }
+        }
+
             hour= hour*60*60*1000;
 
             minute = minute*60*1000;
@@ -304,24 +360,53 @@ public class CalendarioFragment extends Fragment {
                 }
             }
 
+            UUID guid = UUID.randomUUID();
+            guidString = guid.toString();
+            DocumentReference ricevimentoref = ricevimentoRef.document(guidString);
+
             Map<String, Object> ricevimento = new HashMap<>();
 
             ricevimento.put("titolo", titolo.getText().toString());
-            ricevimento.put("relatore", relatoreEmail);
+            ricevimento.put("relatore", relatoreId);
             ricevimento.put("riepilogo", riepilogo.getText().toString());
             ricevimento.put("nomeTesi", tesiSpinner.getSelectedItem().toString());
             ricevimento.put("tesiId", tesiSelezionata);
+            ricevimento.put("ricevimentoId", guidString);
+            ricevimento.put("studente", studenteId);
             if(taskRic.size()==0)
             {
                 taskRic.add("nessun task");
             }
             ricevimento.put("task", taskRic);
             ricevimento.put("time", time+hour+minute);
-            ricevimentoRef.add(ricevimento);
+            ricevimentoref.set(ricevimento, SetOptions.merge());
 
+            sendNotification();
             NavController navController = NavHostFragment.findNavController(this);
             navController.navigate(R.id.action_calendario_self);
     }
+
+    private void sendNotification() {
+
+        String title = getString(R.string.title_notification_ticket, titolo.getText().toString());
+
+        BaseRequestNotification notification = new BaseRequestNotification(receiverId, NotificationType.MEETING);
+
+            notification.setNotification(title, null);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("body", titolo.getText().toString() + " " + convertMtoD(time+hour+minute,true));
+        data.put("receiveId", receiverId);
+        data.put("type", notification.getType());
+        data.put("senderName", currentUser.getEmail());
+        data.put("meetingId", guidString);
+        data.put("timestamp", System.currentTimeMillis());
+        notification.addData(data);
+
+        notification.sendRequest(Request.Method.POST, this.getContext());
+
+    }
+
 
 
     private void popolaSpinnerTesi() {
@@ -337,23 +422,32 @@ public class CalendarioFragment extends Fragment {
                 for (DocumentSnapshot doc : value) {
                     Tesi tesi = doc.toObject(Tesi.class);
                     List<PersonaTesi> coRelatore = tesi.getCoRelatori();
-                    if (coRelatore.isEmpty()) {
+                    if (!coRelatore.isEmpty()) {
                         for (PersonaTesi p : coRelatore) {
-                            if (p.getId().equals(relatoreId)) {
+                            if (p.getId().equals(currentUserUid)) {
                                 tesiList.add(tesi.getNomeTesi());
                                 tesiBackup.add(tesi);
                             }
                         }
                     }
-                    if (tesi.getRelatore().getId().equals(relatoreId)) {
+                    if (tesi.getRelatore().getId().equals(currentUserUid)) {
                         tesiList.add(tesi.getNomeTesi());
                         tesiBackup.add(tesi);
+                    }
+                    if(tesi.getStudent() != null) {
+                        if (tesi.getStudent().getId().equals(currentUserUid)) {
+                            tesiList.add(tesi.getNomeTesi());
+                            tesiBackup.add(tesi);
+                        }
                     }
                 }
                 // Creazione dell'adapter per la lista delle tesi
                 ArrayAdapter<String> tesiAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, tesiList);
                 tesiAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 tesiSpinner.setAdapter(tesiAdapter);
+                if(tesiList.isEmpty()){
+                    addR.setVisibility(View.GONE);
+                }
             }
 
         });
@@ -497,4 +591,5 @@ public class CalendarioFragment extends Fragment {
         timePickerDialog.setTitle("Seleziona orario");
         timePickerDialog.show();
     }
+
 }

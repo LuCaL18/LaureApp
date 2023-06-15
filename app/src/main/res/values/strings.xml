@@ -25,22 +25,16 @@
     <string name="edit">Edit</string>
     <string name="allow">Allow</string>
     <string name="next">Continue</string>
-
+    <string name="ok">OK</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
-
     <string name="nav_header_desc">Navigation header</string>
-
     <string name="action_settings">Settings</string>
-
-
     <string name="request_confirm_email_verified_title"><b>Confirm your email address</b></string>
     <string name="request_confirm_email_verified">We sent a confirmation email to:\n\n<b>%s</b>\n\nCheck your email and click on the confirmation link to continue.</string>
     <string name="resend_email"><b>Resend email</b></string>
-
     <!--    USER FIELDS-->
     <string name="name">Name</string>
     <string name="surname">Surname</string>
@@ -53,18 +47,15 @@
     <string name="role_student">Student</string>
     <string name="role_professor">Professor</string>
     <string name="forgot_password"><u>Forgot password?</u></string>
-
     <!--    TASK FIELD-->
     <string name="nometask">Nome Task</string>
     <string name="stato">Stato</string>
     <string name="descrizione">Descrizione</string>
     <string name="scadenza">Scadenza</string>
     <string name="lista_task">Lista Task</string>
-
     <!--    SHARE TESI-->
     <string name="share_classifica">Condividi classifica</string>
     <string name="share_tesi">Condividi tesi</string>
-
     <!--    ERROR USER-->
     <string name="invalid_username">Not a valid email</string>
     <string name="invalid_password">Password must be >5 characters</string>
@@ -74,14 +65,12 @@
     <string name="invalid_bio">Biography must contain a maximum of 200 characters</string>
     <string name="invalid_confirm_password">Passwords do not match</string>
     <string name="invalid_filename">The file name may not contain special characters</string>
-
     <!--    ERROR TASK-->
     <string name="invalid_state">Not a valid state</string>
     <string name="invalid_taskname">Not a valid name for a task</string>
     <string name="invalid_task">Not a valid task</string>
     <string name="invalid_description">Description must contain a maximum of 200 characters</string>
     <string name="invalid_scadenza">Not a valid end date</string>
-
     <!--    FIREBASE EXCEPTION-->
     <string name="weak_password">Your password is too weak</string>
     <string name="invalid_credentials">Your email is invalid or already in use</string>
@@ -107,22 +96,18 @@
     <string name="classifica_tesi">Classifica Tesi</string>
     <string name="lista_tesi">Lista Tesi</string>
     <string name="title_activity_new_task">NewTaskActivity</string>
-
     <string name="menu_home">Home</string>
     <string name="menu_slideshow">Slideshow</string>
-
     <!--    FORGOT PASSWORD-->
     <string name="request_send_forgot_password">Are you sure you want to send a password reset request to this e-mail address:\n\n<b>%s</b></string>
     <string name="password_reset_sent">Password reset email sent</string>
     <string name="dialog_password_reset_title">Confirm reset password</string>
     <string name="error_message_password_reset">Unable send password reset request</string>
-
     <!--    MENU DRAWER-->
     <string name="logout">Logout</string>
     <string name="menu_gallery">Gallery</string>
     <string name="chat_menu">Chat</string>
     <string name="ticket_menu">Ticket</string>
-
     <!--    TITLE NAVIGATION BAR-->
     <string name="title_home">Home</string>
     <string name="title_thesis_list">Thesis list</string>
@@ -131,7 +116,6 @@
     <string name="user_profile">User profile</string>
     <string name="title_tickets">Tickets List</string>
     <string name="title_ticket">Ticket</string>
-
     <!--    NOTIFICATIONS-->
     <string name="title_message">New message from %s</string>
     <string name="title_messages">New messages in chat %s</string>
@@ -144,7 +128,6 @@
     <string name="notification_ticket_response_exception">Unable to send response</string>
     <string name="notification_title_booking">Booking on %s</string>
     <string name="notification_body_open_booking">Student %s made a booking to the thesis %s</string>
-
     <!--    TICKET-->
     <string name="no_tickets">There are no tickets</string>
     <string name="closed_tickets">Closed</string>
@@ -156,20 +139,16 @@
     <string name="email_prof_title">Professor: %s</string>
     <string name="hint_text_sender">Write your request here…</string>
     <string name="hint_text_receiver">Write your response here…</string>
-
-
     <!--    CONTENT DESCRIPTION-->
     <string name="notification_icon">notification icon</string>
     <string name="content_description_share">Click to share</string>
     <string name="content_description_qr_code">Generate qr code</string>
     <string name="content_description_favorite_thesis">Add thesis to favourites</string>
     <string name="content_description_add_ticket_thesis">Click to create a new ticket</string>
-
     <!--    MENU-->
     <string name="share">Share</string>
     <string name="qr_code">QR Code</string>
     <string name="add_ticket">Add ticket</string>
-
     <!--    THESIS-->
     <string name="relators">Relators</string>
     <string name="constraints">Constraints</string>
@@ -180,7 +159,6 @@
     <string name="no_notes">There are no notes</string>
     <string name="unable_to_save_changes">Unable to save changes</string>
     <string name="share_data_with">Share thesis data via:</string>
-
     <!--    FILE-->
     <string name="filename">Filename</string>
     <string name="file_saved_with_success">File saved successfully</string>
@@ -192,15 +170,12 @@
     <string name="image_saved_in_gallery">Image saved in gallery</string>
     <string name="cannot_image_saved_in_gallery">Cannot saved image in gallery</string>
     <string name="error_upload">An error occurred during the upload</string>
-
     <!--    PERMISSION-->
     <string name="internet_permission_required_cause">Internet permission is required to open web links</string>
     <string name="write_external_permission_declined">Write external storage permission declined</string>
     <string name="app_need_permission_to_save_qr_code">The app needs permission to save the QR code image</string>
     <string name="request_permission_storage_gallery">This app needs access to the external storage to save images to the gallery. If you decline this permission, the app will not be able to save images to the gallery.</string>
     <string name="storage_permission">Storage permission</string>
-
-
     <string name="timelines">Timelines</string>
     <string name="average_votes">Grade point average</string>
     <string name="necessary_exams">Necessary exams</string>
@@ -255,7 +230,6 @@
     <string name="task">Task</string>
     <string name="there_are_no_assigned_tasks">There are no assigned tasks</string>
     <string name="task_graph">Task: \n%s</string>
-
     <string name="tempistiche">Timeline</string>
     <string name="months">months</string>
     <string name="mesi_2"><![CDATA[<2 mesi]]></string>
@@ -314,7 +288,6 @@
     <string name="dark_mode">Dark mode</string>
     <string name="languages">Languages</string>
     <string name="settings">Settings</string>
-
     <!--FILTER TITLE -->
     <string name="default_title">Default</string>
     <string name="ambito">Ambito</string>
@@ -332,7 +305,6 @@
     <string name="filter_by_minimum_grade">Filtra per voto minimo</string>
     <string name="Filter_by_minimum_execution_time">Filter by minimum execution time</string>
     <string name="there_are_no_theses_in_your_ranking">There are no theses in your ranking</string>
-
     <!-- SPINNER-->
     <string-array name="ambiti">
         <item name="informatica">Information technology</item>
@@ -345,21 +317,18 @@
         <item name="economia">Economy</item>
         <item name="ingegneria">Engineering</item>
     </string-array>
-
     <string-array name="available_languages">
         <item>English</item>
         <item>Italian</item>
     </string-array>
-
     <string-array name="available_languages_values">
         <item>en</item>
         <item>it</item>
     </string-array>
-
     <string-array name="available_theme">
         <item>light</item>
         <item>night</item>
     </string-array>
-    <string name="calendar">Calendar</string>
-    <string name="settimane">SETTIMANE</string>
+    <string name="settimane">Weeks</string>
+    <string name="ambiti">AMBITI</string>
 </resources>

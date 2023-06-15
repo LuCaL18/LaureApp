@@ -46,15 +46,16 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/addRicevimentoB">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/addRicevimentoB"
+        app:layout_constraintBottom_toBottomOf="parent">
 
     <LinearLayout
         android:id="@+id/addRicevimentoL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/tesiT"
@@ -85,17 +86,18 @@
             android:text="TASK IN ARGOMENTO"
             android:textSize="20sp"
             android:layout_marginHorizontal="50dp"
+            android:visibility="gone"
             />
 
         <ListView
             android:id="@+id/taskList"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:divider="@color/primary_green"
             android:dividerHeight="2dp"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:fadeScrollbars="false"
-            android:layout_marginHorizontal="50dp"/>
+            android:layout_marginHorizontal="50dp"
+            android:visibility="gone"
+            />
 
         <TextView
             android:id="@+id/titoloT"
@@ -124,6 +126,7 @@
             android:text="RIEPILOGO"
             android:textSize="20sp"
             android:layout_marginHorizontal="50dp"
+            android:visibility="gone"
             />
 
         <EditText
@@ -133,7 +136,7 @@
             android:layout_marginHorizontal="50dp"
             android:hint="Note sul ricevimento avvenuto"
             android:textSize="20sp"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="match_parent"

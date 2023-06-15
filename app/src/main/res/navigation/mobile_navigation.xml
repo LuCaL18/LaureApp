@@ -19,9 +19,6 @@
             android:id="@+id/action_navigation_home_to_visualizeTesiFragment"
             app:destination="@id/visualizeTesiFragment" />
         <action
-            android:id="@+id/action_navigation_home_to_nav_lista_tesi"
-            app:destination="@id/nav_lista_tesi" />
-        <action
             android:id="@+id/action_navigation_home_to_calendario"
             app:destination="@id/calendario" />
     </fragment>
@@ -42,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/tesiFragmant"
-        android:name="com.uniba.mobile.cddgl.laureapp.TesiFragment"
+        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.CreaTesiFragment"
         android:label="@string/crea_tesi"
         tools:layout="@layout/fragment_tesi" >
         <action
