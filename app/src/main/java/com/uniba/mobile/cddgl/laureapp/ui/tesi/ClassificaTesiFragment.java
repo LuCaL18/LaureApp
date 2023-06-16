@@ -62,6 +62,7 @@ import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.ClassificaTesiAdapter;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.TesiListViewModel;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
 import java.lang.reflect.Type;
@@ -132,32 +133,11 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         user = mainViewModel.getUser().getValue();
 
+        thesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
+        tesiListViewModel = new ViewModelProvider(requireParentFragment()).get(TesiListViewModel.class);
+
         currentFilters = new HashMap<>();
         filteredList = new ArrayList<>();
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (currentUser != null) {
-            CollectionReference mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
-            mCollection.whereEqualTo("studentId", currentUser.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    tesiList = new ArrayList<>();
-
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        TesiClassifica classificaTesi = doc.toObject(TesiClassifica.class);
-                        fetchDataTesi(classificaTesi.getTesi());
-                    }
-                }
-            });
-        } else {
-            fetchDataTesi(getTesiList());
-        }
     }
 
     /**
@@ -196,8 +176,29 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
             currentFilters = gson.fromJson(mappaJson, type);
         }
 
-        thesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
-        tesiListViewModel = new ViewModelProvider(requireActivity()).get(TesiListViewModel.class);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            CollectionReference mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
+            mCollection.whereEqualTo("studentId", currentUser.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    tesiList = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        TesiClassifica classificaTesi = doc.toObject(TesiClassifica.class);
+                        fetchDataTesi(classificaTesi.getTesi());
+                    }
+                }
+            });
+        } else {
+            fetchDataTesi(getTesiList());
+        }
+
         return view;
     }
 
@@ -587,8 +588,6 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
         filtersContainer = view.findViewById(R.id.filters_classifica_container);
 
         listView = view.findViewById(R.id.classifica_tesi);
-        /* Rimozione della navBar dallo schermo */
-        navBar = requireActivity().findViewById(R.id.nav_view);
 
         adapter = new ClassificaTesiAdapter(getContext(), thesisViewModel, tesiListViewModel);
         listView.setAdapter(adapter);
@@ -718,6 +717,18 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
                 listView.setVisibility(View.VISIBLE);
             }
         });
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        /* Rimozione della navBar dallo schermo */
+        navBar = requireActivity().findViewById(R.id.nav_view);
+        if(navBar != null) {
+            navBar.setVisibility(View.GONE);
+        }
     }
 
     private void fetchDataTesi(List<String> thesisId) {
@@ -761,14 +772,6 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
             } catch (Exception e) {
                 Log.e(CLASS_ID, "Error during fetchDataTesi --> " + e);
             }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(navBar != null) {
-            navBar.setVisibility(View.GONE);
         }
     }
 

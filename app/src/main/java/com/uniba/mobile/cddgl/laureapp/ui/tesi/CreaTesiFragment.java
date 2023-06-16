@@ -540,10 +540,10 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     private void viewRelatore(View relatorePopup) {
         popup_nome = relatorePopup.findViewById(R.id.nome);
         popup_email = relatorePopup.findViewById(R.id.email);
-        permesso1 = relatorePopup.findViewById(R.id.permesso1);
-        permesso2 = relatorePopup.findViewById(R.id.permesso2);
-        permesso3 = relatorePopup.findViewById(R.id.permesso3);
-        permesso4 = relatorePopup.findViewById(R.id.permesso4);
+        permesso1 = relatorePopup.findViewById(R.id.edit_search_keys_permission);
+        permesso2 = relatorePopup.findViewById(R.id.edit_documents_permission);
+        permesso3 = relatorePopup.findViewById(R.id.edit_constraints_permission);
+        permesso4 = relatorePopup.findViewById(R.id.edit_notes_permission);
         save = relatorePopup.findViewById(R.id.saveButton);
         cancel = relatorePopup.findViewById(R.id.cancelButton);
         verifica = (Button) impostaVerifica(relatorePopup);

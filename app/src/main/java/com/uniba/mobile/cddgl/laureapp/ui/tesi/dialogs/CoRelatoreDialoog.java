@@ -1,19 +1,18 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs;
 
 import android.app.AlertDialog;
-import android.graphics.Color;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -22,12 +21,16 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.CoRelatorPermissions;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CoRelatoreDialoog {
 
@@ -37,10 +40,11 @@ public class CoRelatoreDialoog {
     private final EditText popup_email;
     private final View relatorePopup;
     private final Button save;
-    private Button verifica, modifica;
-    private final CheckBox permesso1, permesso2, permesso3, permesso4;
+    private final Button verifyEmailButton;
+    private final Button actionEditEmail;
+    private final CheckBox editSearchKeysPermission, documentsPermission, constraintsPermission, notesPermission;
     private LoggedInUser selectedCoRelators;
-    private LoggedInUser user;
+    private final LoggedInUser user;
 
     public CoRelatoreDialoog(AlertDialog dialog, View view, List<PersonaTesi> coRelators, VisualizeTesiFragment requireFragment) {
         this.dialog = dialog;
@@ -53,15 +57,17 @@ public class CoRelatoreDialoog {
         popup_nome = view.findViewById(R.id.nome);
         popup_email = view.findViewById(R.id.email);
 
-        permesso1 = view.findViewById(R.id.permesso1);
-        permesso2 = view.findViewById(R.id.permesso2);
-        permesso3 = view.findViewById(R.id.permesso3);
-        permesso4 = view.findViewById(R.id.permesso4);
+        editSearchKeysPermission = view.findViewById(R.id.edit_search_keys_permission);
+        documentsPermission = view.findViewById(R.id.edit_documents_permission);
+        constraintsPermission = view.findViewById(R.id.edit_constraints_permission);
+        notesPermission = view.findViewById(R.id.edit_notes_permission);
+        verifyEmailButton = view.findViewById(R.id.verify_button_email);
+        actionEditEmail = view.findViewById(R.id.edit_button_email);
 
         save = view.findViewById(R.id.saveButton);
         Button cancel = view.findViewById(R.id.cancelButton);
 
-        impostaVerifica();
+        impostaActionButton();
 
         save.setOnClickListener(viewSave -> {
 
@@ -76,20 +82,11 @@ public class CoRelatoreDialoog {
         cancel.setOnClickListener(viewCancel -> dialog.dismiss());
     }
 
-    private void impostaVerifica() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+    private void impostaActionButton() {
 
-        verifica = new Button(relatorePopup.getContext());
-        verifica.setLayoutParams(params);
-        verifica.setTextSize(20);
-        verifica.setTextColor(Color.WHITE);
-        verifica.setBackgroundColor(save.getShadowColor());
-        verifica.setText(R.string.verify_email);
+        impostaVerifica();
 
-        LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
-
-        verifica.setOnClickListener(new View.OnClickListener() {
+        verifyEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -109,24 +106,37 @@ public class CoRelatoreDialoog {
                 }
 
                 CollectionReference usersRef = FirebaseFirestore.getInstance().collection("users");
-                usersRef.whereEqualTo("email", emailRelator)
+                usersRef.whereEqualTo("email", emailRelator).whereEqualTo("role", RoleUser.PROFESSOR)
                         .limit(1)
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                if(queryDocumentSnapshots.isEmpty()) {
+                                    Toast.makeText(relatorePopup.getContext(), relatorePopup.getContext().getString(R.string.professor_email_not_found), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                     LoggedInUser coRelatoreObj = documentSnapshot.toObject(LoggedInUser.class);
                                     popup_nome.setText(coRelatoreObj.getDisplayName());
                                     popup_nome.setVisibility(View.VISIBLE);
-                                    popup_email.setVisibility(View.INVISIBLE);
+                                    popup_email.setVisibility(View.GONE);
 
+                                    CircleImageView imageView = relatorePopup.findViewById(R.id.image);
                                     selectedCoRelators = coRelatoreObj;
+                                    Glide.with(relatorePopup.getContext())
+                                            .load(selectedCoRelators.getPhotoUrl())
+                                            .apply(new RequestOptions()
+                                                    .placeholder(R.mipmap.ic_user_round)
+                                                    .error(R.mipmap.ic_user_round)
+                                                    .skipMemoryCache(true))
+                                            .into(imageView);
+
                                     impostaModifica();
-                                    modifica.setOnClickListener(new View.OnClickListener() {
+                                    actionEditEmail.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-                                            popup_nome.setVisibility(View.INVISIBLE);
+                                            popup_nome.setVisibility(View.GONE);
                                             popup_email.setVisibility(View.VISIBLE);
                                             save.setVisibility(View.INVISIBLE);
                                             impostaVerifica();
@@ -143,43 +153,36 @@ public class CoRelatoreDialoog {
                         });
             }
         });
-        tastiLayout.removeView(modifica);
-        tastiLayout.addView(verifica);
     }
 
     private void impostaModifica() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        modifica = new Button(relatorePopup.getContext());
-        modifica.setLayoutParams(params);
-        modifica.setTextSize(20);
-        modifica.setBackgroundColor(save.getShadowColor());
-        modifica.setTextColor(Color.WHITE);
-        modifica.setText(relatorePopup.getContext().getString(R.string.change_email));
-
-        LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
-        tastiLayout.removeView(verifica);
-        tastiLayout.addView(modifica);
+        verifyEmailButton.setVisibility(View.GONE);
+        actionEditEmail.setVisibility(View.VISIBLE);
     }
+
+    private void impostaVerifica() {
+        verifyEmailButton.setVisibility(View.VISIBLE);
+        actionEditEmail.setVisibility(View.GONE);
+    }
+
 
     private List<String> checkPermessi() {
         List<String> permessi = new ArrayList<>();
 
-        if (permesso1.isChecked()) {
-            permessi.add(permesso1.getText().toString());
+        if (editSearchKeysPermission.isChecked()) {
+            permessi.add(CoRelatorPermissions.EDIT_SEARCH_KEYS.name());
         }
 
-        if (permesso2.isChecked()) {
-            permessi.add(permesso2.getText().toString());
+        if (documentsPermission.isChecked()) {
+            permessi.add(CoRelatorPermissions.EDIT_DOCUMENTS.name());
         }
 
-        if (permesso3.isChecked()) {
-            permessi.add(permesso3.getText().toString());
+        if (constraintsPermission.isChecked()) {
+            permessi.add(CoRelatorPermissions.EDIT_CONSTRAINTS.name());
         }
 
-        if (permesso4.isChecked()) {
-            permessi.add(permesso4.getText().toString());
+        if (notesPermission.isChecked()) {
+            permessi.add(CoRelatorPermissions.EDIT_NOTES.name());
         }
 
         return permessi;

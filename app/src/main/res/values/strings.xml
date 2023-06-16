@@ -81,10 +81,10 @@
     <string name="vincoli">VINCOLI</string>
     <string name="crea_tesi">Crea tesi</string>
     <string name="popvincoli">Vincoli</string>
-    <string name="creare_task">Creare task</string>
-    <string name="accettare_tesisti">Accettare tesisti</string>
-    <string name="modificare_eliminare_task">Modificare ed \n eliminare task</string>
-    <string name="modificare_tesi">Modificare tesi</string>
+    <string name="edit_search_keys">Edit search keys</string>
+    <string name="edit_documents">Edit documents</string>
+    <string name="edit_constraints">Edit constraints</string>
+    <string name="edit_notes">Edit notes</string>
     <string name="cancella">CANCELLA</string>
     <string name="aggiungi">AGGIUNGI</string>
     <string name="email">Email</string>
@@ -377,4 +377,5 @@
     <string name="new_password">New password</string>
     <string name="select_image">Select Image</string>
     <string name="take_picture">Take a picture</string>
+    <string name="professor_email_not_found">Professor with the entered email not found</string>
 </resources>
