@@ -255,50 +255,6 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
             });
             dialog3.show();
         });
-
-
-        /*
-        //Imposta la sezione relativa all'aggiunta dei vincoli
-        ImageView b_aggiungi_vincoli = binding.aggiungiVincoli;
-        final View vincoliPopup = getLayoutInflater().inflate(R.layout.popup_vincoli, null);
-        dialogBuilder2 = new AlertDialog.Builder(getContext());
-        dialogBuilder2.setView(vincoliPopup);
-        dialog2 = dialogBuilder2.create();
-
-
-        //Apertura del popup Vincoli
-        b_aggiungi_vincoli.setOnClickListener(view12 -> {
-            viewVincoli(vincoliPopup);
-            LinearLayout parentLayout = binding.vincoliTesi;
-
-            save2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    rimuoviVincoli(parentLayout);
-                    textmedia = parseInt(voto.getText().toString());
-                    n_settimane = parseInt(text_settimane.getText().toString());
-                    Tempistiche.setText("SETTIMANE PREVISTE: " + n_settimane);
-                    Media.setText("MEDIA: " + textmedia);
-                    if(eSkill.getText().toString().equals(""))
-                    {
-                        Skill.setText("NESSUNA SKILL RICHIESTA");
-                    }
-                    else{
-                        Skill.setText("SKILL: " + eSkill.getText().toString());
-                    }
-                    aggiungiVincoli(parentLayout);
-                    dialog2.dismiss();
-                }
-                });
-            cancel2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog2.dismiss();
-                }
-            });
-            dialog2.show();
-        });
-        */
         salva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

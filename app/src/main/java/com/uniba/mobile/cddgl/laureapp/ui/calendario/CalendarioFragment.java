@@ -67,7 +67,6 @@ import java.util.UUID;
 public class CalendarioFragment extends Fragment {
 
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String currentUserEmail = currentUser.getEmail();
     String currentUserUid = currentUser.getUid();
     private String guidString;
     private String receiverId=null;
@@ -91,11 +90,11 @@ public class CalendarioFragment extends Fragment {
     private ArrayList<String> taskList = new ArrayList<>();
     private boolean canSaveTitolo = false;
     private boolean canSaveOrario = false;
+    private boolean canSaveTask = false;
     private String tesiSelezionata;
     private long time;
     private List<String> taskRic = new ArrayList<>();
     private ArrayAdapter<String> arrayAdapter;
-    private TextView taskSelezionati;
     private TextView orarioT;
     private boolean trovato;
     private int hour;
@@ -138,7 +137,6 @@ public class CalendarioFragment extends Fragment {
         binding.mese.setText(getMese(LocalDate.now().getMonthValue()-1) + " " + LocalDate.now().getYear());
         tesiSpinner = binding.tesi;
         taskListView = binding.taskList;
-        taskSelezionati = binding.taskSelected;
         riepilogo = binding.riepilogo;
         titolo = binding.titolo;
         orario = binding.orario;
@@ -182,12 +180,18 @@ public class CalendarioFragment extends Fragment {
         binding.salva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(canSaveTitolo ==true){
+                if(canSaveTask && canSaveTitolo && canSaveOrario){
                     caricaRicevimento();
+                    ripristina_campi();
                     Toast.makeText(getContext(), "Salvato", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(getContext(), "Riempire i campi", Toast.LENGTH_SHORT).show();
+                    if(canSaveTask==false && taskList.isEmpty()){
+                        Toast.makeText(getContext(), "Crea un task per creare un meeting", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getContext(), "Riempire i campi", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -276,6 +280,9 @@ public class CalendarioFragment extends Fragment {
                 binding.mese.setText(mese);
             }
         });
+
+        tesiBackup.clear();
+        tesiList.clear();
         popolaSpinnerTesi();
 
         tesiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -286,8 +293,10 @@ public class CalendarioFragment extends Fragment {
                 tesiSelezionata = tesiSpinner.getSelectedItem().toString();
                 for (int i=0; i<tesiBackup.size(); i++){
                     if(tesiBackup.get(i).getNomeTesi().equals(tesiSelezionata))
+                    {
                         tesiSelezionata = tesiBackup.get(i).getId();
-                    break;
+                        break;
+                    }
                 }
                         taskRef.whereEqualTo("tesiId", tesiSelezionata)
                         .get().addOnSuccessListener(queryDocumentSnapshots ->  {
@@ -298,19 +307,30 @@ public class CalendarioFragment extends Fragment {
                                     if(taskList.isEmpty()){
                                         T_task.setVisibility(View.GONE);
                                     }
+                                    else{
+                                        T_task.setVisibility(View.VISIBLE);
+                                        taskListView.setVisibility(View.VISIBLE);
+                                    }
                                     arrayAdapter = new ArrayAdapter<>(getContext(),
                                             android.R.layout.simple_list_item_multiple_choice, taskList);
 
                                     taskListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                                     taskListView.setAdapter(arrayAdapter);
                                     taskListView.setOnItemClickListener((adapterView, view121, position, id) -> {
-                                    taskSelezionati.setText("TASK DISCUSSI (" + taskListView.getCheckedItemCount() + ")");
+                                    T_task.setText("TASK DISCUSSI (" + taskListView.getCheckedItemCount() + ")");
+                                    if(taskListView.getCheckedItemCount()>0){
+                                        canSaveTask=true;
+                                        canSave();
+                                    }
+                                    else{
+                                        canSaveTask=false;
+                                        canSave();
+                                    }
                                     });
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        taskSelezionati.setText("NON CI SONO TASK PER QUESTA TESI");
-                                        tesiSpinner.setVisibility(View.GONE);
+
                                     }
                                 });
             }
@@ -324,8 +344,16 @@ public class CalendarioFragment extends Fragment {
 
     }
 
+    private void ripristina_campi() {
+        titolo.setText(null);
+        orarioT.setText(null);
+        canSaveTitolo=false;
+        canSaveOrario=false;
+        binding.salva.setBackgroundColor(getResources().getColor(R.color.grey_app));
+    }
+
     private void canSave() {
-        if(canSaveOrario && canSaveTitolo){
+        if(canSaveOrario && canSaveTitolo && canSaveTask){
             binding.salva.setBackgroundColor(getResources().getColor(R.color.primary_green));
         }
         else{
