@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -144,9 +145,16 @@ public class ProfileFragment extends Fragment {
                         case 0:
                             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                                 selectImageFromGallery();
+                            } else if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+                                selectImageFromGallery();
                             } else {
-                                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        REQUEST_READ_EXTERNAL_STORAGE);
+                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                                            REQUEST_READ_EXTERNAL_STORAGE);
+                                } else {
+                                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                            REQUEST_READ_EXTERNAL_STORAGE);
+                                }
                             }
                             break;
                         case 1:
@@ -307,6 +315,4 @@ public class ProfileFragment extends Fragment {
         PasswordChangeDialog dialog = new PasswordChangeDialog();
         dialog.show(getParentFragmentManager(), "password_change_dialog");
     }
-
-
 }
