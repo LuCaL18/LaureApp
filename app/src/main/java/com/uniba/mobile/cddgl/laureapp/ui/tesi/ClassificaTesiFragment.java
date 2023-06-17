@@ -38,10 +38,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.slider.Slider;
 import com.google.common.reflect.TypeToken;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,7 +51,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
@@ -117,7 +114,6 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
 
     private List<Tesi> tesiList;
     private List<Tesi> filteredList;
-    private BottomNavigationView navBar;
     private LoggedInUser user;
     private VisualizeThesisViewModel thesisViewModel;
     private ChipGroup filtersContainer;
@@ -722,16 +718,6 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        /* Rimozione della navBar dallo schermo */
-        navBar = requireActivity().findViewById(R.id.nav_view);
-        if(navBar != null) {
-            navBar.setVisibility(View.GONE);
-        }
-    }
-
     private void fetchDataTesi(List<String> thesisId) {
         if (thesisId == null || thesisId.isEmpty()) {
             tesiList = new ArrayList<>();
@@ -828,13 +814,8 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(navBar != null) {
-            navBar.setVisibility(View.VISIBLE);
-        }
 
         requireActivity().removeMenuProvider(menuProvider);
-        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
-        navigationView.getMenu().findItem(MainActivity.CLASSIFICA_TESI).setChecked(false);
 
         String mappaJson = new Gson().toJson(currentFilters);
         // Salva la stringa JSON nella memoria locale utilizzando SharedPreferences
