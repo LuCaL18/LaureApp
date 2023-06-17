@@ -54,6 +54,8 @@ import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.ListAdapterTesi;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.interfaces.FavouriteItemCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
 import java.lang.reflect.Type;
@@ -67,7 +69,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTextListener, FavouriteItemCallback {
 
     private static final String FILTERS_KEY = "filters";
 
@@ -153,8 +155,8 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
         visualizeThesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
 
-        adapterAll = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel, user);
-        adapterPersonal = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel, user);
+        adapterAll = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel, user, this);
+        adapterPersonal = new ListAdapterTesi(getContext(), new ArrayList<>(), visualizeThesisViewModel, user, this);
 
         CollectionReference tesiRef = FirebaseFirestore.getInstance().collection("tesi");
 
@@ -266,24 +268,11 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
                     }
                 }
             });
-
-            FirebaseFirestore.getInstance().collection("tesi_classifiche")
-                    .document(user.getId()).get().addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            TesiClassifica classification = documentSnapshot.toObject(TesiClassifica.class);
-                            if (classification != null) {
-                                adapterAll.setClassficaTesi(classification.getTesi());
-                                adapterPersonal.setClassficaTesi(classification.getTesi());
-                            }
-                        }
-                    });
+            fetchClassificaTesi();
 
         } else {
             personalTesiList = new ArrayList<>();
-
-            List<String> classificaGuest = Utility.getTesiList(getContext());
-            adapterAll.setClassficaTesi(classificaGuest);
-            adapterPersonal.setClassficaTesi(classificaGuest);
+            fetchClassificaTesi();
 
             if (currentTab == TAB_PERSONAL) {
                 currentTesiList.clear();
@@ -774,6 +763,30 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
             filtersContainer.addView(chip);
         }
+    }
+
+    public void fetchClassificaTesi() {
+        if(RoleUser.GUEST.equals(user.getRole())) {
+            List<String> classificaGuest = Utility.getTesiList(getContext());
+            adapterAll.setClassficaTesi(classificaGuest);
+            adapterPersonal.setClassficaTesi(classificaGuest);
+        } else if(RoleUser.STUDENT.equals(user.getRole())) {
+            FirebaseFirestore.getInstance().collection("tesi_classifiche")
+                    .document(user.getId()).get().addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            TesiClassifica classification = documentSnapshot.toObject(TesiClassifica.class);
+                            if (classification != null) {
+                                adapterAll.setClassficaTesi(classification.getTesi());
+                                adapterPersonal.setClassficaTesi(classification.getTesi());
+                            }
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onFavouriteItemClicked() {
+        fetchClassificaTesi();
     }
 
     @Override

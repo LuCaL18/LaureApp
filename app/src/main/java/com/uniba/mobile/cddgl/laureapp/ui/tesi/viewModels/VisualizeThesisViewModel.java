@@ -1,14 +1,10 @@
-package com.uniba.mobile.cddgl.laureapp.ui.tesi;
+package com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.uniba.mobile.cddgl.laureapp.data.DownloadedFile;
-import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VisualizeThesisViewModel extends ViewModel {
 

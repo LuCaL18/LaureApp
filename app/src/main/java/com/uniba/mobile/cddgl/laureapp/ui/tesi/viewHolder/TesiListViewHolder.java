@@ -23,7 +23,8 @@ import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.interfaces.FavouriteItemCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
@@ -43,14 +44,16 @@ public class TesiListViewHolder {
     private final ImageButton shareTesiButton;
     private final ImageButton preferitiTesiButton;
     private boolean isFavourite = false;
+    private FavouriteItemCallback favouriteItemCallback;
 
-    public TesiListViewHolder(View itemView) {
+    public TesiListViewHolder(View itemView, FavouriteItemCallback callback) {
         view = itemView;
         context = itemView.getContext();
         nomeTesiTextView = itemView.findViewById(R.id.nometesi);
         nomeRelatoreTextView = itemView.findViewById(R.id.nomerelatore);
         shareTesiButton = itemView.findViewById(R.id.share_tesi);
         preferitiTesiButton = itemView.findViewById(R.id.addTesi);
+        favouriteItemCallback = callback;
     }
 
     public void bindData(Tesi tesi, VisualizeThesisViewModel thesisViewModel, LoggedInUser userLogged, boolean isFavourite) {
@@ -58,6 +61,8 @@ public class TesiListViewHolder {
 
         if (isFavourite) {
             preferitiTesiButton.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24dp));
+        } else {
+            preferitiTesiButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
         }
 
         nomeTesiTextView.setText(tesi.getNomeTesi());
@@ -133,6 +138,7 @@ public class TesiListViewHolder {
                 }
                 preferitiTesiButton.setImageDrawable(context.getDrawable(icon));
             }
+            favouriteItemCallback.onFavouriteItemClicked();
             return;
         }
 
@@ -177,6 +183,7 @@ public class TesiListViewHolder {
                 classificaDocument.update(updates).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         preferitiTesiButton.setImageDrawable(context.getDrawable(icon));
+                        favouriteItemCallback.onFavouriteItemClicked();
                     } else {
                         Log.e("VisualizeTesiFragment", task.getException().getMessage());
                     }
@@ -189,6 +196,7 @@ public class TesiListViewHolder {
                             if (task.isSuccessful()) {
                                 preferitiTesiButton.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24dp));
                                 isFavourite = true;
+                                favouriteItemCallback.onFavouriteItemClicked();
                             } else {
                                 showSaveToast(R.string.unable_add_favorite);
                             }

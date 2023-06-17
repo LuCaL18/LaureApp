@@ -9,7 +9,8 @@ import android.widget.BaseAdapter;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.interfaces.FavouriteItemCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewHolder.TesiListViewHolder;
 
 import java.util.List;
@@ -27,11 +28,13 @@ public class ListAdapterTesi extends BaseAdapter {
     private final VisualizeThesisViewModel thesisViewModel;
     private final LayoutInflater inflater;
     private List<String> classficaTesi;
+    private final FavouriteItemCallback favouriteItemCallback;
 
-    public ListAdapterTesi(Context context, List<Tesi> tesiList, VisualizeThesisViewModel model, LoggedInUser user) {
+    public ListAdapterTesi(Context context, List<Tesi> tesiList, VisualizeThesisViewModel model, LoggedInUser user, FavouriteItemCallback callback) {
         this.tesiList = tesiList;
         thesisViewModel = model;
         this.user = user;
+        favouriteItemCallback = callback;
         inflater = LayoutInflater.from(context);
     }
 
@@ -93,13 +96,13 @@ public class ListAdapterTesi extends BaseAdapter {
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.lista_tesi, parent, false);
-            viewHolder = new TesiListViewHolder(convertView);
+            viewHolder = new TesiListViewHolder(convertView, favouriteItemCallback);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (TesiListViewHolder) convertView.getTag();
         }
 
-        Tesi tesi = tesiList.get(position);
+        Tesi tesi = (Tesi) getItem(position);
         if(classficaTesi != null && classficaTesi.contains(tesi.getId())) {
             viewHolder.bindData(tesi, thesisViewModel, user, true);
         } else {

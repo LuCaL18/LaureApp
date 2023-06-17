@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.CoRelatorPermissions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -129,4 +130,18 @@ public class Utility {
         return properties;
     }
 
+    public static String translatePermissionFromEnum(Resources resources, CoRelatorPermissions permission) {
+        switch(permission) {
+            case EDIT_SEARCH_KEYS:
+                return resources.getString(R.string.edit_search_keys);
+            case EDIT_CONSTRAINTS:
+                return resources.getString(R.string.edit_constraints);
+            case EDIT_DOCUMENTS:
+                return resources.getString(R.string.edit_documents);
+            case EDIT_NOTES:
+                return resources.getString(R.string.edit_notes);
+            default:
+                return "";
+        }
+    }
 }

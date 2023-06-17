@@ -42,6 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.ui.profile.dialogs.PasswordChangeDialog;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
@@ -68,6 +69,9 @@ public class ProfileFragment extends Fragment {
     private TextView bioTextView;
     private MaterialCardView bioCard;
     private MaterialCardView scopesCard;
+    private Button passwordChangeButton;
+    private Button updateProfileButton;
+    private FloatingActionButton uploadImageButton;
 
 
     private File photoFile;
@@ -90,8 +94,8 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         profileImageView = view.findViewById(R.id.profile_image_view);
-        FloatingActionButton uploadImageButton = view.findViewById(R.id.upload_image_button);
-        Button updateProfile = view.findViewById(R.id.edit_profile_button);
+        uploadImageButton = view.findViewById(R.id.upload_image_button);
+        updateProfileButton = view.findViewById(R.id.edit_profile_button);
 
         profileImageView = view.findViewById(R.id.profile_image_view);
         nameTextView = view.findViewById(R.id.name_text_view);
@@ -105,12 +109,12 @@ public class ProfileFragment extends Fragment {
         scopesCard = view.findViewById(R.id.cv_scopes_profile);
 
         uploadImageButton.setOnClickListener(v -> openImageSelectionDialog());
-        updateProfile.setOnClickListener(v -> {
+        updateProfileButton.setOnClickListener(v -> {
             NavController navController = NavHostFragment.findNavController(this);
             navController.navigate(R.id.action_navigation_profile_to_editProfileFragment);
         });
 
-        Button passwordChangeButton = view.findViewById(R.id.password_change_button);
+        passwordChangeButton = view.findViewById(R.id.password_change_button);
         passwordChangeButton.setOnClickListener(v -> showPasswordChangeDialog());
 
         pickPhotoLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -196,6 +200,12 @@ public class ProfileFragment extends Fragment {
     }
 
     private void displayUserData(LoggedInUser user) {
+        if(RoleUser.GUEST.equals(user.getRole())) {
+            passwordChangeButton.setVisibility(View.GONE);
+            updateProfileButton.setVisibility(View.GONE);
+            uploadImageButton.setVisibility(View.GONE);
+        }
+
         emailTextView.setText(user.getEmail());
         nameTextView.setText(user.getName());
         lastNameTextView.setText(user.getSurname());
