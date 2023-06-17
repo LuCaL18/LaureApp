@@ -48,6 +48,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
@@ -611,7 +612,7 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
         List<Tesi> filteredList = new ArrayList<>();
         for (Tesi t : tesiList) {
-            if (t.getAmbito() != null && ambito.contains(Utility.translateScope(getResources(), t.getAmbito()))) {
+            if (t.getAmbito() != null && ambito.contains(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(t.getAmbito())))) {
                 filteredList.add(t);
             }
         }

@@ -56,6 +56,7 @@ import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
@@ -409,7 +410,7 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
 
         List<Tesi> filteredList = new ArrayList<>();
         for (Tesi t : tesiList) {
-            if (t.getAmbito() != null && ambito.contains(Utility.translateScope(getResources(), t.getAmbito()))) {
+            if (t.getAmbito() != null && ambito.contains(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(t.getAmbito())))) {
                 filteredList.add(t);
             }
         }

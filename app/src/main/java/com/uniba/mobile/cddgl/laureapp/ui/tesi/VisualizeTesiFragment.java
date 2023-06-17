@@ -69,6 +69,7 @@ import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.CoRelatorPermissions;
 import com.uniba.mobile.cddgl.laureapp.data.DownloadedFile;
+import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.TicketState;
@@ -89,6 +90,7 @@ import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.UploadFileDialogFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
+import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -348,7 +350,7 @@ public class VisualizeTesiFragment extends Fragment {
         LinearLayout searchKeyInfoLl = root.findViewById(R.id.ll_card_search_keys_info);
 
         TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
-        scopeTextView.setText(thesis.getAmbito());
+        scopeTextView.setText(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(thesis.getAmbito())));
 
 
         if (thesis.getChiavi() == null) {
@@ -1156,11 +1158,11 @@ public class VisualizeTesiFragment extends Fragment {
     }
 
     public void updateSearchKey(String ambito, List<String> keyWords) {
-        thesis.setAmbito(ambito);
+        thesis.setAmbito(Utility.convertScopesToEnum(ambito));
         thesis.setChiavi(keyWords);
 
         TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
-        scopeTextView.setText(thesis.getAmbito());
+        scopeTextView.setText(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(thesis.getAmbito())));
 
         if (keyWords.isEmpty()) {
             root.findViewById(R.id.layout_search_key).setVisibility(View.GONE);

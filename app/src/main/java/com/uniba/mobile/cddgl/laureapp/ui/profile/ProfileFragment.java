@@ -42,6 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.ui.profile.dialogs.PasswordChangeDialog;
@@ -219,9 +220,9 @@ public class ProfileFragment extends Fragment {
             List<String> scopes = user.getAmbiti();
             for (String scope : scopes) {
                 if (user.getAmbiti().indexOf(scope) != scopes.size() - 1) {
-                    scopesString.append(Utility.translateScope(getResources(), scope)).append(", ");
+                    scopesString.append(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(scope))).append(", ");
                 } else {
-                    scopesString.append(Utility.translateScope(getResources(), scope));
+                    scopesString.append(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(scope)));
                 }
             }
             interestsTextView.setText(scopesString.toString());
