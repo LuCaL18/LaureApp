@@ -3,7 +3,6 @@ package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -31,6 +30,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +41,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.uniba.mobile.cddgl.laureapp.R;
@@ -48,6 +48,8 @@ import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Filtri;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentTesiBinding;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.RelatorsAdapter;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.CoRelatoreDialoog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.ConstraintsDialog;
 
 import java.util.ArrayList;
@@ -63,8 +65,10 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     private List<String> esami = new ArrayList<String>();
     private Tesi thesis;
     private FragmentTesiBinding binding;
-    private AlertDialog.Builder dialogBuilder, dialogBuilder2, dialogBuilder3;
-    private AlertDialog dialog2, dialog3;
+    private AlertDialog.Builder dialogBuilder, dialogBuilder3;
+    private RelatorsAdapter relatorsAdapter;
+    private RecyclerView recyclerViewRelators;
+    private AlertDialog dialog3;
     private ListView keywordListView;
     private EditText popup_email, eNuovakey, eSkill, eNote, eNomeTesi, eDescrizione;
     private TextView popup_nome, relatore;
@@ -83,17 +87,16 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     public List<String> keywordList = new ArrayList<>();
     public List<Filtri> filtriList = new ArrayList<>();
     public List<String> ambitiList = new ArrayList<>();
-    private ListView listViewRelatori;
     private ArrayList<String> listRelatori;
     private ArrayAdapter<String> adapterRelatori;
     private List<String> keywordSelezionate = new ArrayList<>();
     private PersonaTesi relatoreObj;
     private PersonaTesi relatorePrincipaleObj;
-    private boolean trovato, trovato2;
+    private boolean trovato2;
     private ImageView addImage;
     private ListAdapter listAdapter;
     private static final int GALLERY_REQUEST_CODE = 100;
-    private String guidString;
+    private RecyclerView listViewrelatori;
 
     public CreaTesiFragment() {
         // Required empty public constructor
@@ -117,6 +120,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         thesis = new Tesi();
+        recyclerViewRelators = binding.listaRelatori;
         impostaAmbiti();
         setCardConstraintsCreator();
 
@@ -131,28 +135,6 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         eNomeTesi = binding.nomeTesi;
         addImage = binding.addImage;
 
-        listViewRelatori = binding.listaRelatori;
-        listRelatori = new ArrayList<>();
-        adapterRelatori = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listRelatori);
-        listViewRelatori.setAdapter(adapterRelatori);
-        listViewRelatori.setOnItemLongClickListener((adapterView, view1, position, l) -> {
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Vuoi rimuovere questo relatore?")
-                    .setPositiveButton("Sì", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            removeItemFromList(position);
-                            co_relatori.remove(position);
-                        }
-                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    }).create().show();
-            return false;
-        });
-
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,27 +145,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
 
 
         /*Imposta la sezione relativa all'aggiunta dei relatori*/
-        ImageView b_aggiungi_relatore = binding.aggiungiRelatore;
-        View relatorePopup = getLayoutInflater().inflate(R.layout.popup_relatore, null);
-        dialogBuilder = new AlertDialog.Builder(getContext());
-        dialogBuilder.setView(relatorePopup);
-        AlertDialog dialog = dialogBuilder.create();
-
-        /*Apertura del popup Relatore */
-        b_aggiungi_relatore.setOnClickListener(view1 -> {
-            viewRelatore(relatorePopup);
-            save.setOnClickListener(view11 -> {
-                aggiungiRelatore(checkPermessi());
-                unchek();
-                PersonaTesi relatore = new PersonaTesi(relatoreObj.getId(), relatoreObj.getDisplayName(), relatoreObj.getEmail(), permessiList);
-                co_relatori.add(relatore);
-                addItemToList(relatore.getDisplayName() + " " + relatore.getPermissions());
-                resetPopupRelatore();
-                dialog.dismiss();
-            });
-            cancel.setOnClickListener(view112 -> dialog.dismiss());
-            dialog.show();
-        });
+        setCardCoRelatorsCreator();
 
         /*Imposta la sezione relativa all'aggiunta degli ambiti*/
         ImageView b_aggiungi_ambiti = binding.aggiungiAmbiti;
@@ -502,89 +464,6 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         permesso4 = relatorePopup.findViewById(R.id.edit_notes_permission);
         save = relatorePopup.findViewById(R.id.saveButton);
         cancel = relatorePopup.findViewById(R.id.cancelButton);
-        verifica = (Button) impostaVerifica(relatorePopup);
-    }
-
-    private void aggiungiRelatore(String permessi) {
-        TextView nuovo_relatore = new TextView(getContext());
-        nuovo_relatore.setText(popup_nome.getText() + " " + " (" + permessi + ").");
-        nuovo_relatore.setTextSize(20);
-        nuovo_relatore.setTextColor(Color.BLACK);
-    }
-
-    private View impostaModifica(View relatorePopup) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        modifica = new Button(this.getContext());
-        modifica.setLayoutParams(params);
-        modifica.setTextSize(20);
-        modifica.setBackgroundColor(save.getShadowColor());
-        modifica.setTextColor(Color.WHITE);
-        modifica.setText("modifica mail");
-        LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
-        tastiLayout.removeView(verifica);
-        tastiLayout.addView(modifica);
-        return modifica;
-    }
-
-    private View impostaVerifica(View relatorePopup) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
-        tastiLayout.removeView(verifica);
-        verifica = new Button(this.getContext());
-        verifica.setLayoutParams(params);
-        verifica.setTextSize(20);
-        verifica.setTextColor(Color.WHITE);
-        verifica.setBackgroundColor(save.getShadowColor());
-        verifica.setText("Verifica email");
-        trovato = false;
-        verifica.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                trovato2= false;
-                for(PersonaTesi relatore : co_relatori){
-                    if(relatore.getEmail().equals(popup_email.getText().toString())){
-                        trovato2=true;
-                    }
-                }
-                if(trovato2==true){
-                    Toast.makeText(getContext(), "Relatore già presente", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    relatoriRef.whereEqualTo("email", popup_email.getText().toString())
-                            .limit(1)
-                            .get()
-                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                        trovato = true;
-                                        relatoreObj = documentSnapshot.toObject(PersonaTesi.class);
-                                        popup_nome.setText(relatoreObj.getDisplayName());
-                                        popup_nome.setVisibility(View.VISIBLE);
-                                        popup_email.setVisibility(View.INVISIBLE);
-                                        modifica = (Button) impostaModifica(relatorePopup);
-                                        modifica.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                popup_nome.setVisibility(View.INVISIBLE);
-                                                popup_email.setVisibility(View.VISIBLE);
-                                                save.setVisibility(View.GONE);
-                                                impostaVerifica(relatorePopup);
-                                            }
-                                        });
-                                        save.setVisibility(View.VISIBLE);
-                                    }
-
-                            }
-                });
-                }
-            }
-        });
-        tastiLayout.removeView(modifica);
-        tastiLayout.addView(verifica);
-        return verifica;
     }
 
     @Override
@@ -618,35 +497,6 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
 
             addImage.setLayoutParams(layoutParams);
         }
-    }
-
-    // Metodo per aggiungere un elemento alla lista
-    private void addItemToList(String item) {
-        listRelatori.add(item);
-        adapterRelatori.notifyDataSetChanged();
-
-        // Ottenere i parametri di layout correnti della ListView
-        ViewGroup.LayoutParams params = listViewRelatori.getLayoutParams();
-
-        // Impostare la nuova altezza desiderata
-        params.height += 125;
-
-        // Applicare i nuovi parametri di layout alla ListView
-        listViewRelatori.setLayoutParams(params);
-    }
-
-    // Metodo per rimuovere un elemento dalla lista
-    private void removeItemFromList(int position) {
-        listRelatori.remove(position);
-        adapterRelatori.notifyDataSetChanged();
-
-            // Ottenere i parametri di layout correnti della ListView
-            ViewGroup.LayoutParams params = listViewRelatori.getLayoutParams();
-            // Impostare la nuova altezza desiderata
-            params.height -= 125;
-
-            // Applicare i nuovi parametri di layout alla ListView
-            listViewRelatori.setLayoutParams(params);
     }
 
     private void setCardConstraintsCreator() {
@@ -691,4 +541,45 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         aggiungiVincoli(parentLayout);
     }
 
+    private void setCardCoRelatorsCreator() {
+        ImageView relatorsArrowCard = binding.aggiungiRelatore;
+        relatorsArrowCard.setImageResource(R.drawable.ic_baseline_add_box_24);
+        relatorsArrowCard.setClickable(true);
+
+        CreaTesiFragment requireFragment = this;
+
+        relatorsArrowCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final View relatorePopup = getLayoutInflater().inflate(R.layout.popup_relatore, null);
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+                dialogBuilder.setView(relatorePopup);
+                AlertDialog dialog = dialogBuilder.create();
+
+                CoRelatoreDialoog coRelatoreDialoog = new CoRelatoreDialoog(dialog, relatorePopup, thesis.getCoRelatori(), requireFragment);
+                coRelatoreDialoog.show();
+            }
+        });
+    }
+
+    public void addCoRelator(PersonaTesi coRelator) {
+        co_relatori.add(coRelator);
+        relatorsAdapter = null;
+        relatorsAdapter = new RelatorsAdapter(co_relatori, true, this);
+        recyclerViewRelators.setAdapter(relatorsAdapter);
+        // 4. Notifica all'adattatore che è stato aggiunto un nuovo elemento
+        relatorsAdapter.notifyDataSetChanged();
+        // Opzionalmente, scorrere la RecyclerView per visualizzare l'elemento appena aggiunto
+        recyclerViewRelators.scrollToPosition(0);
+        recyclerViewRelators.setVisibility(View.VISIBLE);
+        recyclerViewRelators.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    public void removeCoRelator(PersonaTesi coRelator) {
+        co_relatori.remove(coRelator);
+        relatorsAdapter = new RelatorsAdapter(co_relatori, true, this);
+        recyclerViewRelators.setAdapter(relatorsAdapter);
+        relatorsAdapter.notifyDataSetChanged();
+    }
 }

@@ -3,11 +3,9 @@ package com.uniba.mobile.cddgl.laureapp.ui.calendario;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,8 +23,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -52,17 +50,18 @@ import com.uniba.mobile.cddgl.laureapp.data.model.Ricevimento;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentCalendarioBinding;
+import com.uniba.mobile.cddgl.laureapp.ui.calendario.adapters.MeetingAdapter;
 import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class CalendarioFragment extends Fragment {
 
@@ -103,6 +102,11 @@ public class CalendarioFragment extends Fragment {
     private TimePickerDialog timePickerDialog;
     private String relatoreId;
     private String studenteId;
+    private MeetingAdapter meetingAdapter;
+    private List<Ricevimento> listaMeeting;
+    private List<PersonaTesi> co_relatori;
+    private CompactCalendarView calendario;
+    public ImageView restart;
 
 
     public CalendarioFragment() {
@@ -131,7 +135,7 @@ public class CalendarioFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Seleziona le tesi in cui il campo relatore o correlatore corrisponde all'ID del relatore loggato
 
-        CompactCalendarView calendario = binding.compactcalendarView;
+        calendario = binding.compactcalendarView;
         calendario.setUseThreeLetterAbbreviation(true);
 
         binding.mese.setText(getMese(LocalDate.now().getMonthValue()-1) + " " + LocalDate.now().getYear());
@@ -142,6 +146,14 @@ public class CalendarioFragment extends Fragment {
         orario = binding.orario;
         orarioT = binding.orarioT;
         T_task = binding.taskSelected;
+        restart = binding.restart;
+
+        restart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                aggiornaCalendario();
+            }
+        });
 
         orario.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,71 +227,7 @@ public class CalendarioFragment extends Fragment {
             }
         });
 
-            ricevimentoRef.whereEqualTo("relatore", currentUserUid)
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                Ricevimento ricevimentoObj = documentSnapshot.toObject(Ricevimento.class);
-                                ricevimentiMap.put(documentSnapshot.getId(),ricevimentoObj);
-                                long millis = ricevimentoObj.getTime();
-                                Event ev1 = new Event(Color.GREEN, millis, ricevimentoObj.getTitolo());
-                                calendario.addEvent(ev1);
-                            }
-                        }
-                    });
-
-            ricevimentoRef.whereEqualTo("studente", currentUserUid)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Ricevimento ricevimentoObj = documentSnapshot.toObject(Ricevimento.class);
-                            ricevimentiMap.put(documentSnapshot.getId(),ricevimentoObj);
-                            long millis = ricevimentoObj.getTime();
-                            Event ev1 = new Event(Color.GREEN, millis, ricevimentoObj.getTitolo());
-                            calendario.addEvent(ev1);
-                        }
-                    }
-                });
-
-            calendario.setListener(new CompactCalendarView.CompactCalendarViewListener() {
-            @Override
-            public void onDayClick(Date dateClicked) {
-                final View visualizzaRicevimento = getLayoutInflater().inflate(R.layout.fragment_visualizza_ricevimento, null);
-                if (dataPassata(dateClicked.getYear() + 1900, dateClicked.getMonth() + 1, dateClicked.getDate())) {
-                        binding.riepilogo.setVisibility(View.VISIBLE);
-                        binding.riepilogoT.setVisibility(View.VISIBLE);
-                        time = dateClicked.getTime();
-                    } else {
-                        binding.riepilogo.setVisibility(View.GONE);
-                        binding.riepilogoT.setVisibility(View.GONE);
-                        time = dateClicked.getTime();
-                    }
-                trovato=false;
-                for (Map.Entry<String, Ricevimento> entry : ricevimentiMap.entrySet()) {
-                    String converted1 = convertDateClicked(dateClicked);
-                    String converted2 = convertMtoD(entry.getValue().getTime(), false);
-                    if (converted1.equals(converted2)) {
-                        aggiungiRicevimento(entry.getValue(), visualizzaRicevimento, dateClicked);
-                        trovato=true;
-                    }
-                    }
-                if(trovato==true){
-                    dialogBuilder = new AlertDialog.Builder(getContext());
-                    dialogBuilder.setView(visualizzaRicevimento);
-                    dialog = dialogBuilder.create();
-                    dialog.show();
-                }
-            }
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                String mese = getMese(firstDayOfNewMonth.getMonth()) + " " + (firstDayOfNewMonth.getYear() + 1900);
-                binding.mese.setText(mese);
-            }
-        });
+        aggiornaCalendario();
 
         tesiBackup.clear();
         tesiList.clear();
@@ -344,6 +292,80 @@ public class CalendarioFragment extends Fragment {
 
     }
 
+    private void aggiornaCalendario() {
+        calendario.removeAllEvents();
+        calendario.setCurrentDate(Calendar.getInstance().getTime());
+        calendario.setOnClickListener(null);
+        calendario.onTouchEvent(null);
+
+        ricevimentoRef.whereEqualTo("relatore", currentUserUid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Ricevimento ricevimentoObj = documentSnapshot.toObject(Ricevimento.class);
+                            ricevimentiMap.put(documentSnapshot.getId(),ricevimentoObj);
+                            long millis = ricevimentoObj.getTime();
+                            Event ev1 = new Event(Color.GREEN, millis, ricevimentoObj.getTitolo());
+                            calendario.addEvent(ev1);
+                        }
+                    }
+                });
+
+        ricevimentoRef.whereEqualTo("studente", currentUserUid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Ricevimento ricevimentoObj = documentSnapshot.toObject(Ricevimento.class);
+                            ricevimentiMap.put(documentSnapshot.getId(),ricevimentoObj);
+                            long millis = ricevimentoObj.getTime();
+                            Event ev1 = new Event(Color.GREEN, millis, ricevimentoObj.getTitolo());
+                            calendario.addEvent(ev1);
+                        }
+                    }
+                });
+        calendario.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+                listaMeeting = new ArrayList<>();
+                final View visualizzaRicevimento = getLayoutInflater().inflate(R.layout.fragment_visualizza_ricevimento, null);
+                if (dataPassata(dateClicked.getYear() + 1900, dateClicked.getMonth() + 1, dateClicked.getDate())) {
+                    binding.riepilogo.setVisibility(View.VISIBLE);
+                    binding.riepilogoT.setVisibility(View.VISIBLE);
+                    time = dateClicked.getTime();
+                } else {
+                    binding.riepilogo.setVisibility(View.GONE);
+                    binding.riepilogoT.setVisibility(View.GONE);
+                    time = dateClicked.getTime();
+                }
+                trovato=false;
+                for (Map.Entry<String, Ricevimento> entry : ricevimentiMap.entrySet()) {
+                    String converted1 = convertDateClicked(dateClicked);
+                    String converted2 = convertMtoD(entry.getValue().getTime(), false);
+                    if (converted1.equals(converted2)) {
+                        trovato=true;
+                        listaMeeting.add(entry.getValue());
+                    }
+                }
+                if(trovato==true){
+                    aggiungiRicevimento(listaMeeting, visualizzaRicevimento, dateClicked);
+                    dialogBuilder = new AlertDialog.Builder(getContext());
+                    dialogBuilder.setView(visualizzaRicevimento);
+                    dialog = dialogBuilder.create();
+                    dialog.show();
+                }
+            }
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+                String mese = getMese(firstDayOfNewMonth.getMonth()) + " " + (firstDayOfNewMonth.getYear() + 1900);
+                binding.mese.setText(mese);
+            }
+        });
+    }
+
     private void ripristina_campi() {
         titolo.setText(null);
         orarioT.setText(null);
@@ -363,7 +385,6 @@ public class CalendarioFragment extends Fragment {
     }
 
     private void caricaRicevimento() {
-
         for (Tesi tesi : tesiBackup) {
             if (tesi.getNomeTesi().equals(tesiSpinner.getSelectedItem().toString())) {
                 if(tesi.getStudent().getEmail().equals(currentUser.getEmail())){
@@ -374,6 +395,7 @@ public class CalendarioFragment extends Fragment {
                 }
                 relatoreId = tesi.getRelatore().getId();
                 studenteId = tesi.getStudent().getId();
+                co_relatori = tesi.getCoRelatori();
                 break;  // Interrompi il ciclo una volta che hai trovato l'oggetto desiderato
             }
         }
@@ -388,33 +410,17 @@ public class CalendarioFragment extends Fragment {
                 }
             }
 
-            UUID guid = UUID.randomUUID();
-            guidString = guid.toString();
-            DocumentReference ricevimentoref = ricevimentoRef.document(guidString);
+            Ricevimento ricevimento = new Ricevimento(relatoreId, riepilogo.getText().toString(), taskRic,tesiSpinner.getSelectedItem().toString(), tesiSelezionata, time+hour+minute, titolo.getText().toString(), studenteId, co_relatori);
+            DocumentReference ricevimentoref = ricevimentoRef.document(ricevimento.getRicevimentoId());
 
-            Map<String, Object> ricevimento = new HashMap<>();
-
-            ricevimento.put("titolo", titolo.getText().toString());
-            ricevimento.put("relatore", relatoreId);
-            ricevimento.put("riepilogo", riepilogo.getText().toString());
-            ricevimento.put("nomeTesi", tesiSpinner.getSelectedItem().toString());
-            ricevimento.put("tesiId", tesiSelezionata);
-            ricevimento.put("ricevimentoId", guidString);
-            ricevimento.put("studente", studenteId);
-            if(taskRic.size()==0)
-            {
-                taskRic.add("nessun task");
-            }
-            ricevimento.put("task", taskRic);
-            ricevimento.put("time", time+hour+minute);
             ricevimentoref.set(ricevimento, SetOptions.merge());
 
-            sendNotification();
-            NavController navController = NavHostFragment.findNavController(this);
-            navController.navigate(R.id.action_calendario_self);
+            sendNotification(ricevimento.getRicevimentoId());
+
+            aggiornaCalendario();
     }
 
-    private void sendNotification() {
+    private void sendNotification(String ricevimentoId) {
 
         String title = getString(R.string.title_notification_ticket, titolo.getText().toString());
 
@@ -427,7 +433,7 @@ public class CalendarioFragment extends Fragment {
         data.put("receiveId", receiverId);
         data.put("type", notification.getType());
         data.put("senderName", currentUser.getEmail());
-        data.put("meetingId", guidString);
+        data.put("meetingId", ricevimentoId);
         data.put("timestamp", System.currentTimeMillis());
         notification.addData(data);
 
@@ -482,61 +488,16 @@ public class CalendarioFragment extends Fragment {
 
     }
 
-    private void aggiungiRicevimento(Ricevimento value, View view, Date date) {
-
-
-        LinearLayout linearLayoutT = view.findViewById(R.id.ricevimentoLayout);
-
-        TextView spazio = new TextView(getContext());
-        spazio.setTextSize(10);
-        linearLayoutT.addView(spazio);
-
-        TextView titolo = new TextView(getContext());
-        titolo.setText(value.getTitolo());
-        titolo.setTextSize(28);
-        titolo.setTypeface(null, Typeface.BOLD_ITALIC);
-        titolo.setTextColor(getResources().getColor(R.color.primary_green));
-        titolo.setGravity(Gravity.CENTER_HORIZONTAL);
-        linearLayoutT.addView(titolo);
-
-        TextView tesi = new TextView(getContext());
-        tesi.setText("TESI: "+value.getNomeTesi());
-        tesi.setTextSize(25);
-        tesi.setGravity(Gravity.CENTER_HORIZONTAL);
-        linearLayoutT.addView(tesi);
-
-
-        TextView orario = new TextView(getContext());
-        orario.setText("ORARIO: "+convertMtoH(value.getTime()));
-        orario.setTextSize(25);
-        orario.setGravity(Gravity.CENTER_HORIZONTAL);
-        linearLayoutT.addView(orario);
-
-        if(dataPassata(date.getYear() + 1900, date.getMonth() + 1, date.getDate())) {
-            TextView riepilogo = new TextView(getContext());
-            riepilogo.setText("RIEPILOGO: "+value.getRiepilogo());
-            riepilogo.setTextSize(20);
-            riepilogo.setGravity(Gravity.CENTER_HORIZONTAL);
-            linearLayoutT.addView(riepilogo);
-        }
-
-        TextView task = new TextView(getContext());
-        task.setText("TASK:");
-        task.setTextSize(25);
-        task.setGravity(Gravity.CENTER_HORIZONTAL);
-        linearLayoutT.addView(task);
-        for (String tasks: value.getTask()) {
-            TextView taskT = new TextView(view.getContext());
-            taskT.setText(tasks);
-            taskT.setTextSize(20);
-            taskT.setGravity(Gravity.CENTER_HORIZONTAL);
-            linearLayoutT.addView(taskT);
-        }
-
-        TextView spazio2 = new TextView(getContext());
-        spazio.setTextSize(10);
-        linearLayoutT.addView(spazio2);
-
+    private void aggiungiRicevimento(List meetinglist, View view, Date date) {
+        meetingAdapter = new MeetingAdapter(meetinglist);
+        RecyclerView meetingRecyclerView = view.findViewById(R.id.listaMeeting);
+        meetingRecyclerView.setAdapter(meetingAdapter);
+        // 4. Notifica all'adattatore che è stato aggiunto un nuovo elemento
+        meetingAdapter.notifyDataSetChanged();
+        // Opzionalmente, scorrere la RecyclerView per visualizzare l'elemento appena aggiunto
+        meetingRecyclerView.scrollToPosition(0);
+        meetingRecyclerView.setVisibility(View.VISIBLE);
+        meetingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private String getMese(int month) {
@@ -589,12 +550,6 @@ public class CalendarioFragment extends Fragment {
             obj = new SimpleDateFormat("dd MM yyyy");
         }
 
-        return obj.format(res);
-    }
-
-    public String convertMtoH(long millis){
-        Date res = new Date(millis);
-        SimpleDateFormat obj = new SimpleDateFormat("HH:mm");
         return obj.format(res);
     }
 
