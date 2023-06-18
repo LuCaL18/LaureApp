@@ -3,23 +3,22 @@ package com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs;
 import android.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ public class SearchKeyDialog {
 
     private final AlertDialog dialog;
     private ArrayAdapter<String> arrayAdapter2;
+    private final CollectionReference filtriRef = FirebaseFirestore.getInstance().collection("filtri");
 
     public SearchKeyDialog(AlertDialog dialog, View searchKeyPopup, VisualizeTesiFragment requiredFragment, String ambito, List<String> keyWords) {
         this.dialog = dialog;
@@ -89,50 +89,46 @@ public class SearchKeyDialog {
 
                 keywordListView.setItemChecked(keywordList.size() - 1, true);
                 keyWords.add(nuovakey);
-
-
-                Map<String, String> T_chiave = new HashMap<>();
-                T_chiave.put("chiave", nuovakey);
-
-                FirebaseFirestore.getInstance().collection("parola_chiave")
-                        .add(T_chiave)
-                        .addOnSuccessListener(documentReference -> {
-                            Toast.makeText(searchKeyPopup.getContext(), R.string.keyword_entered, Toast.LENGTH_SHORT).show();
-                            eNuovakey.setText("");
-                        });
             } else {
                 Toast.makeText(searchKeyPopup.getContext(), R.string.existing_keyword, Toast.LENGTH_SHORT).show();
             }
+
+            Map<String, Object> T_chiave = new HashMap<>();
+            T_chiave.put("lista", keywordList);
+
+            filtriRef.document("parole_chiave")
+                    .update(T_chiave)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(searchKeyPopup.getContext(), R.string.keyword_entered, Toast.LENGTH_SHORT).show();
+                        eNuovakey.setText("");
+                    });
         });
 
 
-        FirebaseFirestore.getInstance().collection("parola_chiave").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        filtriRef.document("parole_chiave").get().addOnSuccessListener(documentSnapshot -> {
+            if(documentSnapshot != null && documentSnapshot.get("lista") != null) {
+                keywordList.addAll((Collection<String>) documentSnapshot.get("lista"));
+                arrayAdapter2 = new ArrayAdapter<>(searchKeyPopup.getContext(),
+                        android.R.layout.simple_list_item_multiple_choice, keywordList);
 
-            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                keywordList.add(documentSnapshot.get("chiave").toString());
-            }
+                keywordListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                keywordListView.setAdapter(arrayAdapter2);
 
-            arrayAdapter2 = new ArrayAdapter<>(searchKeyPopup.getContext(),
-                    android.R.layout.simple_list_item_multiple_choice, keywordList);
+                keywordListView.setOnItemClickListener((adapterView, view, position, id) -> {
 
-            keywordListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            keywordListView.setAdapter(arrayAdapter2);
+                    if(keyWords.contains(keywordList.get(position))) {
+                        keyWords.remove(keywordList.get(position));
+                        return;
+                    }
 
-            keywordListView.setOnItemClickListener((adapterView, view, position, id) -> {
+                    keyWords.add(keywordList.get(position));
+                });
 
-                if(keyWords.contains(keywordList.get(position))) {
-                    keyWords.remove(keywordList.get(position));
-                    return;
+
+                for (String word : keyWords) {
+                    keywordListView.setItemChecked(keywordList.indexOf(word), true);
                 }
-
-                keyWords.add(keywordList.get(position));
-            });
-
-
-            for (String word : keyWords) {
-                keywordListView.setItemChecked(keywordList.indexOf(word), true);
             }
-
         });
 
         Button save = searchKeyPopup.findViewById(R.id.saveButton);

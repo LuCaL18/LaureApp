@@ -91,6 +91,7 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
     private final int SEARCH_ITEM_MENU = R.id.search_tesi;
     private final int FILTER_ITEM_MENU = R.id.filter_tesi;
+    private static final int CREATE_TESI_APP_BAR = R.id.crea_tesi;
 
     private final int TAB_ALL = 0;
     private final int TAB_PERSONAL = 1;
@@ -356,6 +357,10 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
                     searchView = (SearchView) searchItem.getActionView();
                     searchView.setQueryHint(getString(R.string.search_hint));
                     searchView.setOnQueryTextListener(queryTextListener);
+
+                    if(!RoleUser.PROFESSOR.equals(user.getRole())) {
+                        menu.findItem(CREATE_TESI_APP_BAR).setVisible(false);
+                    }
                 }
 
                 @Override
@@ -375,6 +380,9 @@ public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTex
 
                         case FILTER_ITEM_MENU:
                             setFilter(requireActivity().findViewById(FILTER_ITEM_MENU));
+                            return true;
+                        case CREATE_TESI_APP_BAR:
+                            navController.navigate(R.id.action_navigation_lista_tesi_to_tesiFragmant);
                             return true;
                         default:
                             return false;

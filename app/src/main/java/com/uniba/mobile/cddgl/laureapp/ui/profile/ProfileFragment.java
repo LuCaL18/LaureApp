@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
@@ -145,10 +148,10 @@ public class ProfileFragment extends Fragment {
                         case 0:
                             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                                 selectImageFromGallery();
-                            } else if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+                            } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
                                 selectImageFromGallery();
                             } else {
-                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES},
                                             REQUEST_READ_EXTERNAL_STORAGE);
                                 } else {
@@ -209,7 +212,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void displayUserData(LoggedInUser user) {
-        if(RoleUser.GUEST.equals(user.getRole())) {
+        if (RoleUser.GUEST.equals(user.getRole())) {
             passwordChangeButton.setVisibility(View.GONE);
             updateProfileButton.setVisibility(View.GONE);
             uploadImageButton.setVisibility(View.GONE);
@@ -256,7 +259,12 @@ public class ProfileFragment extends Fragment {
     private void observeUserData() {
         mainActivityViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
-                displayUserData(user);
+                if (RoleUser.GUEST.equals(user.getRole()) && getView() != null) {
+                    View view = getView();
+                    showGuestLayoutProfile(view);
+                } else {
+                    displayUserData(user);
+                }
             }
         });
     }
@@ -314,5 +322,18 @@ public class ProfileFragment extends Fragment {
     private void showPasswordChangeDialog() {
         PasswordChangeDialog dialog = new PasswordChangeDialog();
         dialog.show(getParentFragmentManager(), "password_change_dialog");
+    }
+
+    private void showGuestLayoutProfile(View view) {
+        ScrollView profileLayout = view.findViewById(R.id.profile_scroll_layout);
+        profileLayout.setVisibility(View.GONE);
+        LinearLayout guestLayout = view.findViewById(R.id.guest_profile_linear_layout);
+        guestLayout.setVisibility(View.VISIBLE);
+        Button loginButton = view.findViewById(R.id.button_go_to_login_from_profile);
+        loginButton.setOnClickListener(v -> {
+            if(getActivity() != null) {
+                ((MainActivity)getActivity()).goToLoginActivity();
+            }
+        });
     }
 }

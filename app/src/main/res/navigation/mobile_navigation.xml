@@ -41,11 +41,7 @@
         android:id="@+id/tesiFragmant"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.CreaTesiFragment"
         android:label="@string/crea_tesi"
-        tools:layout="@layout/fragment_tesi" >
-        <action
-            android:id="@+id/action_tesiFragmant_to_navigation_home"
-            app:destination="@id/navigation_home" />
-    </fragment>
+        tools:layout="@layout/fragment_tesi" />
     <fragment
         android:id="@+id/nav_new_task"
         android:name="com.uniba.mobile.cddgl.laureapp.ui.task.NewTaskFragment"
@@ -72,6 +68,9 @@
         <action
             android:id="@+id/action_navigation_lista_tesi_to_visualizeTesiFragment"
             app:destination="@id/visualizeTesiFragment" />
+        <action
+            android:id="@+id/action_navigation_lista_tesi_to_tesiFragmant"
+            app:destination="@id/tesiFragmant" />
     </fragment>
     <fragment
         android:id="@+id/nav_classifica_tesi"
