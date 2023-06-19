@@ -132,8 +132,10 @@ public class ProfileFragment extends Fragment {
                 });
 
         pickPhotoCameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK && result.getData() != null && photoFile != null) {
+            if (result.getResultCode() == RESULT_OK && photoFile != null) {
                 uploadFile(mainActivityViewModel.getIdUser(), FileProvider.getUriForFile(requireContext(), ShareContent.AUTHORITY, photoFile));
+            } else {
+                showSaveToast(R.string.error_upload);
             }
         });
 
