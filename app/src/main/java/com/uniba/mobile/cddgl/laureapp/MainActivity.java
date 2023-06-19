@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int LOGOUT = R.id.logout;
     public static final int MEETING = R.id.nav_meeting;
     public static final int LISTA_TASK = R.id.nav_lista_task;
-    public static final int NEW_TASK = R.id.nav_new_task;
     public static final int CLASSIFICA_TESI = R.id.nav_classifica_tesi;
     public static final int LISTA_TESI = R.id.navigation_lista_tesi;
     public static final int SETTINGS = R.id.nav_settings;
@@ -78,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private BroadcastReceiver downloadReceiver;
     private ShareContent shareContent;
+    private BottomNavigationView navView;
 
     @Nullable
     private LoggedInUser user;
@@ -113,13 +113,13 @@ public class MainActivity extends AppCompatActivity {
             FirebaseMessaging.getInstance().subscribeToTopic("notifications");
 
             DrawerLayout drawer = binding.drawerLayout;
-            BottomNavigationView navView = findViewById(R.id.nav_view);
+            navView = findViewById(R.id.nav_view);
             navigationView = binding.navViewMenu;
 
             // Passing each menu ID as a set of Ids because each
             // menu should be considered as top level destinations.
             appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_home,
-                    R.id.navigation_lista_tesi, R.id.navigation_profile)
+                    LISTA_TESI, CLASSIFICA_TESI, R.id.navigation_profile)
                     .setOpenableLayout(drawer)
                     .build();
 
@@ -206,7 +206,13 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel.getUser().observe(this, loggedInUser -> {
 
             if(loggedInUser.getRole().equals(RoleUser.PROFESSOR)) {
-                navigationView.getMenu().findItem(CLASSIFICA_TESI).setVisible(false);
+                navView.getMenu().findItem(CLASSIFICA_TESI).setVisible(false);
+            } else if(RoleUser.GUEST.equals(loggedInUser.getRole())) {
+                navigationView.getMenu().findItem(LISTA_TASK).setVisible(false);
+                navigationView.getMenu().findItem(CHAT).setVisible(false);
+                navigationView.getMenu().findItem(TICKET).setVisible(false);
+                navigationView.getMenu().findItem(BOOKING).setVisible(false);
+                navigationView.getMenu().findItem(MEETING).setVisible(false);
             }
 
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.display_name_text_view)).setText(loggedInUser.getDisplayName());

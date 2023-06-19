@@ -33,8 +33,10 @@ public class RequestLoginDialog extends DialogFragment {
         ImageView closeButton = view.findViewById(R.id.image_close_dialog);
 
         loginButton.setOnClickListener(v -> {
-            ((MainActivity)getActivity()).goToLoginActivity();
-            dismiss();
+            if(getActivity() != null) {
+                ((MainActivity)getActivity()).goToLoginActivity();
+                dismiss();
+            }
         });
 
         closeButton.setOnClickListener(v -> dismiss());
