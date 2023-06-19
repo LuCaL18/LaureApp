@@ -33,7 +33,7 @@
                     android:id="@+id/temp_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/timeline_value_weeks"
+                    android:text="3"
                     android:textSize="18sp" />
 
             </LinearLayout>
