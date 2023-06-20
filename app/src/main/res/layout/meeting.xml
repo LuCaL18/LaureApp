@@ -9,10 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="#139145"
+        android:textColor="#000000"
         android:padding="8dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"/>
 
     <TextView
         android:id="@+id/TesiM"

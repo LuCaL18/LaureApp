@@ -165,8 +165,6 @@ public class ConstraintsDialog {
             timeWeeks = (int) value;
         });
 
-        media.addOnChangeListener((slider, value, fromUser) -> voto.setText(String.valueOf(value)));
-
         save.setOnClickListener(viewSave -> {
 
             requiredFragment.updateConstraints(timeWeeks, Float.parseFloat(voto.getText().toString()), exams, eSkill.getText().toString());

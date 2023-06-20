@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,11 +22,8 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
 
     private List<Ricevimento> meetingList;
 
-    private ImageView restart;
-
-    public MeetingAdapter(List<Ricevimento> meetingList, ImageView restart) {
+    public MeetingAdapter(List<Ricevimento> meetingList) {
         this.meetingList = meetingList;
-        this.restart = restart;
     }
 
     @NonNull
@@ -78,8 +74,6 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
 
                             // Notifica all'adattatore che un elemento è stato rimosso
                             notifyItemRemoved(itemPosition);
-
-                            restart.performClick();
                         }
                     });
         });

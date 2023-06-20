@@ -24,7 +24,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@mipmap/no_image"/>
+                android:src="@drawable/baseline_add_photo_alternate_24"/>
 
             <EditText
                 android:id="@+id/nome_tesi"
@@ -69,8 +69,8 @@
                         app:layout_constraintTop_toTopOf="@+id/T_relatori_tesi"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="17dp"
-                        android:textAlignment="center"
                         android:background="@drawable/baseline_add_to_photos_24"
+                        android:textAlignment="center"
                         android:clickable="true"
                         android:contextClickable="true"
                         android:allowClickWhenDisabled="true"/>

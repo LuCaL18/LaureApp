@@ -67,6 +67,7 @@ public class CalendarioFragment extends Fragment {
 
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     String currentUserUid = currentUser.getUid();
+    private String guidString;
     private String receiverId=null;
     private BottomNavigationView navBar;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -106,7 +107,6 @@ public class CalendarioFragment extends Fragment {
     private List<PersonaTesi> co_relatori;
     private CompactCalendarView calendario;
     public ImageView restart;
-    private int meseAttuale = LocalDate.now().getMonthValue()-1;
 
 
     public CalendarioFragment() {
@@ -152,7 +152,6 @@ public class CalendarioFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 aggiornaCalendario();
-                binding.mese.setText(getMese(meseAttuale)+ " " +LocalDate.now().getYear());
             }
         });
 
@@ -289,13 +288,15 @@ public class CalendarioFragment extends Fragment {
 
             }
         });
+
+
     }
 
     private void aggiornaCalendario() {
         calendario.removeAllEvents();
         calendario.setCurrentDate(Calendar.getInstance().getTime());
-        calendario.setListener(null);
-        ricevimentiMap.clear();
+        calendario.setOnClickListener(null);
+        calendario.onTouchEvent(null);
 
         ricevimentoRef.whereEqualTo("relatore", currentUserUid)
                 .get()
@@ -362,11 +363,7 @@ public class CalendarioFragment extends Fragment {
                 String mese = getMese(firstDayOfNewMonth.getMonth()) + " " + (firstDayOfNewMonth.getYear() + 1900);
                 binding.mese.setText(mese);
             }
-
-
         });
-
-
     }
 
     private void ripristina_campi() {
@@ -492,7 +489,7 @@ public class CalendarioFragment extends Fragment {
     }
 
     private void aggiungiRicevimento(List meetinglist, View view, Date date) {
-        meetingAdapter = new MeetingAdapter(meetinglist, restart);
+        meetingAdapter = new MeetingAdapter(meetinglist);
         RecyclerView meetingRecyclerView = view.findViewById(R.id.listaMeeting);
         meetingRecyclerView.setAdapter(meetingAdapter);
         // 4. Notifica all'adattatore che è stato aggiunto un nuovo elemento
