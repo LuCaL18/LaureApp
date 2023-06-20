@@ -13,4 +13,11 @@
         android:icon="@drawable/ic_baseline_filter_list_24"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/crea_tesi"
+        android:contentDescription="@string/crea_tesi"
+        android:icon="@drawable/ic_baseline_post_add_24"
+        android:title="@string/crea_tesi"
+        app:showAsAction="ifRoom" />
+
 </menu>

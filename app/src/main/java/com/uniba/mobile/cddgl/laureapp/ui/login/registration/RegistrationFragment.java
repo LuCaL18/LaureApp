@@ -33,9 +33,9 @@ import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentRegistrationBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.component.DatePickerFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModel;
+import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RegistrationFragment extends Fragment {
@@ -169,8 +169,9 @@ public class RegistrationFragment extends Fragment {
                 chip.setTextColor(getResources().getColor(R.color.white));
 
 
-                if (!ambiti.contains(selectedItem)) {
-                    ambiti.add(selectedItem);
+                String selectedItemKey = Utility.convertScopesToEnum(selectedItem);
+                if (!ambiti.contains(selectedItemKey)) {
+                    ambiti.add(selectedItemKey);
                     chipGroup.addView(chip);
                 }
 
@@ -178,7 +179,7 @@ public class RegistrationFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         chipGroup.removeView(chip);
-                        ambiti.remove(selectedItem);
+                        ambiti.remove(selectedItemKey);
                     }
                 });
             }
