@@ -1,6 +1,11 @@
 package com.uniba.mobile.cddgl.laureapp.ui.login;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,17 +15,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
-import com.uniba.mobile.cddgl.laureapp.LoginActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
+/**
+ * Fragment che si occupa di mostrare la schermata iniziale dell'app per permettere all'utente di selezionare
+ * login, registrazione o l'accesso come ospite
+ */
 public class StartFragment extends Fragment {
     private NavController navController;
     private LoginViewModel loginViewModel;

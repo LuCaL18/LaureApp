@@ -2,6 +2,9 @@ package com.uniba.mobile.cddgl.laureapp.ui.profile.viewModels;
 
 import androidx.annotation.Nullable;
 
+/**
+ * Data validation state of the login form.
+ */
 public class EditProfileFormState {
 
     @Nullable

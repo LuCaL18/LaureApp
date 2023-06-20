@@ -45,6 +45,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Fragment che si occupa della visualizzazione e della gestione della schermata home dell'applicazione
+ * Visulizza una serie di tesi recuperate dal mainViewModel e un grafico per i task
+ */
 public class HomeFragment extends Fragment {
 
     public static final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;

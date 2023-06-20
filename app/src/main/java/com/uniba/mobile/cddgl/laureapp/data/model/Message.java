@@ -2,6 +2,9 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 
 import androidx.annotation.Keep;
 
+/**
+ * Classe istanza del messaggio inviato in una chat
+ */
 public class Message {
     private String senderId;
     private String message;

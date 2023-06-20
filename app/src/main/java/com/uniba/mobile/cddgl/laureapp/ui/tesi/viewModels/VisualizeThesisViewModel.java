@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.uniba.mobile.cddgl.laureapp.data.DownloadedFile;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
-
+/**
+ * ViewModel per il fragment VisualizeTesiFragment
+ */
 public class VisualizeThesisViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> error = new MutableLiveData<>();

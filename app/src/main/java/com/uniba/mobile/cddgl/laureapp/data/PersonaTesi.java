@@ -8,6 +8,9 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
+/**
+ * Classe che rappresenta una persona(relatore/corelatore/studente) all'interno di una tesi
+ */
 public class PersonaTesi implements Serializable {
 
     private String id;

@@ -27,6 +27,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * ViewModel dei fragment RegistrationFragment e LoginFragment che si occupa della validazine dei dati di input, del login
+ * o della registrazione dell'utente. RIchiama le interfacce di firebase per effettuare login e registrazione
+ */
 public class LoginViewModel extends ViewModel {
 
     public static final int MIN_LENGTH_PASSWORD = 5;

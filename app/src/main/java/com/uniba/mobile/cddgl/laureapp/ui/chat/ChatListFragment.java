@@ -29,6 +29,9 @@ import com.uniba.mobile.cddgl.laureapp.ui.chat.impl.ChatItemClickCallbackImpl;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.viewHolder.ChatViewHolder;
 
+/**
+ * Fragment che si occupa della visualizzazione e della gestione della lista delle chat
+ */
 public class ChatListFragment extends Fragment {
 
     private FirestoreRecyclerOptions<ChatData> options;

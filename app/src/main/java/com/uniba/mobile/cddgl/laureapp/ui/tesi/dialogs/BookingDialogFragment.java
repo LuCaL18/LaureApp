@@ -29,6 +29,9 @@ import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Dialog che si occupa della prenotazione effettuata da parte dello studente. Acquisisce input dall'utente e invia la prenotazione
+ */
 public class BookingDialogFragment extends DialogFragment {
 
     private static final String STUDENT_KEY = "student_id";

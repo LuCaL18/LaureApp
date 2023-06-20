@@ -99,6 +99,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fragment che si occupa della visualizzazione di una tesi con tutti i suoi dati
+ */
 public class VisualizeTesiFragment extends Fragment {
 
     public static final String TESI_VISUALIZE = "tesi_visualize";

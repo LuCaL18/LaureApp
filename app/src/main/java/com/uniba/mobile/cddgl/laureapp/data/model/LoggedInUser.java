@@ -8,21 +8,21 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Data class that captures user information for logged in users retrieved from LoginRepository
+ * Classe di dati che contiene le informazioni dell'utente loggato recuperate da LoginRepository
  */
 public class LoggedInUser implements Serializable {
 
-    private String id;
-    private String email;
-    private String displayName;
-    private String name;
-    private String surname;
-    private String birthDay;
-    private String bio;
-    private RoleUser role;
-    private String photoUrl;
-    private String token;
-    private List<String> ambiti;
+    private String id; // Identificatore dell'utente
+    private String email; // Email dell'utente
+    private String displayName; // Nome visualizzato dell'utente
+    private String name; // Nome dell'utente
+    private String surname; // Cognome dell'utente
+    private String birthDay; // Data di nascita dell'utente
+    private String bio; // Biografia dell'utente
+    private RoleUser role; // Ruolo dell'utente
+    private String photoUrl; // URL della foto dell'utente
+    private String token; // Token di autenticazione dell'utente
+    private List<String> ambiti; // Lista degli ambiti dell'utente
 
 
     // NON CANCELLARE SERVE A FIREBASE

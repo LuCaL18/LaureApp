@@ -38,6 +38,9 @@ import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationTicketI
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.interfaces.TicketItemClickCallback;
 
+/**
+ * Fragment che si occupa della gestione e della visualizzazione delle notifiche
+ */
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;

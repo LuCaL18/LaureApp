@@ -18,6 +18,9 @@ import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewHolder.RelatorViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter che si occupa della lista dei corelatori della tesi
+ */
 public class RelatorsAdapter extends RecyclerView.Adapter<RelatorViewHolder> {
     private List<PersonaTesi> relators;
     private boolean permissionDelete;

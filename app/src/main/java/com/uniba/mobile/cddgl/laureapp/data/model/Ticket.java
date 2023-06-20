@@ -7,6 +7,9 @@ import com.uniba.mobile.cddgl.laureapp.data.TicketState;
 
 import java.io.Serializable;
 
+/**
+ * Classe che rappresenta l'istanza di un Ticket (segnalazioni effettuate da studenti per le tesi)
+ */
 public class Ticket implements Serializable {
 
     private String idSender;

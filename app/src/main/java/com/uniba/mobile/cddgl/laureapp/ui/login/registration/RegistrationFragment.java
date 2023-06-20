@@ -38,6 +38,9 @@ import com.uniba.mobile.cddgl.laureapp.util.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment che si occupa della visualizzazione e gestione della schermata di registrazione
+ */
 public class RegistrationFragment extends Fragment {
 
     private final int RADIO_BUTTON_STUDENT = R.id.radio_button_student;

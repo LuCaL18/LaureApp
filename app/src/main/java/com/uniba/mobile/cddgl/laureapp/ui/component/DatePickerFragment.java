@@ -15,6 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Classe che estende DialogFragment e implementa l'interfaccia DatePickerDialog.OnDateSetListener
+ * utilizzata per mostrare il dialog per la selezione di una data
+ */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     private static final int FRAGMENT_REGISTRATION = R.layout.fragment_registration;

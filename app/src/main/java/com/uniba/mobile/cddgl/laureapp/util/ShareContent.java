@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.net.URLConnection;
 import java.util.Date;
 
+/**
+ * Classe per condividere dati
+ */
 public class ShareContent {
 
     public static final String AUTHORITY = "com.uniba.mobile.cddgl.laureapp.service.AppFileProvider";

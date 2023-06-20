@@ -22,7 +22,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Dialog che si occupa della modifica o impostazione delle parole chiave associate a una tesi
+ */
 public class SearchKeyDialog {
 
     private final AlertDialog dialog;

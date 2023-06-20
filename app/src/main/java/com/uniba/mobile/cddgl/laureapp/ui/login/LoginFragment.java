@@ -26,6 +26,9 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentLoginBinding;
 
+/**
+ * Fragment che si occupa della visualizzazione e gestione della schermata di login
+ */
 public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;

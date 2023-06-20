@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,16 +33,14 @@ import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.BookingState;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
-import com.uniba.mobile.cddgl.laureapp.data.TicketState;
 import com.uniba.mobile.cddgl.laureapp.data.model.Booking;
-import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.adapters.BookingAdapter;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.impl.BookingItemClickCallbackImpl;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.interfaces.BookingItemClickCallback;
-import com.uniba.mobile.cddgl.laureapp.ui.ticket.adapters.TicketAdapter;
 
 public class BookingListFragment extends Fragment {
 
+    //Tab visualizzati nel layout
     private final int TAB_OPEN = 0;
     private final int TAB_ACCEPTED = 1;
     private final int TAB_REFUSED = 2;
@@ -68,6 +65,7 @@ public class BookingListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Ottieni il view Model dal parent
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireParentFragment());
         bookingViewModel = viewModelProvider.get(BookingViewModel.class);
 
@@ -81,34 +79,70 @@ public class BookingListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //inflate del layout
+        return inflater.inflate(R.layout.fragment_booking_list, container, false);
+    }
 
-        View root = inflater.inflate(R.layout.fragment_booking_list, container, false);
+    private FirestoreRecyclerOptions<Booking> createOption(String id, RoleUser role, BookingState state) {
+        //creazione per le option da impostare per il FirestoreRecycler
+        try {
+            String columnId;
 
+            if (role.equals(RoleUser.STUDENT)) {
+                columnId = "studentId";
+            } else if (role.equals(RoleUser.PROFESSOR)) {
+                columnId = "profId";
+            } else {
+                return new FirestoreRecyclerOptions.Builder<Booking>().build();
+            }
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference notificationsRef = db.collection("bookings");
+            Query query = notificationsRef.whereEqualTo(columnId, id)
+                    .whereEqualTo("state", state.name())
+                    .orderBy("timestamp", Query.Direction.DESCENDING);
+
+            return new FirestoreRecyclerOptions.Builder<Booking>()
+                    .setQuery(query, Booking.class)
+                    .build();
+
+        } catch (Exception e) {
+            Log.e("BookingListFragment", e.getMessage());
+            return new FirestoreRecyclerOptions.Builder<Booking>().build();
+        }
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
-        bookingListRecyclerView = root.findViewById(R.id.booking_list_recycler_view);
+        bookingListRecyclerView = view.findViewById(R.id.booking_list_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         bookingListRecyclerView.setLayoutManager(linearLayoutManager);
 
-        TabLayout bookingTabLayout = root.findViewById(R.id.tab_layout);
-        bookingListScroll = root.findViewById(R.id.scroll_view_booking_list);
-        textNoBookings = root.findViewById(R.id.text_no_bookings);
+        TabLayout bookingTabLayout = view.findViewById(R.id.tab_layout);
+        bookingListScroll = view.findViewById(R.id.scroll_view_booking_list);
+        textNoBookings = view.findViewById(R.id.text_no_bookings);
 
-        String id = mainViewModel.getUser().getValue().getId();
+        String id = mainViewModel.getIdUser();
         RoleUser role = mainViewModel.getUser().getValue().getRole();
 
         if (id == null) {
             bookingListScroll.setVisibility(View.GONE);
             textNoBookings.setVisibility(View.VISIBLE);
-            return root;
+            return;
         }
 
         BookingItemClickCallback callback = new BookingItemClickCallbackImpl(bookingViewModel);
 
+        // Crea gli adapter per i diversi stati delle prenotazioni
         adapterOpen = new BookingAdapter(createOption(id, role, BookingState.OPEN), callback);
         adapterAccepted = new BookingAdapter(createOption(id, role, BookingState.ACCEPTED), callback);
         adapterRefused = new BookingAdapter(createOption(id, role, BookingState.REFUSED), callback);
 
+        // Crea i listener degli eventi di cambio per gli adapter
         changeEventListenerOpen = createListenersForAdapter(adapterOpen);
         changeEventListenerAccepted = createListenersForAdapter(adapterAccepted);
         changeEventListenerRefused = createListenersForAdapter(adapterRefused);
@@ -160,42 +194,6 @@ public class BookingListFragment extends Fragment {
             adapterOpen.getSnapshots().addChangeEventListener(changeEventListenerOpen);
         }
 
-        return root;
-    }
-
-    private FirestoreRecyclerOptions<Booking> createOption(String id, RoleUser role, BookingState state) {
-
-        try {
-            String columnId;
-
-            if (role.equals(RoleUser.STUDENT)) {
-                columnId = "studentId";
-            } else if (role.equals(RoleUser.PROFESSOR)) {
-                columnId = "profId";
-            } else {
-                return new FirestoreRecyclerOptions.Builder<Booking>().build();
-            }
-
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference notificationsRef = db.collection("bookings");
-            Query query = notificationsRef.whereEqualTo(columnId, id)
-                    .whereEqualTo("state", state.name())
-                    .orderBy("timestamp", Query.Direction.DESCENDING);
-
-            return new FirestoreRecyclerOptions.Builder<Booking>()
-                    .setQuery(query, Booking.class)
-                    .build();
-
-        } catch (Exception e) {
-            Log.e("BookingListFragment", e.getMessage());
-            return new FirestoreRecyclerOptions.Builder<Booking>().build();
-        }
-    }
-
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         bookingViewModel.getBooking().observe(getViewLifecycleOwner(), booking -> {
 
             if (booking == null || bookingViewModel.isAlreadyRead()) {

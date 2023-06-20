@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
-
+/**
+ * ViewHolder che si occupa della visualizzazione di un corelatore della lista corelatori di una tesi
+ */
 public class RelatorViewHolder extends RecyclerView.ViewHolder {
     private final TextView rName;
     private final ImageView deleteRelator;

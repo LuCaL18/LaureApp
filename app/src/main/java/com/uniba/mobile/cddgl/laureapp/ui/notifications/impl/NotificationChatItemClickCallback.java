@@ -5,7 +5,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.ChatViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.interfaces.NotificationCallbackItem;
-
+/**
+ * Implementazione dell'interfaccia NotificationCallbackItem e ChatItemClickCallback
+ */
 public class NotificationChatItemClickCallback implements ChatItemClickCallback, NotificationCallbackItem {
 
     private final ChatViewModel chatViewModel;

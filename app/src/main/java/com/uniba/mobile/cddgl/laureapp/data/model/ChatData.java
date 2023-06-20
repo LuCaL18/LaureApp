@@ -3,20 +3,21 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Classe che rapppresenta l'istanza dei dati della chat
+ */
 public class ChatData implements Serializable {
 
-    private String id;
-    private String name;
-    private List<String> members;
+    private String id; // Identificatore della chat
+    private String name; // Nome della chat
+    private List<String> members; // Lista dei membri della chat
 
     @Keep
     public ChatData() {
+        // Costruttore vuoto necessario per la serializzazione/deserializzazione
     }
 
     public ChatData(String id, List<String> members, String name) {
@@ -25,6 +26,7 @@ public class ChatData implements Serializable {
         this.name = name;
     }
 
+    // Metodi getter e setter per i campi
     public String getId() {
         return id;
     }

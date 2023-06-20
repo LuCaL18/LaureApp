@@ -1,7 +1,6 @@
 package com.uniba.mobile.cddgl.laureapp.ui.chat.viewHolder;
 
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +12,11 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.ChatData;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 
+/**
+ * La classe ChatViewHolder estende RecyclerView.ViewHolder
+ * ed è responsabile per la gestione delle view degli elementi all'interno di un RecyclerView.
+ * Si occupa di mostrare l'item chat all'interno della lista
+ */
 public class ChatViewHolder extends RecyclerView.ViewHolder {
     private TextView chatNameTextView;
     private View divider;

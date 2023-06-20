@@ -8,7 +8,10 @@ import androidx.annotation.NonNull;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Notification;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationTicketItemClickCallback;
-
+/**
+ * La classe TicketNotificationViewHolder estende NotificationViewHolder
+ * ed è responsabile per la gestione della vista delle notifiche dei ticket
+ */
 public class TicketNotificationViewHolder extends NotificationViewHolder{
 
     private boolean selected;

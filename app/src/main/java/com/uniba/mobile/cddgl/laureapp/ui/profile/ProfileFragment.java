@@ -57,6 +57,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Fragment che si occupa della visualizzazione e della gestione della schermata di Profilo
+ */
 public class ProfileFragment extends Fragment {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;

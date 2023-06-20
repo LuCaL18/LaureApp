@@ -6,6 +6,10 @@ import androidx.annotation.NonNull;
 
 import com.uniba.mobile.cddgl.laureapp.R;
 
+/**
+ * La classe ReceiveMessageHolder estende MessageViewHolder.
+ * Si occupa di mostrare i messaggi inviati in una chat
+ */
 public class SendMessageViewHolder extends MessageViewHolder {
 
     public SendMessageViewHolder(@NonNull View itemView) {

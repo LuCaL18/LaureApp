@@ -12,6 +12,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * ViewModel che si occupa del controllo dei campi di input della schermata modifica profilo
+ */
 public class EditProfileViewModel extends ViewModel {
 
     private final MutableLiveData<EditProfileFormState> editProfileFormState = new MutableLiveData<>();

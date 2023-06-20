@@ -1,5 +1,8 @@
 package com.uniba.mobile.cddgl.laureapp.data;
 
+/**
+ * Ambiti disponibili per le tesi
+ */
 public enum EnumScopes {
     INFORMATICA,
     BIOLOGIA,

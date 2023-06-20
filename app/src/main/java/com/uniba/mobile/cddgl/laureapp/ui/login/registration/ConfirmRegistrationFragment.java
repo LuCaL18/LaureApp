@@ -24,6 +24,9 @@ import com.uniba.mobile.cddgl.laureapp.ui.login.LoginViewModel;
 
 import java.util.Locale;
 
+/**
+ * Fragment che si occupa della visualizzazione di richiesta conferma registrazione. Una volta ricevuta il fragment è distrutto
+ */
 public class ConfirmRegistrationFragment extends Fragment {
 
     private FirebaseUser user;

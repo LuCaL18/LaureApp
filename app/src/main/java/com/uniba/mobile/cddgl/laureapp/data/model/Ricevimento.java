@@ -5,6 +5,9 @@ import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Classe che rappresenta l'istanza del ricevimento
+ */
 public class Ricevimento implements Serializable {
     private String ricevimentoId;
     private String relatore;
