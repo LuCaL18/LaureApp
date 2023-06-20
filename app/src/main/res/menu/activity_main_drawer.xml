@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_baseline_playlist_play_24"
             android:title="@string/lista_task" />
         <item
+            android:id="@+id/nav_classifica_tesi"
+            android:icon="@drawable/ic_favorite_24dp"
+            android:title="@string/classifica_tesi" />
+        <item
             android:id="@+id/nav_chat"
             android:icon="@drawable/ic_baseline_chat_24dp"
             android:title="@string/chat_menu" />

@@ -27,7 +27,6 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
 import com.uniba.mobile.cddgl.laureapp.data.Result;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.ui.component.DatePickerFragment;
@@ -93,7 +92,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                createChipScope(selectedItem);
+                createChipScope(Utility.translateScope(getResources(), selectedItem));
             }
 
             @Override
@@ -133,11 +132,11 @@ public class EditProfileFragment extends Fragment {
         });
 
         mainViewModel.getEditUserResult().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) {
+            if(result == null) {
                 return;
             }
 
-            if (result instanceof Result.Success) {
+            if(result instanceof Result.Success) {
                 Toast.makeText(requireContext(), getString(R.string.edit_profile_success), Toast.LENGTH_SHORT).show();
                 NavController navController = NavHostFragment.findNavController(this);
                 navController.popBackStack();
@@ -157,13 +156,13 @@ public class EditProfileFragment extends Fragment {
         birthDateEditText.setText(user.getBirthDay());
         emailEditText.setText(user.getEmail());
 
-        if (user.getBio() != null && !user.getBio().isEmpty()) {
+        if(user.getBio() != null && !user.getBio().isEmpty()) {
             bioEditText.setText(user.getBio());
         }
 
-        if (user.getAmbiti() != null && !user.getAmbiti().isEmpty()) {
-            for (String scope : user.getAmbiti()) {
-                createChipScope(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(scope)));
+        if(user.getAmbiti() != null && !user.getAmbiti().isEmpty()) {
+            for(String scope: user.getAmbiti()) {
+                createChipScope(Utility.translateScope(getResources(), scope));
             }
         }
     }
@@ -177,9 +176,8 @@ public class EditProfileFragment extends Fragment {
         chip.setTextColor(getResources().getColor(R.color.white));
 
 
-        String scopeKey = Utility.convertScopesToEnum(scope);
-        if (!scopes.contains(scopeKey)) {
-            scopes.add(scopeKey);
+        if (!scopes.contains(scope)) {
+            scopes.add(scope);
             chipGroup.addView(chip);
         }
 
@@ -187,7 +185,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 chipGroup.removeView(chip);
-                scopes.remove(scopeKey);
+                scopes.remove(scope);
             }
         });
     }
@@ -228,12 +226,12 @@ public class EditProfileFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         navBar = requireActivity().findViewById(R.id.nav_view);
-        if (navBar != null) {
+        if(navBar != null) {
             navBar.setVisibility(View.VISIBLE);
         }
     }
 
-    private void saveProfileChanges() {
+        private void saveProfileChanges() {
         String newName = nameEditText.getText().toString();
         String newLastName = lastNameEditText.getText().toString();
         String newBirthDate = birthDateEditText.getText().toString();

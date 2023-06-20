@@ -1,68 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".ui.login.registration.ConfirmRegistrationFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/imageConfirmationEmail"
+        android:layout_width="407dp"
+        android:layout_height="211dp"
+        android:src="@drawable/email_verification" />
+
+    <TextView
+        android:id="@+id/textViewTitleConfirmRegistration"
+        android:layout_width="338dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/request_confirm_email_verified_title"
+        android:textAlignment="center"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/textViewConfirmRegistration"
+        android:layout_width="338dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/request_confirm_email_verified"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/timerResend"
+        android:layout_width="338dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_marginTop="8dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:visibility="invisible" />
 
-        <ImageView
-            android:id="@+id/imageConfirmationEmail"
-            android:layout_width="407dp"
-            android:layout_height="211dp"
-            android:src="@drawable/email_verification" />
+    <Button
+        android:id="@+id/buttonResendEmail"
+        android:layout_width="338dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/resend_email" />
 
-        <TextView
-            android:id="@+id/textViewTitleConfirmRegistration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/request_confirm_email_verified_title"
-            android:textAlignment="center"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/textViewConfirmRegistration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/request_confirm_email_verified"
-            android:textAlignment="center"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="40dp"
-            android:layout_marginStart="40dp"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/timerResend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="40dp"
-            android:layout_marginStart="40dp"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/buttonResendEmail"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="40dp"
-            android:layout_marginStart="40dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/resend_email" />
-
-    </LinearLayout>
-
-</ScrollView>
-
+</LinearLayout>

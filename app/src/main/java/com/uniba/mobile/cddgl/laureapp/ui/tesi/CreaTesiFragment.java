@@ -225,7 +225,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                 }
                 else {
                     caricaTesi();
-                    navController.popBackStack();
+                    navController.navigate(R.id.action_tesiFragmant_to_navigation_home);
                 }
             }
         });

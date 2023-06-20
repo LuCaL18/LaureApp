@@ -3,14 +3,6 @@ package com.uniba.mobile.cddgl.laureapp.ui.chat;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +11,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.widget.EditText;
+import android.widget.ImageView;
+
 import com.android.volley.Request;
+import com.android.volley.toolbox.Volley;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
 import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Message;
@@ -36,7 +38,6 @@ import com.uniba.mobile.cddgl.laureapp.databinding.FragmentChatBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.viewHolder.MessageViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.viewHolder.ReceiveMessageHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.viewHolder.SendMessageViewHolder;
-import com.uniba.mobile.cddgl.laureapp.util.BaseRequestNotification;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -64,7 +65,6 @@ public class ChatFragment extends Fragment {
     private ChatViewModel chatModel;
     private LoggedInUser currentUser;
     private BottomNavigationView navBar;
-    private boolean isFirstChanged;
 
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> adapter;
 
@@ -103,8 +103,6 @@ public class ChatFragment extends Fragment {
                 }
             }
             chatId = chatModel.getIdChat();
-
-            isFirstChanged = true;
         }
     }
 
@@ -192,11 +190,6 @@ public class ChatFragment extends Fragment {
             @Override
             public void onDataChanged() {
                 super.onDataChanged();
-                if(isFirstChanged && getView() != null) {
-                    LinearLayout loadingLayout = getView().findViewById(R.id.loading_chat);
-                    loadingLayout.setVisibility(View.GONE);
-                }
-                isFirstChanged = false;
 
                 int lastMessagePosition = this.getItemCount() - 1;
 
