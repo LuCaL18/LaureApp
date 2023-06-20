@@ -586,3 +586,7 @@ public class CalendarioFragment extends Fragment {
         }
     }
 }
+/***Dismiss se l'ultimo meeting nel dialog
+ * svuotare l'array
+ * controllare tesi spinner
+ * */

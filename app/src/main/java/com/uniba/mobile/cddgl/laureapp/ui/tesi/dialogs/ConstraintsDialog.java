@@ -108,7 +108,7 @@ public class ConstraintsDialog {
 
     public ConstraintsDialog(AlertDialog dialog, View vincoliPopup, CreaTesiFragment requiredFragment) {
         this.dialog = dialog;
-
+/***sistemare le set*/
         exams = new ArrayList<>();
 
         textExamN = vincoliPopup.findViewById(R.id.text_input_edit_text);
