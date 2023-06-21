@@ -1,5 +1,7 @@
 package com.uniba.mobile.cddgl.laureapp.ui.calendario.adapters;
 
+import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,18 +47,28 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
         holder.titoloM.setText(meeting.getTitolo());
         holder.TesiM.setText(meeting.getNomeTesi());
         holder.OraM.setText(meeting.getTimeString());
-        holder.RiepilogoM.setText(meeting.getRiepilogo());
-
         // Rimuovi tutte le viste precedenti dal layout del Task
         holder.TaskM.removeAllViews();
 
         // Aggiungi gli elementi del Task al layout
         List<String> taskList = meeting.getTask();
+        int i=0;
         for (String task : taskList) {
+            i++;
             TextView textView = new TextView(holder.itemView.getContext());
-            textView.setText(task);
+            textView.setText(i + ") " + task);
+            textView.setTextColor(Color.BLACK); // Imposta il colore del testo a nero
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20); // Imposta la dimensione del testo a 20sp
             holder.TaskM.addView(textView);
         }
+
+        if(holder.RiepilogoM.getText().toString().equals("")){
+            holder.RiepilogoM.setVisibility(View.GONE);
+        }
+        else {
+            holder.RiepilogoM.setVisibility(View.VISIBLE);
+        }
+        holder.RiepilogoM.setText(meeting.getRiepilogo());
 
         // Gestisci il clic sul tasto di eliminazione
         holder.deleteButton.setOnClickListener(v -> {

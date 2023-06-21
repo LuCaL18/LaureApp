@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 public class ConstraintsDialog {
 
     private final AlertDialog dialog;
-    private int timeWeeks;
+    private int timeWeeks = 3;
     private final EditText textExamN;
     private final ChipGroup chipsContainer;
     private final List<String> exams;
@@ -108,7 +108,7 @@ public class ConstraintsDialog {
 
     public ConstraintsDialog(AlertDialog dialog, View vincoliPopup, CreaTesiFragment requiredFragment) {
         this.dialog = dialog;
-/***sistemare le set*/
+
         exams = new ArrayList<>();
 
         textExamN = vincoliPopup.findViewById(R.id.text_input_edit_text);
@@ -118,21 +118,19 @@ public class ConstraintsDialog {
         eSkill.setHint("Skill richieste");
 
         TextView timelineTextView = vincoliPopup.findViewById(R.id.temp_value);
-        //timelineTextView.setText(requiredFragment.getString(R.string.timeline_value_weeks, String.valueOf(thesis.getTempistiche())));
+        timelineTextView.setText(requiredFragment.getString(R.string.timeline_value_weeks, String.valueOf(timeWeeks)));
 
         TextView voto = vincoliPopup.findViewById(R.id.voto_edit_constraint);
-        //voto.setText(String.valueOf(thesis.getMediaVoto()));
 
         Slider media = vincoliPopup.findViewById(R.id.media_edit_slider_bar);
-        //media.setValue(thesis.getMediaVoto());
 
         Slider timeline = vincoliPopup.findViewById(R.id.tempistiche_slider_bar);
-        //timeline.setValue(timeWeeks);
+        timeline.setValue(timeWeeks);
 
         Button save = vincoliPopup.findViewById(R.id.saveButton);
         Button cancel = vincoliPopup.findViewById(R.id.cancelButton);
 
-        //media.addOnChangeListener((slider, value, fromUser) -> voto.setText(String.valueOf(value)));
+        media.addOnChangeListener((slider, value, fromUser) -> voto.setText(String.valueOf(value)));
 
         textExamN.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -165,7 +163,6 @@ public class ConstraintsDialog {
             timeWeeks = (int) value;
         });
 
-        media.addOnChangeListener((slider, value, fromUser) -> voto.setText(String.valueOf(value)));
 
         save.setOnClickListener(viewSave -> {
 

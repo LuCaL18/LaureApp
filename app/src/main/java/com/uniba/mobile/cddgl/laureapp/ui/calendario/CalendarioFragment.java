@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -152,6 +153,11 @@ public class CalendarioFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 aggiornaCalendario();
+                if(dialog != null && listaMeeting != null){
+                    if(dialog.isShowing() && listaMeeting.isEmpty()){
+                        dialog.dismiss();
+                    }
+                }
                 binding.mese.setText(getMese(meseAttuale)+ " " +LocalDate.now().getYear());
             }
         });
@@ -196,14 +202,14 @@ public class CalendarioFragment extends Fragment {
                 if(canSaveTask && canSaveTitolo && canSaveOrario){
                     caricaRicevimento();
                     ripristina_campi();
-                    Toast.makeText(getContext(), "Salvato", Toast.LENGTH_SHORT).show();
+                    showSaveToast(R.string.meeting_successfully_saved);
                 }
                 else {
                     if(canSaveTask==false && taskList.isEmpty()){
-                        Toast.makeText(getContext(), "Crea un task per creare un meeting", Toast.LENGTH_SHORT).show();
+                        showSaveToast(R.string.create_task);
                     }
                     else{
-                        Toast.makeText(getContext(), "Riempire i campi", Toast.LENGTH_SHORT).show();
+                        showSaveToast(R.string.fill_fields);
                     }
                 }
             }
@@ -214,16 +220,16 @@ public class CalendarioFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (addR.getText().toString().equals("NASCONDI")) {
+                if (addR.getText().toString().equals(getString(R.string.hide))) {
                     binding.addRicevimentoL.setVisibility(View.GONE);
-                    addR.setText("AGGIUNGI");
+                    addR.setText(getString(R.string.add));
                 } else {
                     binding.addRicevimentoL.setVisibility(View.VISIBLE);
                     if(taskListView.getCount()>0){
                         taskListView.setVisibility(View.VISIBLE);
                         T_task.setVisibility(View.VISIBLE);
                     }
-                    addR.setText("NASCONDI");
+                    addR.setText(getString(R.string.hide));
                 }
             }
         });
@@ -238,6 +244,9 @@ public class CalendarioFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int positionTesi, long idTesi) {
                 T_task.setVisibility(View.VISIBLE);
+                T_task.setText(getString(R.string.task));
+                taskRic.clear();
+                canSaveTask=false;
                 taskListView.clearChoices();
                 tesiSelezionata = tesiSpinner.getSelectedItem().toString();
                 for (int i=0; i<tesiBackup.size(); i++){
@@ -265,8 +274,18 @@ public class CalendarioFragment extends Fragment {
 
                                     taskListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                                     taskListView.setAdapter(arrayAdapter);
+                                    if(taskList.size()>0){
+                                        taskListView.setVisibility(View.VISIBLE);
+                                        int height = (taskList.size()*150);
+                                        ViewGroup.LayoutParams layoutParams = taskListView.getLayoutParams();
+                                        layoutParams.height = height;
+                                        taskListView.setLayoutParams(layoutParams);
+                                    }
+                                    else {
+                                        taskListView.setVisibility(View.GONE);
+                                    }
                                     taskListView.setOnItemClickListener((adapterView, view121, position, id) -> {
-                                    T_task.setText("TASK DISCUSSI (" + taskListView.getCheckedItemCount() + ")");
+                                    T_task.setText(getString(R.string.task)+ "(" + taskListView.getCheckedItemCount() + ")");
                                     if(taskListView.getCheckedItemCount()>0){
                                         canSaveTask=true;
                                         canSave();
@@ -421,6 +440,12 @@ public class CalendarioFragment extends Fragment {
             sendNotification(ricevimento.getRicevimentoId());
 
             aggiornaCalendario();
+            taskRic.clear();
+            T_task.setText(getString(R.string.task));
+            int count = taskListView.getCount();
+            for (int i = 0; i < count; i++) {
+                taskListView.setItemChecked(i, false);
+            }
     }
 
     private void sendNotification(String ricevimentoId) {
@@ -574,7 +599,7 @@ public class CalendarioFragment extends Fragment {
         };
         timePickerDialog = new TimePickerDialog(getContext(), onTimeSetListener, hour, minute,true);
 
-        timePickerDialog.setTitle("Seleziona orario");
+        timePickerDialog.setTitle(getString(R.string.choose_time));
         timePickerDialog.show();
     }
 
@@ -585,8 +610,13 @@ public class CalendarioFragment extends Fragment {
             navBar.setVisibility(View.VISIBLE);
         }
     }
+
+    private void showSaveToast(@StringRes Integer message) {
+        if (getContext() != null && getContext().getApplicationContext() != null) {
+            Toast.makeText(
+                    getContext().getApplicationContext(),
+                    message,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 }
-/***Dismiss se l'ultimo meeting nel dialog
- * svuotare l'array
- * controllare tesi spinner
- * */

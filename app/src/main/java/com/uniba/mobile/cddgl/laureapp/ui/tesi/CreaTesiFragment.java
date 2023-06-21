@@ -1,9 +1,14 @@
 package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -21,9 +26,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +42,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -41,26 +52,27 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Filtri;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentTesiBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.RelatorsAdapter;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.CoRelatoreDialoog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.ConstraintsDialog;
+import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+    private MainViewModel mainActivityViewModel;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference filtriRef = db.collection("filtri");
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -78,11 +90,10 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     private BottomNavigationView navBar;
     private TextView Ambito, Tempistiche, Chiave, Skill, Media, paroleChiave;
     private String textAmbito;
-    private List<String> permessiList = new ArrayList<>();
     private Spinner ambitoSpinner;
     private List<PersonaTesi> co_relatori = new ArrayList<>();
     private String skill;
-    private int n_settimane = 1;
+    private int n_settimane = 3;
     private float textmedia;
     public List<String> keywordList = new ArrayList<>();
     public List<Filtri> filtriList = new ArrayList<>();
@@ -93,6 +104,8 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     private ListAdapter listAdapter;
     private static final int REQUEST_PICK_IMAGE = 1;
     private Uri selectedImageUri;
+    private FloatingActionButton uploadImageButton;
+    private ActivityResultLauncher<Intent> pickPhotoLauncher;
 
     public CreaTesiFragment() {
         // Required empty public constructor
@@ -101,6 +114,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     }
 
     @Override
@@ -115,7 +129,6 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        thesis = new Tesi();
         recyclerViewRelators = binding.listaRelatori;
         impostaAmbiti();
         setCardConstraintsCreator();
@@ -129,14 +142,19 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         eNote = binding.note;
         eDescrizione = binding.descrizione;
         eNomeTesi = binding.nomeTesi;
-        addImage = binding.addImage;
+        addImage = binding.tesiImageView;
+        uploadImageButton = binding.uploadImageButton;
 
-        addImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+        uploadImageButton.setOnClickListener(v -> openImageFromGallery());
+
+        pickPhotoLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        addImage.setImageURI(selectedImageUri);
+                    }
+                });
+
         /*Imposta la sezione relativa all'aggiunta dei relatori*/
         setCardCoRelatorsCreator();
 
@@ -152,12 +170,12 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
             filtriRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot documentSnapshots) {
-                    paroleChiave.setText("Parole chiave");
+                    paroleChiave.setText(getString(R.string.keyword)+": ");
                     keywordListView.clearChoices();
                     keywordSelezionate.clear();
                     filtriList = documentSnapshots.toObjects(Filtri.class);
-                    ambitiList = filtriList.get(0).getLista();
-                    keywordList = filtriList.get(1).getLista();
+                    ambitiList = Arrays.asList(getResources().getStringArray(R.array.ambiti));
+                    keywordList = filtriList.get(0).getLista();
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                             android.R.layout.simple_spinner_dropdown_item, ambitiList);
@@ -177,7 +195,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                             }
                             else{
                             }
-                            paroleChiave.setText("Parole chiave (" + keywordListView.getCheckedItemCount()+")");
+                            paroleChiave.setText(getString(R.string.keyword) + " (" + keywordListView.getCheckedItemCount()+")");
                         }
 
                     });
@@ -198,7 +216,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                 rimuoviAmbiti(parentLayout);
                 textAmbito = ambitoSpinner.getSelectedItem().toString();
                 Chiave.setText("("+stampaKey(keywordSelezionate)+")");
-                Ambito.setText("AMBITO: " + textAmbito);
+                Ambito.setText(getString(R.string.scope) + ": " + textAmbito);
                 aggiungiAmbiti(parentLayout);
                 dialog3.dismiss();
             });
@@ -213,11 +231,12 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         salva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(eDescrizione.getText().length()<1 || eNomeTesi.getText().length()<1 || textAmbito == null){
-                    Toast.makeText(getContext(), "Riempire tutti i campi", Toast.LENGTH_SHORT).show();
+                if(eDescrizione.getText().length()<1 || eNomeTesi.getText().length()<1 || textAmbito == null || n_settimane < 3){
+                    showSaveToast(R.string.fill_fields);
                 }
                 else {
                     caricaTesi();
+                    mainActivityViewModel.loadLastTheses();
                     navController.popBackStack();
                 }
             }
@@ -227,16 +246,23 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     private void caricaTesi() {
         List<String> documents = new ArrayList<String>();
 
-        Tesi tesi = new Tesi(eNomeTesi.getText().toString(), co_relatori, relatorePrincipaleObj, eDescrizione.getText().toString(), textAmbito, keywordSelezionate, Skill.getText().toString(), n_settimane, esami, textmedia, documents, null, eNote.getText().toString());
-        uploadImageToFirebase(tesi);
+        String nomeTesi = eNomeTesi.getText().toString();
+        String descrizione = eDescrizione.getText().toString();
+        String note = eNote.getText().toString();
 
-        db.collection("tesi").document(tesi.getId())
-                .set(tesi, SetOptions.merge())
-                .addOnSuccessListener(documentReference -> {
-                            saveKey();
-                            Toast.makeText(getContext(), "tesi creata", Toast.LENGTH_SHORT).show();
-                }
-                ).addOnFailureListener(e -> Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show());
+        Tesi tesi = new Tesi(nomeTesi, co_relatori, relatorePrincipaleObj, descrizione, Utility.convertScopesToEnum(textAmbito), keywordSelezionate, skill, n_settimane, esami, textmedia, documents, null, note);
+        thesis = tesi;
+        if(selectedImageUri==null){
+            db.collection("tesi").document(thesis.getId())
+                    .set(thesis, SetOptions.merge())
+                    .addOnSuccessListener(documentReference -> {
+                                saveKey();
+                                showSaveToast(R.string.successfull);
+                            }
+                    ).addOnFailureListener(e -> showSaveToast(R.string.failed));
+            return;
+        }
+        uploadFile(thesis.getId(), selectedImageUri);
     }
 
     private String stampaKey(List<String> keywordSelezionate) {
@@ -270,7 +296,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                         }
                     }
                     if (findit){
-                        Toast.makeText(getContext(),"Chiave esistente", Toast.LENGTH_SHORT).show();
+                        showSaveToast(R.string.existing_keyword);
                     }
                     else {
                         // Creare una lista per gli elementi selezionati
@@ -297,11 +323,11 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                             keywordListView.setItemChecked(elemento, true);
                         }
                         keywordListView.setItemChecked(keywordListView.getCount()-1, true);
-                        paroleChiave.setText("Parole chiave (" + keywordListView.getCheckedItemCount()+")");
-                        Toast.makeText(getContext(), "Lista aggiornata", Toast.LENGTH_SHORT).show();
+                        paroleChiave.setText(getString(R.string.keyword) + " (" + keywordListView.getCheckedItemCount()+")");
+                        showSaveToast(R.string.list_updated);
                     }
                 }
-                else Toast.makeText(getContext(), "Inserire una chiave", Toast.LENGTH_SHORT).show();
+                else showSaveToast(R.string.insert_keyword);
             }
         });
     }
@@ -419,14 +445,14 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
 
         rimuoviVincoli(parentLayout);
 
-        Tempistiche.setText("SETTIMANE PREVISTE: " + n_settimane);
-        Media.setText("MEDIA: " + textmedia);
+        Tempistiche.setText(getString(R.string.timelines) + ":" + n_settimane);
+        Media.setText(getString(R.string.average_votes) + ":" + textmedia);
         if(skill.isEmpty())
         {
-            Skill.setText("NESSUNA SKILL RICHIESTA");
+            Skill.setText(getString(R.string.no_skill_required));
         }
         else{
-            Skill.setText("SKILL: " + skill);
+            Skill.setText(getString(R.string.skills_and_competences) + ":" + skill);
         }
         aggiungiVincoli(parentLayout);
     }
@@ -444,7 +470,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                 dialogBuilder.setView(relatorePopup);
                 AlertDialog dialog = dialogBuilder.create();
 
-                CoRelatoreDialoog coRelatoreDialoog = new CoRelatoreDialoog(dialog, relatorePopup, thesis.getCoRelatori(), requireFragment);
+                CoRelatoreDialoog coRelatoreDialoog = new CoRelatoreDialoog(dialog, relatorePopup, co_relatori, requireFragment);
                 coRelatoreDialoog.show();
             }
         });
@@ -470,52 +496,79 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         relatorsAdapter.notifyDataSetChanged();
     }
 
-    private void uploadImageToFirebase(Tesi tesi) {
-        if (selectedImageUri != null) {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference().child("tesi").child(generateUniqueFileName());
-
-            UploadTask uploadTask = storageRef.putFile(selectedImageUri);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // L'immagine è stata caricata con successo su Firebase Storage
-                    storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            String imageUrl = uri.toString();
-                            tesi.setImageTesi(imageUrl);
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // Si è verificato un errore durante il caricamento dell'immagine su Firebase Storage
-                }
-            });
-        }
-    }
-
-    // Metodo per avviare l'Intent per selezionare un'immagine dalla galleria
-    private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_PICK_IMAGE);
-    }
-
     // Gestisci la risposta dell'Intent
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_PICK_IMAGE && resultCode == MainActivity.RESULT_OK && data != null) {
             selectedImageUri = data.getData();
-            addImage.setImageURI(selectedImageUri);
         }
     }
 
-    private String generateUniqueFileName() {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        return "image_" + timeStamp + ".jpg"; // Modifica l'estensione del file se necessario
+    private void openImageFromGallery() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            selectImageFromGallery();
+        } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            selectImageFromGallery();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                        MainActivity.REQUEST_READ_EXTERNAL_STORAGE);
+            } else {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MainActivity.REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        }
     }
 
+    private void selectImageFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickPhotoLauncher.launch(intent);
+    }
+
+    private void uploadFile(String title, Uri fileUri) {
+
+        LoggedInUser user = mainActivityViewModel.getUser().getValue();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference documentRef = storageRef.child("images/tesi/" + title);
+
+        // Upload the file to Firebase Storage
+        documentRef.putFile(fileUri)
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        documentRef.getDownloadUrl()
+                                .addOnCompleteListener(task1 -> {
+                                    if(task1.isSuccessful()){
+                                        thesis.setImageTesi(task1.getResult().toString());
+                                    }
+                                    db.collection("tesi").document(thesis.getId())
+                                            .set(thesis, SetOptions.merge())
+                                            .addOnSuccessListener(documentReference -> {
+                                                        saveKey();
+                                                        showSaveToast(R.string.successfull);
+                                                    }
+                                            ).addOnFailureListener(e -> showSaveToast(R.string.failed));
+                                });
+                    }
+                    else{
+                        db.collection("tesi").document(thesis.getId())
+                                .set(thesis, SetOptions.merge())
+                                .addOnSuccessListener(documentReference -> {
+                                            saveKey();
+                                            showSaveToast(R.string.successfull);
+                                        }
+                                ).addOnFailureListener(e -> showSaveToast(R.string.failed));
+                    }
+                });
+    }
+
+    private void showSaveToast(@StringRes Integer message) {
+        if (getContext() != null && getContext().getApplicationContext() != null) {
+            Toast.makeText(
+                    getContext().getApplicationContext(),
+                    message,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 }
