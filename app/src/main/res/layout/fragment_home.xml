@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="?android:attr/actionBarSize"
     android:layout_marginBottom="@dimen/bottomBarHeight"
-    tools:context=".ui.home.HomeFragment">
+    tools:context="it.uniba.dib.sms222327.laureapp.ui.home.HomeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

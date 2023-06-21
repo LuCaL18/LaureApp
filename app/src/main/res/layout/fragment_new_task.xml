@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="?attr/actionBarSize"
     android:orientation="vertical"
-    tools:context=".ui.task.NewTaskFragment">
+    tools:context="it.uniba.dib.sms222327.laureapp.ui.task.NewTaskFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

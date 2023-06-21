@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:scrollbars="none"
     android:layout_marginTop="?android:attr/actionBarSize"
-    tools:context=".ui.login.registration.RegistrationFragment">
+    tools:context="it.uniba.dib.sms222327.laureapp.ui.login.registration.RegistrationFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.home.HomeFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.home.HomeFragment"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_navigation_home_to_navigation_notifications"
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.notifications.NotificationsFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" >
         <action
@@ -39,17 +39,17 @@
     </fragment>
     <fragment
         android:id="@+id/tesiFragmant"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.CreaTesiFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.tesi.CreaTesiFragment"
         android:label="@string/crea_tesi"
         tools:layout="@layout/fragment_tesi" />
     <fragment
         android:id="@+id/nav_new_task"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.task.NewTaskFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.task.NewTaskFragment"
         android:label="@string/new_task"
         tools:layout="@layout/fragment_new_task" />
     <fragment
         android:id="@+id/nav_lista_task"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.task.ListaTaskFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.task.ListaTaskFragment"
         android:label="ListaTask" >
         <action
             android:id="@+id/action_nav_lista_task_to_nav_new_task"
@@ -57,12 +57,12 @@
     </fragment>
     <fragment
         android:id="@+id/nav_visualizza_task"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.task.VisualizzaTask"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.task.VisualizzaTask"
         android:label="VisualizzaTask" >
     </fragment>
     <fragment
         android:id="@+id/navigation_lista_tesi"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.ListaTesiFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.tesi.ListaTesiFragment"
         android:label="@string/lista_tesi"
         tools:layout="@layout/fragment_lista_tesi" >
         <action
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_classifica_tesi"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.ClassificaTesiFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.tesi.ClassificaTesiFragment"
         android:label="@string/classifica_tesi"
         tools:layout="@layout/fragment_classifica_tesi" >
         <action
@@ -83,12 +83,12 @@
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.chat.ChatFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.chat.ChatFragment"
         android:label="@string/title_chat"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/nav_chat_list_fragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.chat.ChatListFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.chat.ChatListFragment"
         android:label="@string/chat_list" >
         <action
             android:id="@+id/action_chatListFragment_to_chatFragment"
@@ -96,7 +96,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_ticket"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketListFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.ticket.TicketListFragment"
         android:label="@string/title_tickets"
         tools:layout="@layout/fragment_ticket_list" >
         <action
@@ -105,12 +105,12 @@
     </fragment>
     <fragment
         android:id="@+id/ticketFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.ticket.TicketFragment"
         android:label="@string/title_ticket"
         tools:layout="@layout/fragment_ticket" />
     <fragment
         android:id="@+id/visualizeTesiFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.tesi.VisualizeTesiFragment"
         android:label=""
         tools:layout="@layout/fragment_visualize_tesi" >
         <action
@@ -122,7 +122,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_bookingListFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.bookings.BookingListFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.bookings.BookingListFragment"
         android:label="@string/booking_list"
         tools:layout="@layout/fragment_booking_list" >
         <action
@@ -131,11 +131,11 @@
     </fragment>
     <fragment
         android:id="@+id/bookingFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.bookings.BookingFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.bookings.BookingFragment"
         android:label="@string/booking" />
     <fragment
         android:id="@+id/logo_fragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.LogoFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.LogoFragment"
         android:label="fragment_logo"
         tools:layout="@layout/fragment_logo" >
         <action
@@ -146,7 +146,7 @@
     </fragment>
     <fragment
         android:id="@+id/calendario"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.calendario.CalendarioFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.calendario.CalendarioFragment"
         android:label="Calendario"
         tools:layout="@layout/fragment_calendario" >
         <action
@@ -158,16 +158,16 @@
     </fragment>
     <fragment
         android:id="@+id/visualizzaRicevimento"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.calendario.VisualizzaRicevimentoFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.calendario.VisualizzaRicevimentoFragment"
         android:label="Ricevimento"
         tools:layout="@layout/fragment_visualizza_ricevimento" />
     <fragment
         android:id="@+id/fragment_settings"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.settings.SettingsFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.settings.SettingsFragment"
         android:label="@string/settings" />
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.profile.ProfileFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.profile.ProfileFragment"
         android:label="@string/profile" >
         <action
             android:id="@+id/action_navigation_profile_to_editProfileFragment"
@@ -175,7 +175,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.profile.EditProfileFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.profile.EditProfileFragment"
         android:label="@string/edit_profile_label"
         tools:layout="@layout/fragment_edit_profile" />
 </navigation>

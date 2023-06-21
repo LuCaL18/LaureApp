@@ -31,11 +31,11 @@
         tools:targetApi="31"
         tools:ignore="HardcodedDebugMode">
         <activity
-            android:name=".LoginActivity"
+            android:name="it.uniba.dib.sms222327.laureapp.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.LaureApp.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name="it.uniba.dib.sms222327.laureapp.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.LaureApp.NoActionBar"
             android:windowSoftInputMode="adjustPan">
@@ -49,7 +49,7 @@
         </activity>
 
         <service
-            android:name=".service.MyFirebaseMessagingService"
+            android:name="it.uniba.dib.sms222327.laureapp.service.MyFirebaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -57,7 +57,7 @@
         </service>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.uniba.mobile.cddgl.laureapp.service.AppFileProvider"
+            android:authorities="it.uniba.dib.sms222327.laureapp.service.AppFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.component.DatePickerFragment">
+    tools:context="it.uniba.dib.sms222327.laureapp.ui.component.DatePickerFragment">
 
     <DatePicker
         android:id="@+id/birthDay_picker"

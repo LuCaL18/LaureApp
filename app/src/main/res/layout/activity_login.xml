@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context="it.uniba.dib.sms222327.laureapp.LoginActivity">
 
     <include android:id="@+id/app_bar_login"
         layout="@layout/app_toolbar_login" />
