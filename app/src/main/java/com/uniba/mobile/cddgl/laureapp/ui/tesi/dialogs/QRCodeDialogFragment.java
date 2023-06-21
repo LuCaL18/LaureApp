@@ -34,6 +34,9 @@ import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Dialog che si occupa di mostrare il QRCode della tesi e di poterlo condividere e salvare
+ */
 public class QRCodeDialogFragment extends DialogFragment {
 
     private ActivityResultLauncher<Intent> saveImageLauncher;

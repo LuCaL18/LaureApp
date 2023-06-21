@@ -8,7 +8,10 @@ import androidx.annotation.NonNull;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Notification;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationMeetingItemClickCallback;
-
+/**
+ * La classe MeetingNotificationViewHolder estende NotificationViewHolder
+ * ed è responsabile per la gestione della vista delle notifiche dei ricevimenti
+ */
 public class MeetingNotificationViewHolder extends NotificationViewHolder {
 
     private boolean selected;

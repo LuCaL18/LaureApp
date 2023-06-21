@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ViewModel della main activity si occupa del caricamento delle tesi presenti nella home e del recupero dei dati dell'utente
+ */
 public class MainViewModel extends ViewModel {
 
     private final static String CLASSNAME = "MainViewModel";

@@ -8,12 +8,14 @@ import androidx.annotation.NonNull;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Ticket;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.interfaces.TicketItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.viewHolder.TicketViewHolder;
-
+/**
+ *  La classe TicketAdapter estende FirestoreRecyclerAdapter,
+ *  che è una classe di supporto fornita da FirestoreUI per la gestione di un elenco di dati Firestore in un RecyclerView.
+ */
 public class TicketAdapter extends FirestoreRecyclerAdapter<Ticket, TicketViewHolder> {
 
     private final TicketItemClickCallback callback;

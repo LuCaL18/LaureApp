@@ -25,6 +25,9 @@ import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewHolder.DocumentViewHolder;
 
 import java.util.List;
 
+/**
+ * Adapter che si occupa della visualizzazione della lista dei document della tesi
+ */
 public class DocumentAdapter extends RecyclerView.Adapter<DocumentViewHolder> {
     private List<String> documents;
     private final java.lang.String idThesis;

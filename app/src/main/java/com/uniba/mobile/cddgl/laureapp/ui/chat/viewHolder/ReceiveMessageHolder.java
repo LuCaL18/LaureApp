@@ -12,6 +12,10 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Message;
 
+/**
+ * La classe ReceiveMessageHolder estende MessageViewHolder.
+ * Si occupa di mostrare i messaggi ricevuti in una chat
+ */
 public class ReceiveMessageHolder extends MessageViewHolder {
 
     private final TextView displayNameTextView;

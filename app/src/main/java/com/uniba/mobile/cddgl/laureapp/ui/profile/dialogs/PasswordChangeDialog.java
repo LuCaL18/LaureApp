@@ -22,6 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.uniba.mobile.cddgl.laureapp.R;
 
+/**
+ * Dialog per la richiesta di modifica password
+ */
 public class PasswordChangeDialog extends DialogFragment {
 
     private Context context;

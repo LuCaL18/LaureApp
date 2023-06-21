@@ -16,6 +16,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * La classe BookingViewHolder estende RecyclerView.ViewHolder
+ * ed è responsabile per la gestione delle viste degli elementi all'interno di un RecyclerView.
+ */
 public class BookingViewHolder extends RecyclerView.ViewHolder {
     private final TextView titleView;
     private final TextView bodyView;
@@ -26,43 +30,53 @@ public class BookingViewHolder extends RecyclerView.ViewHolder {
     public BookingViewHolder(@NonNull View itemView, BookingItemClickCallback callback) {
         super(itemView);
 
+        // Ottieni il context
         context = itemView.getContext();
 
         titleView = itemView.findViewById(R.id.booking_thesis_name);
         bodyView = itemView.findViewById(R.id.booking_thesis_body);
         timestamp = itemView.findViewById(R.id.text_timestamp_booking);
 
+        // Imposta un listener per il clic sulla view dell'elemento
         itemView.setOnClickListener(view -> {
+            // Imposta la view selezionata come true
             itemView.setSelected(true);
-            callback.onBookingClicked((idBooking));
+            // Richiama il callback passando l'id della prenotazione
+            callback.onBookingClicked(idBooking);
         });
     }
 
     public void bind(Booking booking) {
+        // Associa i dati della prenotazione al ViewHolder
 
         this.idBooking = booking.getId();
         String bodyText;
 
+        // Imposta il testo del titolo con il nome della tesi e l'id della tesi
         titleView.setText(booking.getNameThesis() + " (" + booking.getIdThesis() + ")");
+
         try {
-            if(booking.getState().equals(BookingState.OPEN)) {
-                bodyText = context.getString(R.string.notification_body_open_booking, booking.getNameStudent()+ " " + booking.getSurnameStudent(), booking.getNameThesis());
-            } else if (booking.getState().equals(BookingState.ACCEPTED)){
+            // Verifica lo stato della prenotazione e imposta il testo del body di conseguenza
+            if (booking.getState().equals(BookingState.OPEN)) {
+                bodyText = context.getString(R.string.notification_body_open_booking, booking.getNameStudent() + " " + booking.getSurnameStudent(), booking.getNameThesis());
+            } else if (booking.getState().equals(BookingState.ACCEPTED)) {
                 bodyText = context.getString(R.string.booking_accepted_by_professor);
             } else {
                 bodyText = context.getString(R.string.booking_refused_by_professor);
             }
 
+            // Imposta il testo del body
             bodyView.setText(bodyText);
         } catch (Exception e) {
+            // In caso di eccezione, nascondi la vista del body
             bodyView.setVisibility(View.GONE);
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        Date date;
+        Date date = new Date(booking.getTimestamp());
 
-        date = new Date(booking.getTimestamp());
-
+        // Imposta il testo del timestamp con la data formattata
         timestamp.setText(formatter.format(date));
     }
 }
+

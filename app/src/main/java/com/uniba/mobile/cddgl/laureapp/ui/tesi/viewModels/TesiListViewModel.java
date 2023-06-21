@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ViewModel per il fragment ListaTesiFragment
+ */
 public class TesiListViewModel extends ViewModel {
 
     private final MutableLiveData<List<Tesi>> tesiList = new MutableLiveData<>();

@@ -5,6 +5,9 @@ import androidx.annotation.Nullable;
 
 import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 
+/**
+ * Classe che rappresenta l'istanza della notifica
+ */
 public class Notification {
 
     private String receiveId;

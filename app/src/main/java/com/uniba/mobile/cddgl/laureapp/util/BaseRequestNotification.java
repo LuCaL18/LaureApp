@@ -19,6 +19,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe per inviare notifiche al servizio https://fcm.googleapis.com/fcm/send
+ */
 public class BaseRequestNotification {
 
     public final static String KEY_TYPE = "type";

@@ -14,6 +14,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * La classe MessageViewHolder estende RecyclerView.ViewHolder
+ * ed è responsabile per la gestione delle view degli elementi all'interno di un RecyclerView.
+ * Si occupa di mostrare i messaggi inviati in una chat
+ */
 public class MessageViewHolder extends RecyclerView.ViewHolder {
     protected TextView messageTextView;
     protected TextView timestampTextView;

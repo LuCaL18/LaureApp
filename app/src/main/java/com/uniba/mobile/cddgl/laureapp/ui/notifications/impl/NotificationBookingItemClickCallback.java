@@ -5,7 +5,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.BookingViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.interfaces.BookingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.interfaces.NotificationCallbackItem;
-
+/**
+ * Implementazione dell'interfaccia NotificationCallbackItem e BookingItemClickCallback
+ */
 public class NotificationBookingItemClickCallback implements NotificationCallbackItem, BookingItemClickCallback {
 
     private final BookingViewModel bookingViewModel;

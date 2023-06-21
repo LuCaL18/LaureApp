@@ -14,6 +14,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Classe astratta per la gestione della view delle notifiche
+ * Estende la classe RecyclerView.ViewHolder
+ */
 public abstract class NotificationViewHolder extends RecyclerView.ViewHolder {
 
     protected TextView titleTextView;

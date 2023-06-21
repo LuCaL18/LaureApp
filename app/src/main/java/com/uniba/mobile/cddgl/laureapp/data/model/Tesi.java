@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Classe che rappresenta l'istanza di una tesi
+ */
 public class Tesi implements Serializable, Cloneable {
 
     private String id;

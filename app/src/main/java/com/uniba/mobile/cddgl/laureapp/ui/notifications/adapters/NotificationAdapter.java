@@ -26,8 +26,12 @@ import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.NotificationV
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.TicketNotificationViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.interfaces.TicketItemClickCallback;
 
+/**
+ * Adapter che si occupa della visualizzazione della lista di Notifiche
+ */
 public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, NotificationViewHolder> {
 
+    //Tipi di notifica da visualizzare
     private static final int VIEW_TYPE_CHAT_NOTIFICATION = 1;
     private static final int VIEW_TYPE_TICKET_NOTIFICATION = 2;
     private static final int VIEW_TYPE_BOOKING_NOTIFICATION = 3;
@@ -40,6 +44,7 @@ public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, 
     private final TextView textView;
     private final RecyclerView notificationListRecyclerView;
 
+    //Vengono passate varie callback, ognuna per la gestione di un tipo di notifica
     public NotificationAdapter(FirestoreRecyclerOptions<Notification> options,
                                ChatItemClickCallback chatItemClickCallback,
                                TicketItemClickCallback ticketItemClickCallback,

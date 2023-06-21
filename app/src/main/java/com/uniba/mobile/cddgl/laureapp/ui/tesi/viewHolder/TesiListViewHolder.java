@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ViewHolder che si occupa della visualizzazione di una tesi della lista tesi
+ */
 public class TesiListViewHolder {
 
     private static final String CLASS_ID = "TesiViewHolder";

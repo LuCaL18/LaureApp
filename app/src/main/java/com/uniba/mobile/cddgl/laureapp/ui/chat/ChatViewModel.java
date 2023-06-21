@@ -9,9 +9,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,7 +17,10 @@ import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 
 import java.util.ArrayList;
 
-
+/**
+ * ViewModel utilizzato per comunicare i dati dalla lista chat al fragment della chat. Si occupa anche del
+ * recupero dei dati della chat da firebase
+ */
 public class ChatViewModel extends ViewModel {
 
     private final MutableLiveData<LoggedInUser[]> members = new MutableLiveData<>();

@@ -37,7 +37,9 @@ import com.uniba.mobile.cddgl.laureapp.util.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Fragment che si occupa della visualizzazione e della gestione della schermata per la modifca del profilo
+ */
 public class EditProfileFragment extends Fragment {
 
     private MainViewModel mainViewModel;

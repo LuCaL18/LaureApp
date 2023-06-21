@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+/**
+ * Classe che rappresenta l'istanza del ricevimento
+ */
 public class Ricevimento implements Serializable {
     private String ricevimentoId;
     private String relatore;

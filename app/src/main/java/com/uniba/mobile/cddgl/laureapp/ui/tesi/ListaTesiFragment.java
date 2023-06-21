@@ -70,6 +70,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Fragment che si occupa della visualizzazione e della gestione di una lista di tesi
+ */
 public class ListaTesiFragment extends Fragment implements SearchView.OnQueryTextListener, FavouriteItemCallback {
 
     private static final String FILTERS_KEY = "filters";

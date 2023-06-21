@@ -13,7 +13,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * La classe MyFirebaseMessagingService estende FirebaseMessagingService,
+ * che è una classe di base fornita da Firebase per gestire la ricezione dei messaggi push.
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private final static String CLASSNAME = "MyFirebaseMessagingService";
@@ -21,29 +24,30 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
-        saveTokenUser(token);
+        saveTokenUser(token); // Salvataggio del token dell'utente quando viene generato un nuovo token
     }
 
     private void saveTokenUser(String token) {
         try {
+            // Ottieni il riferimento al documento dell'utente corrente nel database Firestore
             DocumentReference userRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+            // Crea una mappa con l'aggiornamento da effettuare (aggiornare il campo "token" con il nuovo token)
             Map<String, Object> updates = new HashMap<>();
             updates.put("token", token);
 
+            // Esegui l'aggiornamento del documento dell'utente nel database Firestore
             userRef.update(updates)
-                    .addOnSuccessListener(aVoid -> Log.i(CLASSNAME, "user updates"))
-                    .addOnFailureListener(e -> Log.e(CLASSNAME, "Unable updates user"));
+                    .addOnSuccessListener(aVoid -> Log.i(CLASSNAME, "user updates")) // Aggiornamento avvenuto con successo
+                    .addOnFailureListener(e -> Log.e(CLASSNAME, "Unable updates user")); // Errore durante l'aggiornamento
         } catch (NullPointerException e) {
-            Log.w(CLASSNAME, "Unable update token user");
+            Log.w(CLASSNAME, "Unable update token user"); // Gestione dell'eccezione nel caso in cui l'utente corrente sia nullo
         }
-
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        // check if the message is message chat to the current user
 //        if (isMessage(remoteMessage)) {
 //            createNotificationMessage(remoteMessage);
 //            return;

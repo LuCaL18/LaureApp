@@ -23,6 +23,9 @@ import com.uniba.mobile.cddgl.laureapp.R;
 
 import java.util.Locale;
 
+/**
+ * Fragment che si occupa della visualizzazione e della gestione della schermata delle Impostazioni
+ */
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SharedPreferences sharedPreferences;

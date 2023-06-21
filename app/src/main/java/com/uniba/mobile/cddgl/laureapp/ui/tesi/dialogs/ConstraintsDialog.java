@@ -25,6 +25,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+/**
+ * Dialog che si occupa della modifica o impostazione dei vincoli associati a una tesi
+ */
 public class ConstraintsDialog {
 
     private final AlertDialog dialog;

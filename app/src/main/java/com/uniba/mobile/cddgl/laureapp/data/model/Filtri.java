@@ -2,9 +2,12 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 
 import java.util.List;
 
+/**
+ * Classe istanza del document Filtri in firebase
+ */
 public class Filtri {
 
-    private List<String> lista;
+    private List<String> lista; //lista dei filtri
 
     public Filtri(){
     }

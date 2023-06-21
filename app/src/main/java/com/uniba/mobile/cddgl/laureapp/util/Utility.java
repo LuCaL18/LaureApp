@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe di Utility, contiene metodi statici riutilizzabili nell'app
+ */
 public class Utility {
 
     public static int getNumberFromString(String inputString, int defaultValue) {

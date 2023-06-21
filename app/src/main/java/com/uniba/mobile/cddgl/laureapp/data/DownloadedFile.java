@@ -4,6 +4,9 @@ import android.app.DownloadManager;
 
 import androidx.annotation.Keep;
 
+/**
+ * Classe che rappresneta l'istanza di un file scaricato
+ */
 public class DownloadedFile {
 
     private String filename;

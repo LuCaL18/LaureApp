@@ -5,7 +5,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.ui.calendario.MeetingViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.calendario.MeetingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.interfaces.NotificationCallbackItem;
-
+/**
+ * Implementazione dell'interfaccia NotificationCallbackItem e MeetingItemClickCallback
+ */
 public class NotificationMeetingItemClickCallback implements NotificationCallbackItem, MeetingItemClickCallback {
 
     private final MeetingViewModel meetingViewModel;

@@ -46,7 +46,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-
+/**
+ * Fragment che si occupa della visualizzazione e della gestione di una chat
+ */
 public class ChatFragment extends Fragment {
 
     private final static String CLASS_NAME = "ChatFragment";

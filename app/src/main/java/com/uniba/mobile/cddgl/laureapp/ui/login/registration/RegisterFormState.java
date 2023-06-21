@@ -4,6 +4,10 @@ import androidx.annotation.Nullable;
 
 import com.uniba.mobile.cddgl.laureapp.ui.login.LoginFormState;
 
+/**
+ * Classe che estende LoginFormState utilizzata per
+ * registrare lo stato della registrazione i base agli input ricevuti
+ */
 public class RegisterFormState extends LoginFormState {
     @Nullable
     private final Integer nameError;

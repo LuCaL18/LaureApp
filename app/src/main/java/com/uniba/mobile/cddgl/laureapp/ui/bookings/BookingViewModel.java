@@ -19,6 +19,12 @@ public class BookingViewModel extends ViewModel {
 
     public BookingViewModel() {}
 
+    /**
+     * Inizializza il ViewModel con l'ID della prenotazione.
+     * Recupera i dati della prenotazione dal database Firebase Firestore.
+     *
+     * @param id ID della prenotazione
+     */
     public void init(String id) {
 
         isAlreadyRead = false;

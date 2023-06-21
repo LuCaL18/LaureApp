@@ -33,6 +33,9 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Dialog che si occupa dell'aggiunta dei corelatori associati a una tesi
+ */
 public class CoRelatoreDialoog {
 
     private final AlertDialog dialog;

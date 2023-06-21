@@ -21,6 +21,9 @@ import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 
+/**
+ * ViewHolder che si occupa della visualizzazione del singolo task
+ */
 public class TaskListViewHolder {
     private final TextView nomeTasktextView;
     private final TextView scadenzaTasktextView;

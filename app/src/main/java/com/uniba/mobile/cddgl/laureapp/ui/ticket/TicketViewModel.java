@@ -18,6 +18,12 @@ public class TicketViewModel extends ViewModel {
     private boolean isAlreadyRead = false;
 
     public TicketViewModel() {}
+    /**
+     * Inizializza il ViewModel con l'ID del ticket.
+     * Recupera i dati della prenotazione dal database Firebase Firestore.
+     *
+     * @param id ID del ticket
+     */
 
     public void init(String id) {
 

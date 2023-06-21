@@ -1,6 +1,5 @@
 package com.uniba.mobile.cddgl.laureapp.ui.ticket.viewHolder;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,7 +13,10 @@ import com.uniba.mobile.cddgl.laureapp.ui.ticket.interfaces.TicketItemClickCallb
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+/**
+ * La classe TicketViewHolder estende RecyclerView.ViewHolder
+ * ed è responsabile per la gestione delle viste degli elementi all'interno di un RecyclerView.
+ */
 public class TicketViewHolder extends RecyclerView.ViewHolder {
     private final TextView titleView;
     private final TextView bodyView;

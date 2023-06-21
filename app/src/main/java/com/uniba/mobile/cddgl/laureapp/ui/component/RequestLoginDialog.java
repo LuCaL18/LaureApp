@@ -14,6 +14,10 @@ import androidx.fragment.app.DialogFragment;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
 
+/**
+ * Classe che estende DialogFragment
+ * utilizzata per mostrare il dialog per la richiesta di login
+ */
 public class RequestLoginDialog extends DialogFragment {
 
     public RequestLoginDialog() {}
@@ -34,6 +38,7 @@ public class RequestLoginDialog extends DialogFragment {
 
         loginButton.setOnClickListener(v -> {
             if(getActivity() != null) {
+                //richiama metodo dell'activity
                 ((MainActivity)getActivity()).goToLoginActivity();
                 dismiss();
             }
