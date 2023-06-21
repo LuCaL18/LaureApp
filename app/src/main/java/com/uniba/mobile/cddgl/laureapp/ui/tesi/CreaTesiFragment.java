@@ -6,7 +6,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -122,8 +121,6 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentTesiBinding.inflate(inflater, container, false);
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.INVISIBLE);
         return binding.getRoot();
     }
 
@@ -383,9 +380,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         Ambito = new TextView(getContext());
         Chiave = new TextView(getContext());
         Ambito.setTextSize(20);
-        Ambito.setTextColor(Color.BLACK);
         Chiave.setTextSize(20);
-        Chiave.setTextColor(Color.BLACK);
     }
 
     private void impostaVincoli() {
@@ -393,19 +388,38 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         Skill = new TextView(getContext());
         Media = new TextView(getContext());
         Media.setTextSize(20);
-        Media.setTextColor(Color.BLACK);
         Tempistiche.setTextSize(20);
-        Tempistiche.setTextColor(Color.BLACK);
         Skill.setTextSize(20);
-        Skill.setTextColor(Color.BLACK);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        navBar.setVisibility(View.VISIBLE);
         binding = null;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(navBar != null) {
+            navBar.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
@@ -570,6 +584,18 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                     getContext().getApplicationContext(),
                     message,
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MainActivity.REQUEST_READ_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectImageFromGallery();
+            } else {
+                showSaveToast(R.string.access_media_gallery_denied);
+            }
         }
     }
 }

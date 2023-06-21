@@ -33,6 +33,7 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -44,6 +45,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
@@ -622,6 +624,8 @@ public class CalendarioFragment extends Fragment {
         if(navBar!= null){
             navBar.setVisibility(View.VISIBLE);
         }
+        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
+        navigationView.getMenu().findItem(MainActivity.MEETING).setChecked(false);
     }
 
     private void showSaveToast(@StringRes Integer message) {
