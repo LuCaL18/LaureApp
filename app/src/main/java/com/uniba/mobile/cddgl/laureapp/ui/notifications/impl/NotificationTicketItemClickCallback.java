@@ -5,7 +5,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.interfaces.NotificationCallbackItem;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.interfaces.TicketItemClickCallback;
-
+/**
+ * Implementazione dell'interfaccia NotificationCallbackItem e TicketItemClickCallback
+ */
 public class NotificationTicketItemClickCallback implements NotificationCallbackItem, TicketItemClickCallback {
 
     private final TicketViewModel model;

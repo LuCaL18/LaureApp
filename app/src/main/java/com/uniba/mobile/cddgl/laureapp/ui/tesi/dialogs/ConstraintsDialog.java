@@ -17,6 +17,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.slider.Slider;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.CreaTesiFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 
 import java.util.ArrayList;
@@ -24,10 +25,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+/**
+ * Dialog che si occupa della modifica o impostazione dei vincoli associati a una tesi
+ */
 public class ConstraintsDialog {
 
     private final AlertDialog dialog;
-    private int timeWeeks;
+    private int timeWeeks = 3;
     private final EditText textExamN;
     private final ChipGroup chipsContainer;
     private final List<String> exams;
@@ -95,6 +99,73 @@ public class ConstraintsDialog {
             timelineTextView.setText(vincoliPopup.getContext().getString(R.string.timeline_value_weeks, String.valueOf((int) value)));
             timeWeeks = (int) value;
         });
+
+        save.setOnClickListener(viewSave -> {
+
+            requiredFragment.updateConstraints(timeWeeks, Float.parseFloat(voto.getText().toString()), exams, eSkill.getText().toString());
+            dialog.dismiss();
+        });
+
+        cancel.setOnClickListener(viewCancel -> dialog.dismiss());
+    }
+
+    public ConstraintsDialog(AlertDialog dialog, View vincoliPopup, CreaTesiFragment requiredFragment) {
+        this.dialog = dialog;
+
+        exams = new ArrayList<>();
+
+        textExamN = vincoliPopup.findViewById(R.id.text_input_edit_text);
+        chipsContainer = vincoliPopup.findViewById(R.id.chips_exam_container);
+
+        EditText eSkill = vincoliPopup.findViewById(R.id.CeS_edit);
+        eSkill.setHint("Skill richieste");
+
+        TextView timelineTextView = vincoliPopup.findViewById(R.id.temp_value);
+        timelineTextView.setText(requiredFragment.getString(R.string.timeline_value_weeks, String.valueOf(timeWeeks)));
+
+        TextView voto = vincoliPopup.findViewById(R.id.voto_edit_constraint);
+
+        Slider media = vincoliPopup.findViewById(R.id.media_edit_slider_bar);
+
+        Slider timeline = vincoliPopup.findViewById(R.id.tempistiche_slider_bar);
+        timeline.setValue(timeWeeks);
+
+        Button save = vincoliPopup.findViewById(R.id.saveButton);
+        Button cancel = vincoliPopup.findViewById(R.id.cancelButton);
+
+        media.addOnChangeListener((slider, value, fromUser) -> voto.setText(String.valueOf(value)));
+
+        textExamN.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    createChip(null);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        textExamN.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().endsWith("\n")) {
+                    createChip(null);
+                }
+            }
+        });
+
+        timeline.addOnChangeListener((slider, value, fromUser) -> {
+            timelineTextView.setText(vincoliPopup.getContext().getString(R.string.timeline_value_weeks, String.valueOf((int) value)));
+            timeWeeks = (int) value;
+        });
+
 
         save.setOnClickListener(viewSave -> {
 

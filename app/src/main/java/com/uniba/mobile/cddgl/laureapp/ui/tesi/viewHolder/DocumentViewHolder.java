@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.uniba.mobile.cddgl.laureapp.R;
 
+/**
+ * ViewHolder che si occupa della visualizzazione di un documento della lista documenti di una tesi
+ */
 public class DocumentViewHolder extends RecyclerView.ViewHolder {
     private final TextView documentFileName;
     private final ImageView downloadButton;

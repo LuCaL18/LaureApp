@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,8 +29,10 @@ import com.google.firebase.storage.UploadTask;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
 
+/**
+ * Dialog che si occupa del caricamento di un file per la tesi
+ */
 public class UploadFileDialogFragment extends DialogFragment {
 
     private static final String THESIS_UPLOAD = "thesis_upload";

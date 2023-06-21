@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="General"
+        android:title="@string/general"
         android:layout="@layout/custom_preference_category">
 
         <ListPreference
@@ -15,7 +15,7 @@
             android:key="theme"
             android:layout="@layout/custom_list_preferences"
             android:minHeight="48dp"
-            android:title="Theme" />
+            android:title="@string/theme" />
 
         <ListPreference
             android:defaultValue="en"
@@ -23,7 +23,7 @@
             android:entryValues="@array/available_languages_values"
             android:icon="@drawable/ic_baseline_language_24"
             android:key="language"
-            android:title="Language"
+            android:title="@string/language"
             android:layout="@layout/custom_list_preferences"/>
 
     </PreferenceCategory>

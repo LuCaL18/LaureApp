@@ -11,41 +11,52 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.uniba.mobile.cddgl.laureapp.R;
-import com.uniba.mobile.cddgl.laureapp.data.NotificationType;
 import com.uniba.mobile.cddgl.laureapp.data.model.Notification;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.interfaces.BookingItemClickCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.calendario.interfaces.MeetingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationBookingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationChatItemClickCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationMeetingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationTicketItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.BookingNotificationViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.ChatNotificationViewHolder;
+import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.MeetingNotificationViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.NotificationViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.viewHolder.TicketNotificationViewHolder;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.interfaces.TicketItemClickCallback;
 
+/**
+ * Adapter che si occupa della visualizzazione della lista di Notifiche
+ */
 public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, NotificationViewHolder> {
 
+    //Tipi di notifica da visualizzare
     private static final int VIEW_TYPE_CHAT_NOTIFICATION = 1;
     private static final int VIEW_TYPE_TICKET_NOTIFICATION = 2;
     private static final int VIEW_TYPE_BOOKING_NOTIFICATION = 3;
+    private static final int VIEW_TYPE_MEETING_NOTIFICATION = 4;
 
     private final ChatItemClickCallback chatItemClickCallback;
     private final TicketItemClickCallback ticketItemClickCallback;
     private final BookingItemClickCallback bookingItemClickCallback;
+    private final MeetingItemClickCallback meetingItemClickCallback;
     private final TextView textView;
     private final RecyclerView notificationListRecyclerView;
 
+    //Vengono passate varie callback, ognuna per la gestione di un tipo di notifica
     public NotificationAdapter(FirestoreRecyclerOptions<Notification> options,
                                ChatItemClickCallback chatItemClickCallback,
                                TicketItemClickCallback ticketItemClickCallback,
                                BookingItemClickCallback bookingItemClickCallback,
+                               MeetingItemClickCallback meetingItemClickCallback,
                                TextView textView,
                                RecyclerView notificationListRecyclerView) {
         super(options);
         this.chatItemClickCallback = chatItemClickCallback;
         this.ticketItemClickCallback = ticketItemClickCallback;
         this.bookingItemClickCallback = bookingItemClickCallback;
+        this.meetingItemClickCallback = meetingItemClickCallback;
         this.textView = textView;
         this.notificationListRecyclerView = notificationListRecyclerView;
     }
@@ -72,6 +83,8 @@ public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, 
                 return VIEW_TYPE_CHAT_NOTIFICATION;
             case BOOKING:
                 return VIEW_TYPE_BOOKING_NOTIFICATION;
+            case MEETING:
+                return VIEW_TYPE_MEETING_NOTIFICATION;
             case TICKET:
             default:
                 return VIEW_TYPE_TICKET_NOTIFICATION;
@@ -89,6 +102,8 @@ public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, 
                 return new ChatNotificationViewHolder(view, (NotificationChatItemClickCallback) chatItemClickCallback);
             case VIEW_TYPE_BOOKING_NOTIFICATION:
                 return new BookingNotificationViewHolder(view, (NotificationBookingItemClickCallback) bookingItemClickCallback);
+            case VIEW_TYPE_MEETING_NOTIFICATION:
+                return new MeetingNotificationViewHolder(view, (NotificationMeetingItemClickCallback) meetingItemClickCallback);
             case VIEW_TYPE_TICKET_NOTIFICATION:
             default:
                 return new TicketNotificationViewHolder(view, (NotificationTicketItemClickCallback) ticketItemClickCallback);

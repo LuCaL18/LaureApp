@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name"><b>Laure</b>App</string>
+    <string name="content_description_notification">Mostra notifiiche</string>
+    <string name="action_sign_in">Registrazione</string>
+    <string name="action_sign_in_short">Registrazione</string>
+    <string name="register">Registrati</string>
+    <string name="welcome">"Benvenuto !"</string>
+    <string name="login_failed">"Login fallito"</string>
+    <string name="registration_failed">"Registrazione fallita"</string>
+    <string name="login">Login</string>
+    <string name="guest">Guest</string>
+    <string name="sign_up">Registrazione</string>
+    <string name="login_guest"><u>Entra come guest</u></string>
+    <string name="favorite">Preferiti</string>
+    <string name="content_description_favorite">Aggiungi ai preferiti</string>
+    <string name="search">Cerca</string>
+    <string name="content_description_search">Richiesta</string>
+    <string name="confirm">Conferma</string>
+    <string name="send">Invia</string>
+    <string name="cancel">Cancella</string>
+    <string name="save">Salva</string>
+    <string name="unknown_user">Utente sconosciuto</string>
+    <string name="yes_text">Si</string>
+    <string name="no_text">No</string>
+    <string name="title">Titolo</string>
+    <string name="edit">Modifica</string>
+    <string name="allow">Conferma</string>
+    <string name="next">Continua</string>
+
+    <string name="navigation_drawer_open">Apri menu di navigazione</string>
+    <string name="navigation_drawer_close">Chiudi menu di navigazione</string>
+
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+
+    <string name="nav_header_desc">Intestazione</string>
+
+    <string name="action_settings">Impostazioni</string>
+
+
+    <string name="request_confirm_email_verified_title"><b>Conferma il tuo indirizzo mail</b></string>
+    <string name="request_confirm_email_verified">Abbiamo inviato una mail di conferma a:\n\n<b>%s</b>\n\nControlla la tua mail e clicca sul link di conferma per continuare.</string>
+    <string name="resend_email"><b>Rinvia email</b></string>
+
+    <!--    USER FIELDS-->
+    <string name="name">Nome</string>
+    <string name="surname">Cognome</string>
+    <string name="birth_day">Data di nascita</string>
+    <string name="bio">Biografia</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="confirm_password">Conferma password</string>
+    <string name="bioHint">Inserisci una descrizione (massimo 200 caratteri)</string>
+    <string name="role_student">Studente</string>
+    <string name="role_professor">Professore</string>
+    <string name="forgot_password"><u>Password dimenticata?</u></string>
+
+    <!--    TASK FIELD-->
+    <string name="nometask">Nome Task</string>
+    <string name="stato">Stato</string>
+    <string name="descrizione">Descrizione</string>
+    <string name="scadenza">Scadenza</string>
+    <string name="lista_task">Lista Task</string>
+
+    <!--    SHARE TESI-->
+    <string name="share_classifica">Condividi classifica</string>
+    <string name="share_tesi">Condividi tesi</string>
+
+    <!--    ERROR USER-->
+    <string name="invalid_username">Username non valido</string>
+    <string name="invalid_password">La password deve contenere almeno 5 caratteri</string>
+    <string name="invalid_name">Nome non valido</string>
+    <string name="invalid_surname">Cognome non valido</string>
+    <string name="invalid_date">Data di nascita non valida</string>
+    <string name="invalid_bio">La biografia può contenere al massimo 200 caratteri</string>
+    <string name="invalid_confirm_password">La passwords non corrisponde</string>
+    <string name="invalid_filename">Il nome del file non può contenere caratteri speciali</string>
+
+    <!--    ERROR TASK-->
+    <string name="invalid_state">Stato non valido</string>
+    <string name="invalid_taskname">Nome non valido per il task</string>
+    <string name="invalid_task">Task non valido</string>
+    <string name="invalid_description">La descrizione può contenere al massimo 200 caratteri</string>
+    <string name="invalid_scadenza">Data fine non valida</string>
+
+    <!--    FIREBASE EXCEPTION-->
+    <string name="weak_password">Password debole</string>
+    <string name="invalid_credentials">Email non valida o già registrata</string>
+    <string name="user_collision">Utente già registrato con questa email</string>
+    <string name="nome_tesi">NOME TESI</string>
+    <string name="relatori">RELATORI</string>
+    <string name="vincoli">VINCOLI</string>
+    <string name="crea_tesi">Crea tesi</string>
+    <string name="popvincoli">Vincoli</string>
+    <string name="cancella">CANCELLA</string>
+    <string name="aggiungi">AGGIUNGI</string>
+    <string name="email">Email</string>
+    <string name="cognome">COGNOME</string>
+    <string name="nome">NOME</string>
+    <string name="vedi_tutte">Vedi tutte</string>
+    <string name="task_creati">TASK CREATI</string>
+    <string name="verifica_email">VERIFICA EMAIL</string>
+    <string name="new_task">New Task</string>
+    <string name="classifica_tesi">Classifica Tesi</string>
+    <string name="lista_tesi">Lista Tesi</string>
+    <string name="title_activity_new_task">Nuovo Task</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_slideshow">Presentazione</string>
+
+    <!--    FORGOT PASSWORD-->
+    <string name="request_send_forgot_password">Sei sicuro di voler inviare una richiesta di reimpostazione della password a questo indirizzo e-mail?:\n\n<b>%s</b></string>
+    <string name="password_reset_sent">Email di reimpostazione password inviata</string>
+    <string name="dialog_password_reset_title">Conferma la reimpostazione della password</string>
+    <string name="error_message_password_reset">Impossibile inviare la richiesta di reimpostazione della password</string>
+
+    <!--    MENU DRAWER-->
+    <string name="logout">Esci</string>
+    <string name="menu_gallery">Galleria</string>
+    <string name="chat_menu">Chat</string>
+    <string name="ticket_menu">Ticket</string>
+
+    <!--    TITLE NAVIGATION BAR-->
+    <string name="title_home">Home</string>
+    <string name="title_notifications">Notifiche</string>
+    <string name="title_chat">Chat</string>
+    <string name="user_profile">Profilo utente</string>
+    <string name="title_tickets">Lista Ticket</string>
+    <string name="title_ticket">Ticket</string>
+
+    <!--    NOTIFICATIONS-->
+    <string name="title_message">Nuovo messaggio da %s</string>
+    <string name="title_messages">Nuovi messaggi in chat %s</string>
+    <string name="body_messages">Hai ricevuto più messaggi nella chat %s</string>
+    <string name="no_notifications">Non hai nuove notifiche</string>
+    <string name="title_notification_ticket">Ticket attivo %s</string>
+    <string name="notification_body_open_ticket">%s ha aperto un nuovo ticket il %s</string>
+    <string name="notification_body_closed_ticket">%s ha chiuso il ticket il %s</string>
+    <string name="notification_ticket_request_exception">Impossibile inviare la richiesta</string>
+    <string name="notification_ticket_response_exception">Impossibile inviare la risposta</string>
+    <string name="notification_title_booking">Prenotazione attiva %s</string>
+    <string name="notification_body_open_booking">Lo studente %s ha effettuato una prenotazione alla tesi %s</string>
+
+    <!--    TICKET-->
+    <string name="no_tickets">Non ci sono nuovi ticket</string>
+    <string name="closed_tickets">Chiuso</string>
+    <string name="open_tickets">Aperto</string>
+    <string name="title_dialog_ticket">Conferma Ticket</string>
+    <string name="message_dialog_ticket_request">Sei sicuro di voler inviare questa richiesta?</string>
+    <string name="message_dialog_ticket_response">Sei sicuro di voler inviare questa risposta?</string>
+    <string name="email_student_title">Studente: %s</string>
+    <string name="email_prof_title">Professore: %s</string>
+    <string name="hint_text_sender">Scrivi qui la tua richiesta…</string>
+    <string name="hint_text_receiver">Scrivi qui la tua risposta…</string>
+
+
+    <!--    CONTENT DESCRIPTION-->
+    <string name="notification_icon">Icona di notifica</string>
+    <string name="content_description_share">Clicca per condividere</string>
+    <string name="content_description_qr_code">Genera QR code</string>
+    <string name="content_description_favorite_thesis">Aggiungi tesi alla classifica</string>
+    <string name="content_description_add_ticket_thesis">Clicca per creare un nuovo ticket</string>
+
+    <!--    MENU-->
+    <string name="share">Condividi</string>
+    <string name="qr_code">QR Code</string>
+    <string name="add_ticket">Aggiungi ticket</string>
+
+    <!--    THESIS-->
+    <string name="relators">Relatori</string>
+    <string name="constraints">Vincoli</string>
+    <string name="book_thesis_uppercase">PRENOTA TESI</string>
+    <string name="book_thesis">Prenota tesi</string>
+    <string name="documents">Documenti</string>
+    <string name="notes">Note</string>
+    <string name="no_notes">Non ci sono note</string>
+    <string name="unable_to_save_changes">Impossibile salvare le modifiche</string>
+    <string name="share_data_with">Condividi i dati della tesi tramite:</string>
+
+    <!--    FILE-->
+    <string name="filename">Nome del file</string>
+    <string name="file_saved_with_success">File salvato con successo</string>
+    <string name="unable_saved_file">Impossibile salvare il file</string>
+    <string name="file_saved_unauthorised">Autorizzazioni per il salvataggio dei file non abilitate</string>
+    <string name="unable_downloaded_file">Impossibile scaricare il file</string>
+    <string name="unable_open_file">Impossibile aprire il file</string>
+    <string name="upload">Caricamento</string>
+    <string name="image_saved_in_gallery">Immagine salvata in galleria</string>
+    <string name="cannot_image_saved_in_gallery">Impossibile salvare imamgine in galleria</string>
+    <string name="error_upload">Errore durante il caricamento</string>
+
+    <!--    PERMISSION-->
+    <string name="internet_permission_required_cause">Per aprire i collegamenti Web è necessaria l\' autorizzazione a Internet</string>
+    <string name="write_external_permission_declined">Accesso all\'archivio rifiutato</string>
+    <string name="app_need_permission_to_save_qr_code">Richiesta autorizzazione per salvare immagine del codice QR</string>
+    <string name="request_permission_storage_gallery">Necessario accesso alla memoria per salvare le immagini nella galleria. Se rifiuti questa autorizzazione, non sarà possibile salvare le immagini nella galleria.</string>
+    <string name="storage_permission">Permesso di archiviazione</string>
+
+
+    <string name="timelines">Tempistiche</string>
+    <string name="average_votes">Media dei voti</string>
+    <string name="necessary_exams">Esami necessari</string>
+    <string name="skills_and_competences">Abilità e competenze</string>
+    <string name="booking">Prenotazione</string>
+    <string name="write_here_your_motivation">Scrivi qui la tua motivazione...</string>
+    <string name="motivation_for_unfulfilled_constraints">Motivazione per vincoli non soddisfatti</string>
+    <string name="constraints_checks_the_constraints_satisfied">Controlla i vincoli soddisfatti</string>
+    <string name="booking_successfully_saved">Prenotazione salvata con successo</string>
+    <string name="impossible_to_save_the_booking">Impossibile salvare la prenotazione</string>
+    <string name="refused">Rifiutato</string>
+    <string name="accepted">Accettato</string>
+    <string name="there_are_no_bookings">Non ci sono prenotazioni</string>
+    <string name="booking_list">Lista prenotazioni</string>
+    <string name="booking_accepted_by_professor">La prenotazione è stata accettata dal professore</string>
+    <string name="booking_refused_by_professor">La prenotazione è stata rifiutata dal professore</string>
+    <string name="menu_booking">Prenotazione</string>
+    <string name="opened">Aperto</string>
+    <string name="reasons_for_unfulfilled_constraints">Motivi dei vincoli non rispettati</string>
+    <string name="reject">Rifiuta</string>
+    <string name="accept">Accetta</string>
+    <string name="your_booking_has_been_refused">La tua prenotazione è stata rifiutata</string>
+    <string name="your_booking_has_been_accepted">La tua prenotazione è stata accettata</string>
+    <string name="you_have_accepted_this_booking">Hai accettato questa prenotazione</string>
+    <string name="you_have_refused_this_booking">Hai rifiutato questa prenotazione</string>
+    <string name="refuse_booking_dialog">Sei sicuro di voler rifiutare questa prenotazione?</string>
+    <string name="accept_booking_dialog">Sei sicuro di voler accettare questa prenotazione?</string>
+    <string name="title_booking_dialog_confirm">Conferma risposta alla prenotazione</string>
+    <string name="response_sent_successfully">Risposta inviata con successo</string>
+    <string name="unable_to_send_response">Impossibile inviare la risposta</string>
+    <string name="unable_to_assign_the_thesis">Impossibile assegnare la tesi</string>
+    <string name="cancel_booking">Annulla prenotazione</string>
+    <string name="delete">Cancella</string>
+    <string name="delete_booking">Cancella prenotazione</string>
+    <string name="delete_booking_dialog_message">Sei sicuro di voler cancellare questa prenotazione ?</string>
+    <string name="booking_successfully_cancelled">Prenotazione cancellata con successo</string>
+    <string name="unable_to_delete_the_booking">Impossibile eliminare la prenotazione</string>
+    <string name="unable_to_add_student_to_the_chat_of_thesis">Impossibile aggiungere lo studente alla chat della tesi</string>
+    <string name="title_dialog_delete_document">Elimina documento</string>
+    <string name="message_dialog_delete_document">Sei sicuro di voler eliminare il documento? <b>%s</b></string>
+    <string name="thesis_data">Dati tesi</string>
+    <string name="data_shared_data">Tesi: <b>%s</b> Descrizione: %s Professore: %s Tempistiche: %s Media voti: %s Esami necessari: %s Skills richieste: %s Note: %s</string>
+    <string name="unable_save_changes">Impossibile salvare le modifiche</string>
+    <string name="changes_saved_successfully">Modifiche salvate con successo</string>
+    <string name="image_saved_successfully">Imamagine salvata con successo</string>
+    <string name="permission_is_required_to_upload_files_from_the_device">Necessaria autorizzazione per caricare i file dal dispositivo</string>
+    <string name="student">Studente</string>
+    <string name="professor">Professore</string>
+    <string name="state_new">NEW</string>
+    <string name="started">STARTED</string>
+    <string name="completed">COMPLETED</string>
+    <string name="task">Task</string>
+    <string name="there_are_no_assigned_tasks">Non ci sono task assegnati</string>
+    <string name="task_graph">Task: \n%s</string>
+
+    <string name="tempistiche">Tempistiche</string>
+    <string name="mesi_2"><![CDATA[<2 mesi]]></string>
+    <string name="mesi_3"><![CDATA[<3 mesi]]></string>
+    <string name="mesi_4"><![CDATA[<4 mesi]]></string>
+    <string name="piu_mesi"><![CDATA[>4 mesi]]></string>
+    <string name="salva">Salva</string>
+    <string name="meetings">Ricevimenti</string>
+
+    <!-- SPINNER-->
+
+
+    <string name="edit_search_keys">Modifica parole chiave</string>
+    <string name="edit_documents">Modifica documenti</string>
+    <string name="edit_constraints">Modifica vincoli</string>
+    <string name="edit_notes">Modifca note</string>
+    <string name="title_thesis_list">Lista tesi</string>
+    <string name="meeting_successfully_saved">Ricevimento salvato con successo</string>
+    <string name="months">mesi</string>
+    <string name="unable_add_favorite">Impossibile aggiungere la tesi alla classifica</string>
+    <string name="weeks">settimane</string>
+    <string name="add_task">Aggiungi task</string>
+    <string name="list_task">Lista task</string>
+    <string name="calendar">Calendario</string>
+    <string name="click_to_add_task">Clicca per aggiungere task</string>
+    <string name="click_to_list_task">Clicca per visualizzare la lista dei task</string>
+    <string name="click_to_calendar_tesi">Clicca per visualizzare il calendario</string>
+    <string name="verify_email">Verifica email</string>
+    <string name="email_not_found">Email non trovata</string>
+    <string name="relator_already_inserted">Relatore già inserito</string>
+    <string name="change_email">Modifca email</string>
+    <string name="no_permissions">No permessi</string>
+    <string name="title_dialog_delete_relator">Elimina relatore</string>
+    <string name="title_dialog_delete_student">Elimina studente</string>
+    <string name="message_dialog_delete_relator">Si è sicuri di voler cancellare il relatore <b>%s</b></string>
+    <string name="message_dialog_delete_student">Si è sicuri di voler cancellare lo studente <b>%s</b></string>
+    <string name="required_skills_and_competences">Capacità e competenze richieste</string>
+    <string name="requested_grade_average">Media voto richiesta</string>
+    <string name="timeline_value_weeks">%s settimane</string>
+    <string name="es_programming_in_java">ES. Programmazione in java…</string>
+    <string name="search_keys">Cerca parole chiave</string>
+    <string name="scopes">Ambiti</string>
+    <string name="search_words">Cerca parole</string>
+    <string name="key_words">Parole chiave</string>
+    <string name="add">Aggiungi</string>
+    <string name="scope">Ambito</string>
+    <string name="keyword_entered">parola chiave inserita</string>
+    <string name="existing_keyword">Parola chiave esistente</string>
+    <string name="latest_entries">Ultime inserite</string>
+    <string name="there_are_no_theses_inserted">Non sono state inserite tesi</string>
+    <string name="your_theses">Le tue tesi</string>
+    <string name="for_your_scope">Per i tuoi ambiti</string>
+    <string name="there_are_no_theses_for_your_scopes">Non ci sono tesi per i tuoi ambiti</string>
+    <string name="select_your_scopes">Seleziona i tuoi ambiti</string>
+    <string name="chat_list">Lista chat</string>
+    <string name="search_hint">Ricerca di una tesi per titolo</string>
+    <string name="required_exams">Esami richiesti</string>
+    <string name="enter_exam">Inserire l\'esame</string>
+    <string name="filters">Filtri</string>
+    <string name="all">Tutti</string>
+    <string name="personal">Personali</string>
+    <string name="there_are_no_theses_available">Non ci sono tesi disponibili</string>
+    <string name="available">Disponibili</string>
+    <string name="registration_required_to_booking">La registrazione è necessaria per effettuare una prenotazione</string>
+    <string name="go_to_login">Vai al login</string>
+    <string name="to_activate_this_functionality_you_must_be_registered_please_sign_up_to_access_this_feature">Per attivare questa funzionalità, è necessario essere registrati. Registrati per accedere a questa funzione.</string>
+    <string name="languages">Lingue</string>
+    <string name="settings">Impostazioni</string>
+    <string name="confirm_registration">Conferma registrazione</string>
+    <string name="ambito">Ambito</string>
+    <string name="chiave">Parola chiave</string>
+    <string name="media_voto">Media voto</string>
+    <string name="tesi_a_z">Tesi A-Z</string>
+    <string name="tesi_z_a">Tesi Z-A</string>
+    <string name="relatore_a_z">Relatore A-Z</string>
+    <string name="relatore_z_a">Relatore Z-A</string>
+    <string name="tempistiche_title">Tempistiche</string>
+    <string name="filter_for_scope">Filtra per ambito</string>
+    <string name="select_an_option">Seleziona una delle seguenti opzioni:</string>
+    <string name="filter_by_key">Filtra per parola chiave</string>
+    <string name="insert_key_word_filter">Inserire il campo di ricerca per la parola chiave:</string>
+    <string name="filter_by_minimum_grade">Filtra per voto minimo</string>
+    <string name="Filter_by_minimum_execution_time">Filtrare per tempo di esecuzione minimo</string>
+    <string name="there_are_no_theses_in_your_ranking">Non ci sono tesi nella tua classifica</string>
+    <string name="there_are_no_task_assigned">Non ci sono task assegnati</string>
+    <string name="thesis">Tesi</string>
+    <string name="an_error_occured">Si è verificato un errore</string>
+    <string name="successfull">Successo</string>
+    <string name="failed">Fallito</string>
+    <string name="task_name">Nome Task</string>
+    <string name="profile">Profilo</string>
+    <string name="fill_fields">Compilare i campi vuoti</string>
+    <string name="insert_keyword">Inserire la parola chiave</string>
+    <string name="settimane">Settimane</string>
+    <string name="ambiti">AMBITI</string>
+    <string name="camera_permission_denied">Autorizzazione per la fotocamera negata</string>
+    <string name="access_media_gallery_denied">Accesso alla galleria negato</string>
+    <string name="role">Ruolo</string>
+    <string name="edit_profile">Modifica profilo</string>
+    <string name="upload_image">Carica immagina</string>
+    <string name="edit_profile_label">Modifica profilo</string>
+    <string name="edit_profile_success">Profilo utente aggiornato con successo</string>
+    <string name="update_user_failed">Non è stato possibile aggiornare il profilo utente</string>
+    <string name="edit_password">Modifica password</string>
+    <string name="password_changed_successfully">Password modificata con successo</string>
+    <string name="password_changed_failed">Impossibile modificare la password</string>
+    <string name="wrong_old_password_entered">Password attuale errata</string>
+    <string name="required_new_passord_length">La nuova password deve avere almeno 5 caratteri</string>
+    <string name="old_password">Password attuale</string>
+    <string name="new_password">Nuova password</string>
+    <string name="select_image">Seleziona immagine</string>
+    <string name="take_picture">Scatta una foto</string>
+    <string name="professor_email_not_found">Professore con email inserita non trovato</string>
+    <string name="list_updated">Lista aggiornata</string>
+    <string name="keyword">Parola chiave</string>
+    <string name="no_skill_required">Non è richiesta alcuna competenza</string>
+    <string name="choose_time">Scegli il tempo</string>
+    <string name="hide">Nascondi</string>
+    <string name="create_task">Crea e seleziona un\'attività prima di</string>
+    <string name="thesis_name">Tesi</string>
+    <string name="summary">Sintesi</string>
+    <string name="minimum_10_characters">Minimo 10 caratteri</string>
+    <string name="es_robotica">ES…robotica</string>
+    <string name="theme">Tema</string>
+    <string name="general">Generali</string>
+    <string name="type_your_message_here">Scrivi qui il tuo messaggio</string>
+    <string name="language">Lingua</string>
+
+
+    <!-- SPINNER-->
+    <string-array name="ambiti">
+        <item name="informatica">Informatica</item>
+        <item name="biologia">Biologia</item>
+        <item name="astronomia">Astronomia</item>
+        <item name="arte">Arte</item>
+        <item name="medicina">Medicina</item>
+        <item name="giurisprudenza">Giurisprudenza</item>
+        <item name="finanza">Finanza</item>
+        <item name="economia">Economia</item>
+        <item name="ingegneria">Ingegneria</item>
+    </string-array>
+
+    <string-array name="available_languages">
+        <item>Inglese</item>
+        <item>Italiano</item>
+    </string-array>
+
+    <string-array name="available_languages_values">
+        <item>en</item>
+        <item>it</item>
+    </string-array>
+
+    <string-array name="available_theme">
+        <item>light</item>
+        <item>night</item>
+    </string-array>
+</resources>

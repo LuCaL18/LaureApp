@@ -6,9 +6,12 @@ import android.widget.TextView;
 
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
-import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeThesisViewModel;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.TesiListViewModel;
 
+/**
+ * ViewHolder che si occupa della visualizzazione di una tesi nella classifica
+ */
 public class ClassificaTesiViewHolder {
 
     private final View view;

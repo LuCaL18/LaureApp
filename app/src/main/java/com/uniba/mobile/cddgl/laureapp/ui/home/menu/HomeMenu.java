@@ -16,7 +16,9 @@ import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.ui.home.HomeFragment;
 
-
+/**
+ * Classe che si occupa della gestione del menu della home. Implementa l'interfaccia MenuProvider
+ */
 public class HomeMenu implements MenuProvider {
 
     private final MutableLiveData<Menu> menu = new MutableLiveData<>();
@@ -37,7 +39,6 @@ public class HomeMenu implements MenuProvider {
             MenuItem menuItem = menu.findItem(HomeFragment.CREATE_TESI_APP_BAR);
             menuItem.setVisible(false);
         }
-
         this.menu.setValue(menu);
     }
 
@@ -50,6 +51,7 @@ public class HomeMenu implements MenuProvider {
             }
             case HomeFragment.CREATE_TESI_APP_BAR:
                 navController.navigate(R.id.action_navigation_home_to_tesiFragmant);
+                return true;
             default:
                 return false;
         }

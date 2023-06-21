@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,8 +43,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
+import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.ui.profile.dialogs.PasswordChangeDialog;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
@@ -51,6 +57,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Fragment che si occupa della visualizzazione e della gestione della schermata di Profilo
+ */
 public class ProfileFragment extends Fragment {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
@@ -68,6 +77,9 @@ public class ProfileFragment extends Fragment {
     private TextView bioTextView;
     private MaterialCardView bioCard;
     private MaterialCardView scopesCard;
+    private Button passwordChangeButton;
+    private Button updateProfileButton;
+    private FloatingActionButton uploadImageButton;
 
 
     private File photoFile;
@@ -90,8 +102,8 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         profileImageView = view.findViewById(R.id.profile_image_view);
-        FloatingActionButton uploadImageButton = view.findViewById(R.id.upload_image_button);
-        Button updateProfile = view.findViewById(R.id.edit_profile_button);
+        uploadImageButton = view.findViewById(R.id.upload_image_button);
+        updateProfileButton = view.findViewById(R.id.edit_profile_button);
 
         profileImageView = view.findViewById(R.id.profile_image_view);
         nameTextView = view.findViewById(R.id.name_text_view);
@@ -105,12 +117,12 @@ public class ProfileFragment extends Fragment {
         scopesCard = view.findViewById(R.id.cv_scopes_profile);
 
         uploadImageButton.setOnClickListener(v -> openImageSelectionDialog());
-        updateProfile.setOnClickListener(v -> {
+        updateProfileButton.setOnClickListener(v -> {
             NavController navController = NavHostFragment.findNavController(this);
             navController.navigate(R.id.action_navigation_profile_to_editProfileFragment);
         });
 
-        Button passwordChangeButton = view.findViewById(R.id.password_change_button);
+        passwordChangeButton = view.findViewById(R.id.password_change_button);
         passwordChangeButton.setOnClickListener(v -> showPasswordChangeDialog());
 
         pickPhotoLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -123,8 +135,10 @@ public class ProfileFragment extends Fragment {
                 });
 
         pickPhotoCameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK && result.getData() != null && photoFile != null) {
+            if (result.getResultCode() == RESULT_OK && photoFile != null) {
                 uploadFile(mainActivityViewModel.getIdUser(), FileProvider.getUriForFile(requireContext(), ShareContent.AUTHORITY, photoFile));
+            } else {
+                showSaveToast(R.string.error_upload);
             }
         });
 
@@ -139,9 +153,16 @@ public class ProfileFragment extends Fragment {
                         case 0:
                             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                                 selectImageFromGallery();
+                            } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+                                selectImageFromGallery();
                             } else {
-                                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        REQUEST_READ_EXTERNAL_STORAGE);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                                            REQUEST_READ_EXTERNAL_STORAGE);
+                                } else {
+                                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                            REQUEST_READ_EXTERNAL_STORAGE);
+                                }
                             }
                             break;
                         case 1:
@@ -196,6 +217,12 @@ public class ProfileFragment extends Fragment {
     }
 
     private void displayUserData(LoggedInUser user) {
+        if (RoleUser.GUEST.equals(user.getRole())) {
+            passwordChangeButton.setVisibility(View.GONE);
+            updateProfileButton.setVisibility(View.GONE);
+            uploadImageButton.setVisibility(View.GONE);
+        }
+
         emailTextView.setText(user.getEmail());
         nameTextView.setText(user.getName());
         lastNameTextView.setText(user.getSurname());
@@ -209,9 +236,9 @@ public class ProfileFragment extends Fragment {
             List<String> scopes = user.getAmbiti();
             for (String scope : scopes) {
                 if (user.getAmbiti().indexOf(scope) != scopes.size() - 1) {
-                    scopesString.append(Utility.translateScope(getResources(), scope)).append(", ");
+                    scopesString.append(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(scope))).append(", ");
                 } else {
-                    scopesString.append(Utility.translateScope(getResources(), scope));
+                    scopesString.append(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(scope)));
                 }
             }
             interestsTextView.setText(scopesString.toString());
@@ -237,7 +264,12 @@ public class ProfileFragment extends Fragment {
     private void observeUserData() {
         mainActivityViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
-                displayUserData(user);
+                if (RoleUser.GUEST.equals(user.getRole()) && getView() != null) {
+                    View view = getView();
+                    showGuestLayoutProfile(view);
+                } else {
+                    displayUserData(user);
+                }
             }
         });
     }
@@ -297,5 +329,16 @@ public class ProfileFragment extends Fragment {
         dialog.show(getParentFragmentManager(), "password_change_dialog");
     }
 
-
+    private void showGuestLayoutProfile(View view) {
+        ScrollView profileLayout = view.findViewById(R.id.profile_scroll_layout);
+        profileLayout.setVisibility(View.GONE);
+        LinearLayout guestLayout = view.findViewById(R.id.guest_profile_linear_layout);
+        guestLayout.setVisibility(View.VISIBLE);
+        Button loginButton = view.findViewById(R.id.button_go_to_login_from_profile);
+        loginButton.setOnClickListener(v -> {
+            if(getActivity() != null) {
+                ((MainActivity)getActivity()).goToLoginActivity();
+            }
+        });
+    }
 }

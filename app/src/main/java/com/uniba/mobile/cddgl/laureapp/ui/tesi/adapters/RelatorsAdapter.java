@@ -12,16 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.CreaTesiFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewHolder.RelatorViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter che si occupa della lista dei corelatori della tesi
+ */
 public class RelatorsAdapter extends RecyclerView.Adapter<RelatorViewHolder> {
     private List<PersonaTesi> relators;
     private boolean permissionDelete;
     private VisualizeTesiFragment tesiFragment;
+    private CreaTesiFragment creaTesiFragment;
 
     public RelatorsAdapter() {
         relators = new ArrayList<>();
@@ -31,6 +36,12 @@ public class RelatorsAdapter extends RecyclerView.Adapter<RelatorViewHolder> {
         this.relators = relators;
         this.permissionDelete = permissionDelete;
         this.tesiFragment = tesiFragment;
+    }
+
+    public RelatorsAdapter(List<PersonaTesi> relators, boolean permissionDelete, CreaTesiFragment tesiFragment) {
+        this.relators = relators;
+        this.permissionDelete = permissionDelete;
+        this.creaTesiFragment = tesiFragment;
     }
 
     public void setRelators(List<PersonaTesi> relators) {
@@ -57,12 +68,25 @@ public class RelatorsAdapter extends RecyclerView.Adapter<RelatorViewHolder> {
             deleteButton.setClickable(true);
             deleteButton.setVisibility(View.VISIBLE);
             deleteButton.setOnClickListener(view -> {
-
-                Context context = tesiFragment.getContext();
+                Context context;
+                int mod;
+                if(tesiFragment==null){
+                    context = creaTesiFragment.getContext();
+                    mod = 1;
+                }
+                else{
+                    context = tesiFragment.getContext();
+                    mod = 0;
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(context.getString(R.string.title_dialog_delete_relator));
                 builder.setMessage(context.getString(R.string.message_dialog_delete_relator, relator.getDisplayName()));
-                builder.setPositiveButton(context.getString(R.string.yes_text), (dialog, which) -> tesiFragment.removeCoRelator(relator));
+                if(mod==1){
+                    builder.setPositiveButton(context.getString(R.string.yes_text), (dialog, which) -> creaTesiFragment.removeCoRelator(relator));
+                }
+                else {
+                    builder.setPositiveButton(context.getString(R.string.yes_text), (dialog, which) -> tesiFragment.removeCoRelator(relator));
+                }
                 builder.setNegativeButton(context.getString(R.string.no_text), null);
                 builder.create().show();
             });

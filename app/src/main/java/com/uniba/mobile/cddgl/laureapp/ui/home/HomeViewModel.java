@@ -2,21 +2,16 @@ package com.uniba.mobile.cddgl.laureapp.ui.home;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
-import com.uniba.mobile.cddgl.laureapp.data.model.Task;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * ViewModel del fragment HomeFragment utilizzato per il conteggio delle notifiche
+ */
 public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> countNotification = new MutableLiveData<>();

@@ -2,6 +2,9 @@ package com.uniba.mobile.cddgl.laureapp.data;
 
 import androidx.annotation.Keep;
 
+/**
+ * Classe che rappresenta l'istanza dei vincoli soddisfatti di una prenotazione
+ */
 public class BookingConstraints {
 
     private boolean timelines;

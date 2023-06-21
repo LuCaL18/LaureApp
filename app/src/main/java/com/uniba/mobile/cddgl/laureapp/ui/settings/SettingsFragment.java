@@ -2,7 +2,9 @@ package com.uniba.mobile.cddgl.laureapp.ui.settings;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,9 @@ import com.uniba.mobile.cddgl.laureapp.R;
 
 import java.util.Locale;
 
+/**
+ * Fragment che si occupa della visualizzazione e della gestione della schermata delle Impostazioni
+ */
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SharedPreferences sharedPreferences;
@@ -127,8 +132,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private void applyLanguage(String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
-        Configuration configuration = getResources().getConfiguration();
+
+        Resources resources = getResources();
+        Configuration configuration = resources.getConfiguration();
         configuration.setLocale(locale);
+
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        resources.updateConfiguration(configuration, displayMetrics);
 
         // Restart the activity to apply the language change
         requireActivity().recreate();

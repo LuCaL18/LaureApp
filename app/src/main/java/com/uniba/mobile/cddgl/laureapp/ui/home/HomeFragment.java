@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.core.content.ContextCompat;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -45,6 +45,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Fragment che si occupa della visualizzazione e della gestione della schermata home dell'applicazione
+ * Visulizza una serie di tesi recuperate dal mainViewModel e un grafico per i task
+ */
 public class HomeFragment extends Fragment {
 
     public static final int NOTIFICATION_APP_BAR = R.id.notification_app_bar;
@@ -73,11 +77,12 @@ public class HomeFragment extends Fragment {
         pieChart = root.findViewById(R.id.pie_chart);
         manageViewGraphTask(tasks);
 
-
-        mainViewModel.readTask(currentUser.getRole(), currentUser.getId());
-        mainViewModel.loadTesiByRole(currentUser.getRole());
+        if(currentUser!=null){
+            mainViewModel.readTask(currentUser.getRole(), currentUser.getId());
+            mainViewModel.loadTesiByRole(currentUser.getRole());
+            mainViewModel.loadThesesAmbito(currentUser.getAmbiti());
+        }
         mainViewModel.loadLastTheses();
-        mainViewModel.loadThesesAmbito(currentUser.getAmbiti());
 
         return root;
     }
@@ -93,8 +98,12 @@ public class HomeFragment extends Fragment {
             actionBar.setTitle(R.string.app_name);
         }
 
-        provider = new HomeMenu(navController, mainViewModel.getUser().getValue().getRole());
-
+        if(mainViewModel.getUser().getValue()!=null){
+            provider = new HomeMenu(navController, mainViewModel.getUser().getValue().getRole());
+        }
+        else{
+            provider = new HomeMenu(navController, RoleUser.GUEST);
+        }
         requireActivity().addMenuProvider(provider);
 
         provider.getMenu().observe(getViewLifecycleOwner(), menu -> {

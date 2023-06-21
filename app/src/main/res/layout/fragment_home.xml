@@ -56,7 +56,7 @@
                             android:layout_margin="10dp"
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"/>
+                            android:src="@mipmap/no_image"/>
                         <TextView
                             android:id="@+id/Nome_tesi1_user_thesis"
                             android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                             android:layout_margin="10dp"
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore" />
+                            android:src="@mipmap/no_image" />
                         <TextView
                             android:id="@+id/Nome_tesi2_user_thesis"
                             android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                             android:adjustViewBounds="true"
                             android:layout_margin="10dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
+                            android:src="@mipmap/no_image"
                             app:shapeAppearanceOverlay="@style/roundedImage"
                             />
                         <TextView
@@ -223,7 +223,7 @@
                             android:adjustViewBounds="true"
                             android:layout_margin="10dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
+                            android:src="@mipmap/no_image"
                             app:shapeAppearanceOverlay="@style/roundedImage"
                             />
                         <TextView
@@ -269,7 +269,7 @@
                             android:adjustViewBounds="true"
                             android:layout_margin="10dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
+                            android:src="@mipmap/no_image"
                             app:shapeAppearanceOverlay="@style/roundedImage"
                             />
                         <TextView
@@ -315,7 +315,7 @@
                             android:adjustViewBounds="true"
                             android:layout_margin="10dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
+                            android:src="@mipmap/no_image"
                             app:shapeAppearanceOverlay="@style/roundedImage"
                             />
                         <TextView
@@ -394,7 +394,7 @@
                             android:adjustViewBounds="true"
                             android:layout_margin="10dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
+                            android:src="@mipmap/no_image"
                             app:shapeAppearanceOverlay="@style/roundedImage"
                             />
                         <TextView
@@ -440,7 +440,7 @@
                             android:adjustViewBounds="true"
                             android:layout_margin="10dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
+                            android:src="@mipmap/no_image"
                             app:shapeAppearanceOverlay="@style/roundedImage"
                             />
                         <TextView
@@ -486,7 +486,7 @@
                             android:adjustViewBounds="true"
                             android:layout_margin="10dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/relatore"
+                            android:src="@mipmap/no_image"
                             app:shapeAppearanceOverlay="@style/roundedImage"
                             />
                         <TextView

@@ -26,15 +26,21 @@ import com.uniba.mobile.cddgl.laureapp.data.model.Notification;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentNotificationsBinding;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.BookingViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.interfaces.BookingItemClickCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.calendario.interfaces.MeetingItemClickCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.calendario.viewModels.MeetingViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.ChatViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.adapters.NotificationAdapter;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationBookingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationChatItemClickCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationMeetingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationTicketItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.interfaces.TicketItemClickCallback;
 
+/**
+ * Fragment che si occupa della gestione e della visualizzazione delle notifiche
+ */
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
@@ -43,6 +49,7 @@ public class NotificationsFragment extends Fragment {
     private ChatViewModel chatViewModel;
     private TicketViewModel ticketViewModel;
     private BookingViewModel bookingViewModel;
+    private MeetingViewModel meetingViewModel;
     private RecyclerView notificationListRecyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,7 +61,7 @@ public class NotificationsFragment extends Fragment {
         chatViewModel = viewModelProvider.get(ChatViewModel.class);
         ticketViewModel = viewModelProvider.get(TicketViewModel.class);
         bookingViewModel = viewModelProvider.get(BookingViewModel.class);
-
+        meetingViewModel = viewModelProvider.get(MeetingViewModel.class);
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -87,8 +94,9 @@ public class NotificationsFragment extends Fragment {
         ChatItemClickCallback chatItemClickCallback = new NotificationChatItemClickCallback(chatViewModel);
         TicketItemClickCallback ticketItemClickCallback = new NotificationTicketItemClickCallback(ticketViewModel);
         BookingItemClickCallback bookingItemClickCallback = new NotificationBookingItemClickCallback(bookingViewModel);
+        MeetingItemClickCallback meetingItemClickCallback = new NotificationMeetingItemClickCallback(meetingViewModel);
 
-        adapter = new NotificationAdapter(options, chatItemClickCallback, ticketItemClickCallback, bookingItemClickCallback, textView, notificationListRecyclerView);
+        adapter = new NotificationAdapter(options, chatItemClickCallback, ticketItemClickCallback, bookingItemClickCallback, meetingItemClickCallback, textView, notificationListRecyclerView);
 
         notificationListRecyclerView.setAdapter(adapter);
 

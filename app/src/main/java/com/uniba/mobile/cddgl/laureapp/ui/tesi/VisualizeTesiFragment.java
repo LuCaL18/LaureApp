@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.util.Linkify;
@@ -67,7 +68,9 @@ import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.CoRelatorPermissions;
 import com.uniba.mobile.cddgl.laureapp.data.DownloadedFile;
+import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.TicketState;
@@ -85,8 +88,10 @@ import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.ConstraintsDialog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.QRCodeDialogFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.SearchKeyDialog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.UploadFileDialogFragment;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.ui.ticket.TicketFragment;
 import com.uniba.mobile.cddgl.laureapp.util.ShareContent;
+import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -94,6 +99,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fragment che si occupa della visualizzazione di una tesi con tutti i suoi dati
+ */
 public class VisualizeTesiFragment extends Fragment {
 
     public static final String TESI_VISUALIZE = "tesi_visualize";
@@ -103,7 +111,6 @@ public class VisualizeTesiFragment extends Fragment {
     private static final int FAVORITE_THESIS = R.id.favorite_thesis;
     private static final int ADD_TICKET_THESIS = R.id.add_ticket_thesis;
     private static final int LIST_TASK_THESIS = R.id.list_task;
-    private static final int CALENDAR_THESIS = R.id.tesi_calendar;
 
     private BottomNavigationView navBar;
     private MenuProvider providerMenu;
@@ -120,6 +127,7 @@ public class VisualizeTesiFragment extends Fragment {
     private RecyclerView recyclerViewRelators;
     private RelatorsAdapter relatorsAdapter;
     private LoggedInUser user;
+    private PersonaTesi userCorelator;
 
     public VisualizeTesiFragment() {
         // Required empty public constructor
@@ -346,7 +354,7 @@ public class VisualizeTesiFragment extends Fragment {
         LinearLayout searchKeyInfoLl = root.findViewById(R.id.ll_card_search_keys_info);
 
         TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
-        scopeTextView.setText(thesis.getAmbito());
+        scopeTextView.setText(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(thesis.getAmbito())));
 
 
         if (thesis.getChiavi() == null) {
@@ -455,12 +463,35 @@ public class VisualizeTesiFragment extends Fragment {
 
                     Button editImage = root.findViewById(R.id.edit_image_tesi_button);
                     editImage.setVisibility(View.VISIBLE);
-                    editImage.setOnClickListener(view1 -> {
-                        checkAndRequestReadExternalStorage();
-                    });
-                }
+                    editImage.setOnClickListener(view1 -> checkAndRequestReadExternalStorage());
+                } else if (RoleUser.PROFESSOR.equals(loggedInUser.getRole()) && thesis.getCoRelatori() != null && !thesis.getCoRelatori().isEmpty()
+                        && thesis.getCoRelatori().contains(new PersonaTesi(loggedInUser.getId()))) {
+                    userCorelator = null;
 
-                if (loggedInUser.getRole().equals(RoleUser.STUDENT) && (thesis.getStudent() == null || !thesis.getStudent().getId().equals(loggedInUser.getId()))) {
+                    PersonaTesi finalUserCorelator = new PersonaTesi(loggedInUser.getId());
+                    userCorelator = thesis.getCoRelatori().stream()
+                            .filter(corelator -> corelator.equals(finalUserCorelator))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (userCorelator != null) {
+                        menuToVisualize = R.menu.app_bar_visualize_thesis_prof;
+                        if (userCorelator.getPermissions() != null) {
+                            for (String permission : userCorelator.getPermissions()) {
+                                if (CoRelatorPermissions.EDIT_CONSTRAINTS.name().equals(permission)) {
+                                    setCardConstraintsCreator();
+                                } else if (CoRelatorPermissions.EDIT_DOCUMENTS.name().equals(permission)) {
+                                    setCardDocumentsCreator();
+                                } else if (CoRelatorPermissions.EDIT_NOTES.name().equals(permission)) {
+                                    setNotesText();
+                                } else if (CoRelatorPermissions.EDIT_SEARCH_KEYS.name().equals(permission)) {
+                                    setCardSearchKeysCreator();
+                                }
+                            }
+                        }
+                    }
+                } else if (loggedInUser.getRole().equals(RoleUser.STUDENT) &&
+                        (thesis.getStudent() == null || !thesis.getStudent().getId().equals(loggedInUser.getId()))) {
                     menuToVisualize = R.menu.app_bar_visualize_tesi;
 
                     if (!thesis.getIsAssigned()) {
@@ -483,9 +514,7 @@ public class VisualizeTesiFragment extends Fragment {
                             });
                 } else if (thesis.getStudent() != null && thesis.getStudent().getId().equals(loggedInUser.getId())) {
                     menuToVisualize = R.menu.app_bar_visualize_thesis_prof;
-                }
-
-                if (loggedInUser.getRole().equals(RoleUser.GUEST)) {
+                } else if (loggedInUser.getRole().equals(RoleUser.GUEST)) {
                     menuToVisualize = R.menu.app_bar_visualize_tesi;
 
                     if (getTesiList().contains(thesis.getId())) {
@@ -574,13 +603,10 @@ public class VisualizeTesiFragment extends Fragment {
                                 bundleTask.putSerializable(LIST_TASK_TESI_KEY, thesis);
 
                                 boolean permissionCreateTask = (thesis.getRelatore().getId().equals(loggedInUser.getId()) ||
-                                        thesis.getCoRelatori().contains(new PersonaTesi(loggedInUser.getId())));
+                                        thesis.getCoRelatori().contains(userCorelator));
                                 bundleTask.putString(LIST_TASK_PERMISSION_CREATE, String.valueOf(permissionCreateTask));
 
                                 navController.navigate(R.id.action_visualizeTesiFragment_to_nav_lista_task, bundleTask);
-                                return true;
-                            case VisualizeTesiFragment.CALENDAR_THESIS:
-                                // TODO: collegamento con calendario
                                 return true;
                             default:
                                 return false;
@@ -736,11 +762,12 @@ public class VisualizeTesiFragment extends Fragment {
     private void checkAndRequestReadExternalStorage() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_READ_EXTERNAL_STORAGE);
         } else {
             // Permission has already been granted, continue with your code
             pickImageFile();
         }
-
     }
 
     @Override
@@ -1136,11 +1163,11 @@ public class VisualizeTesiFragment extends Fragment {
     }
 
     public void updateSearchKey(String ambito, List<String> keyWords) {
-        thesis.setAmbito(ambito);
+        thesis.setAmbito(Utility.convertScopesToEnum(ambito));
         thesis.setChiavi(keyWords);
 
         TextView scopeTextView = root.findViewById(R.id.tv_search_keys_scope);
-        scopeTextView.setText(thesis.getAmbito());
+        scopeTextView.setText(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(thesis.getAmbito())));
 
         if (keyWords.isEmpty()) {
             root.findViewById(R.id.layout_search_key).setVisibility(View.GONE);

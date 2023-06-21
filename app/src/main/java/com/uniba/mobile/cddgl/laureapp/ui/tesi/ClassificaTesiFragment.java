@@ -38,10 +38,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.slider.Slider;
 import com.google.common.reflect.TypeToken;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,15 +51,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.uniba.mobile.cddgl.laureapp.MainActivity;
 import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.TesiClassifica;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.ClassificaTesiAdapter;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.TesiListViewModel;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.viewModels.VisualizeThesisViewModel;
 import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
 import java.lang.reflect.Type;
@@ -115,7 +114,6 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
 
     private List<Tesi> tesiList;
     private List<Tesi> filteredList;
-    private BottomNavigationView navBar;
     private LoggedInUser user;
     private VisualizeThesisViewModel thesisViewModel;
     private ChipGroup filtersContainer;
@@ -132,32 +130,11 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         user = mainViewModel.getUser().getValue();
 
+        thesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
+        tesiListViewModel = new ViewModelProvider(requireParentFragment()).get(TesiListViewModel.class);
+
         currentFilters = new HashMap<>();
         filteredList = new ArrayList<>();
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (currentUser != null) {
-            CollectionReference mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
-            mCollection.whereEqualTo("studentId", currentUser.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    tesiList = new ArrayList<>();
-
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        TesiClassifica classificaTesi = doc.toObject(TesiClassifica.class);
-                        fetchDataTesi(classificaTesi.getTesi());
-                    }
-                }
-            });
-        } else {
-            fetchDataTesi(getTesiList());
-        }
     }
 
     /**
@@ -196,8 +173,29 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
             currentFilters = gson.fromJson(mappaJson, type);
         }
 
-        thesisViewModel = new ViewModelProvider(requireParentFragment()).get(VisualizeThesisViewModel.class);
-        tesiListViewModel = new ViewModelProvider(requireActivity()).get(TesiListViewModel.class);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            CollectionReference mCollection = FirebaseFirestore.getInstance().collection("tesi_classifiche");
+            mCollection.whereEqualTo("studentId", currentUser.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    tesiList = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        TesiClassifica classificaTesi = doc.toObject(TesiClassifica.class);
+                        fetchDataTesi(classificaTesi.getTesi());
+                    }
+                }
+            });
+        } else {
+            fetchDataTesi(getTesiList());
+        }
+
         return view;
     }
 
@@ -408,7 +406,7 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
 
         List<Tesi> filteredList = new ArrayList<>();
         for (Tesi t : tesiList) {
-            if (t.getAmbito() != null && ambito.contains(Utility.translateScope(getResources(), t.getAmbito()))) {
+            if (t.getAmbito() != null && ambito.contains(Utility.translateScopesFromEnum(getResources(), EnumScopes.valueOf(t.getAmbito())))) {
                 filteredList.add(t);
             }
         }
@@ -587,8 +585,6 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
         filtersContainer = view.findViewById(R.id.filters_classifica_container);
 
         listView = view.findViewById(R.id.classifica_tesi);
-        /* Rimozione della navBar dallo schermo */
-        navBar = requireActivity().findViewById(R.id.nav_view);
 
         adapter = new ClassificaTesiAdapter(getContext(), thesisViewModel, tesiListViewModel);
         listView.setAdapter(adapter);
@@ -718,6 +714,8 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
                 listView.setVisibility(View.VISIBLE);
             }
         });
+
+
     }
 
     private void fetchDataTesi(List<String> thesisId) {
@@ -761,14 +759,6 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
             } catch (Exception e) {
                 Log.e(CLASS_ID, "Error during fetchDataTesi --> " + e);
             }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(navBar != null) {
-            navBar.setVisibility(View.GONE);
         }
     }
 
@@ -824,13 +814,8 @@ public class ClassificaTesiFragment extends Fragment implements SearchView.OnQue
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(navBar != null) {
-            navBar.setVisibility(View.VISIBLE);
-        }
 
         requireActivity().removeMenuProvider(menuProvider);
-        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view_menu);
-        navigationView.getMenu().findItem(MainActivity.CLASSIFICA_TESI).setChecked(false);
 
         String mappaJson = new Gson().toJson(currentFilters);
         // Salva la stringa JSON nella memoria locale utilizzando SharedPreferences

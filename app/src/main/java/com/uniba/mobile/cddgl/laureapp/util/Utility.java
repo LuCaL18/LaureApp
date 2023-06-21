@@ -12,6 +12,8 @@ import android.util.Log;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.uniba.mobile.cddgl.laureapp.R;
+import com.uniba.mobile.cddgl.laureapp.data.CoRelatorPermissions;
+import com.uniba.mobile.cddgl.laureapp.data.EnumScopes;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -20,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe di Utility, contiene metodi statici riutilizzabili nell'app
+ */
 public class Utility {
 
     public static int getNumberFromString(String inputString, int defaultValue) {
@@ -44,40 +49,6 @@ public class Utility {
             return Math.round(floatValue);
         } else {
             return defaultValue;
-        }
-    }
-
-    public static String translateScope(Resources resources, String scope) {
-        switch(scope) {
-            case "Informatica":
-            case "Information technology":
-                return resources.getStringArray(R.array.ambiti)[0];
-            case "Biologia":
-            case "Biology":
-                return resources.getStringArray(R.array.ambiti)[1];
-            case "Astronomia":
-            case "Astronomy":
-                return resources.getStringArray(R.array.ambiti)[2];
-            case "Arte":
-            case "Art":
-                return resources.getStringArray(R.array.ambiti)[3];
-            case "Medicina":
-            case "Medicine":
-                return resources.getStringArray(R.array.ambiti)[4];
-            case "Giurisprudenza":
-            case "Jurisprudence":
-                return resources.getStringArray(R.array.ambiti)[5];
-            case "Finanza":
-            case "Finance":
-                return resources.getStringArray(R.array.ambiti)[6];
-            case "Economia":
-            case "Economy":
-                return resources.getStringArray(R.array.ambiti)[7];
-            case "Ingegneria":
-            case "Engineering":
-                return resources.getStringArray(R.array.ambiti)[8];
-            default:
-                return "";
         }
     }
 
@@ -129,4 +100,77 @@ public class Utility {
         return properties;
     }
 
+    public static String translatePermissionFromEnum(Resources resources, CoRelatorPermissions permission) {
+        switch(permission) {
+            case EDIT_SEARCH_KEYS:
+                return resources.getString(R.string.edit_search_keys);
+            case EDIT_CONSTRAINTS:
+                return resources.getString(R.string.edit_constraints);
+            case EDIT_DOCUMENTS:
+                return resources.getString(R.string.edit_documents);
+            case EDIT_NOTES:
+                return resources.getString(R.string.edit_notes);
+            default:
+                return "";
+        }
+    }
+
+    public static String translateScopesFromEnum(Resources resources, EnumScopes scope) {
+        switch(scope) {
+            case INFORMATICA:
+                return resources.getStringArray(R.array.ambiti)[0];
+            case BIOLOGIA:
+                return resources.getStringArray(R.array.ambiti)[1];
+            case ASTRONOMIA:
+                return resources.getStringArray(R.array.ambiti)[2];
+            case ARTE:
+                return resources.getStringArray(R.array.ambiti)[3];
+            case MEDICINA:
+                return resources.getStringArray(R.array.ambiti)[4];
+            case GIURISPRUDENZA:
+                return resources.getStringArray(R.array.ambiti)[5];
+            case FINANZA:
+                return resources.getStringArray(R.array.ambiti)[6];
+            case ECONOMIA:
+                return resources.getStringArray(R.array.ambiti)[7];
+            case INGEGNERIA:
+                return resources.getStringArray(R.array.ambiti)[8];
+            default:
+                return "";
+        }
+    }
+
+    public static String convertScopesToEnum(String scope) {
+        switch(scope) {
+            case "Informatica":
+            case "Information technology":
+                return EnumScopes.INFORMATICA.name();
+            case "Biologia":
+            case "Biology":
+                return EnumScopes.BIOLOGIA.name();
+            case "Astronomia":
+            case "Astronomy":
+                return EnumScopes.ASTRONOMIA.name();
+            case "Arte":
+            case "Art":
+                return EnumScopes.ARTE.name();
+            case "Medicina":
+            case "Medicine":
+                return EnumScopes.MEDICINA.name();
+            case "Giurisprudenza":
+            case "Jurisprudence":
+                return EnumScopes.GIURISPRUDENZA.name();
+            case "Finanza":
+            case "Finance":
+                return EnumScopes.FINANZA.name();
+            case "Economia":
+            case "Economy":
+                return EnumScopes.ECONOMIA.name();
+            case "Ingegneria":
+            case "Engineering":
+                return EnumScopes.INGEGNERIA.name();
+            default:
+                return "";
+        }
+    }
 }

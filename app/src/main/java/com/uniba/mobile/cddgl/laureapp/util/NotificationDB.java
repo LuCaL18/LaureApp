@@ -19,6 +19,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe per il salvatagio delle notifiche su Firestore
+ */
 public class NotificationDB {
 
     private final CollectionReference collectionReference;

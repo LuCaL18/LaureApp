@@ -180,10 +180,12 @@ public class BookingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Impostazione del comportamento quando il fragment viene visualizzato
         bookingViewModel.setAlreadyRead(true);
         NavController navController = NavHostFragment.findNavController(this);
 
         if (user.getRole().equals(RoleUser.STUDENT) && booking.getState().equals(BookingState.OPEN)) {
+            // Configurazione del menu per gli studenti
             providerMenu = new MenuProvider() {
                 @Override
                 public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
@@ -226,6 +228,11 @@ public class BookingFragment extends Fragment {
     }
 
 
+    /**
+     * Visualizzazione di un dialog di conferma per la scelta dell'utente
+     * @param message
+     * @param newState
+     */
     private void showConfirmDialog(String message, BookingState newState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.title_booking_dialog_confirm));
@@ -246,11 +253,16 @@ public class BookingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        // Configurazione della visualizzazione della barra di navigazione
         navBar = getActivity().findViewById(R.id.nav_view);
         navBar.setVisibility(View.GONE);
     }
 
+    /**
+     * Invio della risposta di accettazione della prenotazione al database
+     * Invio di una notifica al destinatario
+     * Aggiunta dello studente alla tesi
+     */
     private void sendAcceptedResponse() {
         booking.setState(BookingState.ACCEPTED);
         Map<String, Object> updates = new HashMap<>();
@@ -274,6 +286,11 @@ public class BookingFragment extends Fragment {
                 });
     }
 
+    /**
+     * Invio della risposta di rifiuto della prenotazione al database
+     * Invio di una notifica al destinatario
+     * Aggiornamento della vista con il risultato del rifiuto
+     */
     private void sendRefusedResponse() {
 
         booking.setState(BookingState.REFUSED);
@@ -303,6 +320,7 @@ public class BookingFragment extends Fragment {
     }
 
     private void sendNotification(String receiverId) {
+        // Invio di una notifica al destinatario
         BaseRequestNotification notification = new BaseRequestNotification(receiverId, NotificationType.BOOKING);
 
         String title = getString(R.string.notification_title_booking, booking.getNameThesis());
@@ -339,6 +357,10 @@ public class BookingFragment extends Fragment {
         }
     }
 
+    /**
+     * Aggiunta dello studente alla tesi nel database.
+     * Aggiunta dello studente alla chat relativa alla tesi
+     */
     private void addStudentToThesis() {
         try {
 
@@ -370,6 +392,7 @@ public class BookingFragment extends Fragment {
     }
 
     private void rollBackAcceptedResponse() {
+        // Annullamento della risposta di accettazione
         booking.setState(BookingState.OPEN);
         Map<String, Object> updates = new HashMap<>();
 
@@ -381,6 +404,9 @@ public class BookingFragment extends Fragment {
                 .update(updates);
     }
 
+    /**
+     * Aggiunta dello studente alla chat relativa alla tesi. Crea una chat se non presente
+     */
     private void addStudentToChat() {
         DocumentReference chatRef = FirebaseFirestore.getInstance().collection("chats").document(booking.getIdThesis());
 

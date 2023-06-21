@@ -9,6 +9,7 @@
     android:layout_marginBottom="@dimen/bottomBarHeight">
 
     <ScrollView
+        android:id="@+id/profile_scroll_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -71,11 +72,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|end"
+                    android:padding="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:text="@string/edit_password"
-                    android:minHeight="54dp"
+                    android:minHeight="55dp"
                     android:textColor="@color/white" />
 
             </LinearLayout>
@@ -341,6 +343,32 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/guest_profile_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/to_activate_this_functionality_you_must_be_registered_please_sign_up_to_access_this_feature"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button_go_to_login_from_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:text="@string/go_to_login" />
+
+    </LinearLayout>
 
 
 </FrameLayout>
