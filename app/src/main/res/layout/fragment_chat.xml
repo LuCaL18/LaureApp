@@ -28,7 +28,7 @@
             android:id="@+id/message_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type your message here" />
+            android:hint="@string/type_your_message_here" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
