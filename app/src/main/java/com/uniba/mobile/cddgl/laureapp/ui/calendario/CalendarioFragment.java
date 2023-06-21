@@ -117,6 +117,7 @@ public class CalendarioFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
 
@@ -125,8 +126,6 @@ public class CalendarioFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         binding = FragmentCalendarioBinding.inflate(inflater, container, false);
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.GONE);
         return binding.getRoot();
     }
 
@@ -386,6 +385,20 @@ public class CalendarioFragment extends Fragment {
         });
 
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
     }
 
     private void ripristina_campi() {

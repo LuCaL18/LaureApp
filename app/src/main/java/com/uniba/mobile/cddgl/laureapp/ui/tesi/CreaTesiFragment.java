@@ -114,6 +114,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         mainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     }
 
