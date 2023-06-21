@@ -25,6 +25,7 @@ import com.uniba.mobile.cddgl.laureapp.data.CoRelatorPermissions;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.RoleUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.CreaTesiFragment;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.VisualizeTesiFragment;
 
 import java.util.ArrayList;
@@ -85,6 +86,42 @@ public class CoRelatoreDialoog {
         cancel.setOnClickListener(viewCancel -> dialog.dismiss());
     }
 
+    public CoRelatoreDialoog(AlertDialog dialog, View view, List<PersonaTesi> coRelators, CreaTesiFragment requireFragment) {
+        this.dialog = dialog;
+        this.coRelators = coRelators;
+        relatorePopup = view;
+
+        MainViewModel model = new ViewModelProvider(requireFragment.requireActivity()).get(MainViewModel.class);
+        user = model.getUser().getValue();
+
+        popup_nome = view.findViewById(R.id.nome);
+        popup_email = view.findViewById(R.id.email);
+
+        editSearchKeysPermission = view.findViewById(R.id.edit_search_keys_permission);
+        documentsPermission = view.findViewById(R.id.edit_documents_permission);
+        constraintsPermission = view.findViewById(R.id.edit_constraints_permission);
+        notesPermission = view.findViewById(R.id.edit_notes_permission);
+        verifyEmailButton = view.findViewById(R.id.verify_button_email);
+        actionEditEmail = view.findViewById(R.id.edit_button_email);
+
+        save = view.findViewById(R.id.saveButton);
+        Button cancel = view.findViewById(R.id.cancelButton);
+
+        impostaActionButton();
+
+        save.setOnClickListener(viewSave -> {
+
+            if (selectedCoRelators != null) {
+                PersonaTesi coRelatore = new PersonaTesi(selectedCoRelators.getId(), selectedCoRelators.getDisplayName(), selectedCoRelators.getEmail(), checkPermessi());
+                requireFragment.addCoRelator(coRelatore);
+            }
+
+            dialog.dismiss();
+        });
+
+        cancel.setOnClickListener(viewCancel -> dialog.dismiss());
+    }
+
     private void impostaActionButton() {
 
         impostaVerifica();
@@ -96,10 +133,12 @@ public class CoRelatoreDialoog {
                 String emailRelator = popup_email.getText().toString();
                 boolean isAlreadyPresent = false;
 
-                for (PersonaTesi relator : coRelators) {
-                    if (relator.getEmail().equals(emailRelator)) {
-                        isAlreadyPresent = true;
-                        break;
+                if(coRelators!=null){
+                    for (PersonaTesi relator : coRelators) {
+                        if (relator.getEmail().equals(emailRelator)) {
+                            isAlreadyPresent = true;
+                            break;
+                        }
                     }
                 }
 

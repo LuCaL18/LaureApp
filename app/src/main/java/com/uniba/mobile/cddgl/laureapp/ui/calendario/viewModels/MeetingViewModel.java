@@ -1,4 +1,4 @@
-package com.uniba.mobile.cddgl.laureapp.ui.calendario;
+package com.uniba.mobile.cddgl.laureapp.ui.calendario.viewModels;
 
 import android.util.Log;
 

@@ -2,11 +2,12 @@ package com.uniba.mobile.cddgl.laureapp.ui.tesi;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -15,85 +16,95 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.uniba.mobile.cddgl.laureapp.MainActivity;
+import com.uniba.mobile.cddgl.laureapp.MainViewModel;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 import com.uniba.mobile.cddgl.laureapp.data.model.Filtri;
+import com.uniba.mobile.cddgl.laureapp.data.model.LoggedInUser;
 import com.uniba.mobile.cddgl.laureapp.data.model.Tesi;
 import com.uniba.mobile.cddgl.laureapp.databinding.FragmentTesiBinding;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.adapters.RelatorsAdapter;
+import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.CoRelatoreDialoog;
 import com.uniba.mobile.cddgl.laureapp.ui.tesi.dialogs.ConstraintsDialog;
+import com.uniba.mobile.cddgl.laureapp.util.Utility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+    private MainViewModel mainActivityViewModel;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference relatoriRef = db.collection("users");
     private final CollectionReference filtriRef = db.collection("filtri");
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private List<String> esami = new ArrayList<String>();
     private Tesi thesis;
     private FragmentTesiBinding binding;
-    private AlertDialog.Builder dialogBuilder, dialogBuilder2, dialogBuilder3;
-    private AlertDialog dialog2, dialog3;
+    private AlertDialog.Builder dialogBuilder3;
+    private RelatorsAdapter relatorsAdapter;
+    private RecyclerView recyclerViewRelators;
+    private AlertDialog dialog3;
     private ListView keywordListView;
-    private EditText popup_email, eNuovakey, eSkill, eNote, eNomeTesi, eDescrizione;
-    private TextView popup_nome, relatore;
-    private Button cancel, save, verifica, modifica, cancel2, addKey, salva, save2, save3, cancel3;
+    private EditText eNuovakey, eNote, eNomeTesi, eDescrizione;
+    private TextView relatore;
+    private Button addKey, salva, save3, cancel3;
     private BottomNavigationView navBar;
-    private CheckBox permesso1, permesso2, permesso3, permesso4;
-    private TextView Ambito, Tempistiche, Chiave, Skill, Media, text_settimane, voto, paroleChiave;
-    private String permessi, textAmbito;
-    private List<String> permessiList = new ArrayList<>();
+    private TextView Ambito, Tempistiche, Chiave, Skill, Media, paroleChiave;
+    private String textAmbito;
     private Spinner ambitoSpinner;
-    private SeekBar mediaSeek, settimaneSeek;
     private List<PersonaTesi> co_relatori = new ArrayList<>();
     private String skill;
-    private int n_settimane = 1;
+    private int n_settimane = 3;
     private float textmedia;
     public List<String> keywordList = new ArrayList<>();
     public List<Filtri> filtriList = new ArrayList<>();
     public List<String> ambitiList = new ArrayList<>();
-    private ListView listViewRelatori;
-    private ArrayList<String> listRelatori;
-    private ArrayAdapter<String> adapterRelatori;
     private List<String> keywordSelezionate = new ArrayList<>();
-    private PersonaTesi relatoreObj;
     private PersonaTesi relatorePrincipaleObj;
-    private boolean trovato, trovato2;
     private ImageView addImage;
     private ListAdapter listAdapter;
-    private static final int GALLERY_REQUEST_CODE = 100;
-    private String guidString;
+    private static final int REQUEST_PICK_IMAGE = 1;
+    private Uri selectedImageUri;
+    private FloatingActionButton uploadImageButton;
+    private ActivityResultLauncher<Intent> pickPhotoLauncher;
 
     public CreaTesiFragment() {
         // Required empty public constructor
@@ -102,21 +113,21 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        mainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentTesiBinding.inflate(inflater, container, false);
-        navBar = getActivity().findViewById(R.id.nav_view);
-        navBar.setVisibility(View.INVISIBLE);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        thesis = new Tesi();
+        recyclerViewRelators = binding.listaRelatori;
         impostaAmbiti();
         setCardConstraintsCreator();
 
@@ -129,61 +140,21 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         eNote = binding.note;
         eDescrizione = binding.descrizione;
         eNomeTesi = binding.nomeTesi;
-        addImage = binding.addImage;
+        addImage = binding.tesiImageView;
+        uploadImageButton = binding.uploadImageButton;
 
-        listViewRelatori = binding.listaRelatori;
-        listRelatori = new ArrayList<>();
-        adapterRelatori = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listRelatori);
-        listViewRelatori.setAdapter(adapterRelatori);
-        listViewRelatori.setOnItemLongClickListener((adapterView, view1, position, l) -> {
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Vuoi rimuovere questo relatore?")
-                    .setPositiveButton("Sì", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            removeItemFromList(position);
-                            co_relatori.remove(position);
-                        }
-                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    }).create().show();
-            return false;
-        });
+        uploadImageButton.setOnClickListener(v -> openImageFromGallery());
 
-        addImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
-            }
-        });
-
+        pickPhotoLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        addImage.setImageURI(selectedImageUri);
+                    }
+                });
 
         /*Imposta la sezione relativa all'aggiunta dei relatori*/
-        ImageView b_aggiungi_relatore = binding.aggiungiRelatore;
-        View relatorePopup = getLayoutInflater().inflate(R.layout.popup_relatore, null);
-        dialogBuilder = new AlertDialog.Builder(getContext());
-        dialogBuilder.setView(relatorePopup);
-        AlertDialog dialog = dialogBuilder.create();
-
-        /*Apertura del popup Relatore */
-        b_aggiungi_relatore.setOnClickListener(view1 -> {
-            viewRelatore(relatorePopup);
-            save.setOnClickListener(view11 -> {
-                aggiungiRelatore(checkPermessi());
-                unchek();
-                PersonaTesi relatore = new PersonaTesi(relatoreObj.getId(), relatoreObj.getDisplayName(), relatoreObj.getEmail(), permessiList);
-                co_relatori.add(relatore);
-                addItemToList(relatore.getDisplayName() + " " + relatore.getPermissions());
-                resetPopupRelatore();
-                dialog.dismiss();
-            });
-            cancel.setOnClickListener(view112 -> dialog.dismiss());
-            dialog.show();
-        });
+        setCardCoRelatorsCreator();
 
         /*Imposta la sezione relativa all'aggiunta degli ambiti*/
         ImageView b_aggiungi_ambiti = binding.aggiungiAmbiti;
@@ -197,12 +168,12 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
             filtriRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot documentSnapshots) {
-                    paroleChiave.setText("Parole chiave");
+                    paroleChiave.setText(getString(R.string.keyword)+": ");
                     keywordListView.clearChoices();
                     keywordSelezionate.clear();
                     filtriList = documentSnapshots.toObjects(Filtri.class);
-                    ambitiList = filtriList.get(0).getLista();
-                    keywordList = filtriList.get(1).getLista();
+                    ambitiList = Arrays.asList(getResources().getStringArray(R.array.ambiti));
+                    keywordList = filtriList.get(0).getLista();
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                             android.R.layout.simple_spinner_dropdown_item, ambitiList);
@@ -222,7 +193,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                             }
                             else{
                             }
-                            paroleChiave.setText("Parole chiave (" + keywordListView.getCheckedItemCount()+")");
+                            paroleChiave.setText(getString(R.string.keyword) + " (" + keywordListView.getCheckedItemCount()+")");
                         }
 
                     });
@@ -243,7 +214,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                 rimuoviAmbiti(parentLayout);
                 textAmbito = ambitoSpinner.getSelectedItem().toString();
                 Chiave.setText("("+stampaKey(keywordSelezionate)+")");
-                Ambito.setText("AMBITO: " + textAmbito);
+                Ambito.setText(getString(R.string.scope) + ": " + textAmbito);
                 aggiungiAmbiti(parentLayout);
                 dialog3.dismiss();
             });
@@ -255,92 +226,41 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
             });
             dialog3.show();
         });
-
-
-        /*
-        //Imposta la sezione relativa all'aggiunta dei vincoli
-        ImageView b_aggiungi_vincoli = binding.aggiungiVincoli;
-        final View vincoliPopup = getLayoutInflater().inflate(R.layout.popup_vincoli, null);
-        dialogBuilder2 = new AlertDialog.Builder(getContext());
-        dialogBuilder2.setView(vincoliPopup);
-        dialog2 = dialogBuilder2.create();
-
-
-        //Apertura del popup Vincoli
-        b_aggiungi_vincoli.setOnClickListener(view12 -> {
-            viewVincoli(vincoliPopup);
-            LinearLayout parentLayout = binding.vincoliTesi;
-
-            save2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    rimuoviVincoli(parentLayout);
-                    textmedia = parseInt(voto.getText().toString());
-                    n_settimane = parseInt(text_settimane.getText().toString());
-                    Tempistiche.setText("SETTIMANE PREVISTE: " + n_settimane);
-                    Media.setText("MEDIA: " + textmedia);
-                    if(eSkill.getText().toString().equals(""))
-                    {
-                        Skill.setText("NESSUNA SKILL RICHIESTA");
-                    }
-                    else{
-                        Skill.setText("SKILL: " + eSkill.getText().toString());
-                    }
-                    aggiungiVincoli(parentLayout);
-                    dialog2.dismiss();
-                }
-                });
-            cancel2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog2.dismiss();
-                }
-            });
-            dialog2.show();
-        });
-        */
         salva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(eDescrizione.getText().length()<1 || eNomeTesi.getText().length()<1 || textAmbito == null){
-                    Toast.makeText(getContext(), "Riempire tutti i campi", Toast.LENGTH_SHORT).show();
+                if(eDescrizione.getText().length()<1 || eNomeTesi.getText().length()<1 || textAmbito == null || n_settimane < 3){
+                    showSaveToast(R.string.fill_fields);
                 }
                 else {
                     caricaTesi();
+                    mainActivityViewModel.loadLastTheses();
                     navController.popBackStack();
                 }
             }
         });
     }
 
-    private void resetPopupRelatore() {
-        popup_email.setText(null);
-        popup_nome.setText(null);
-        modifica.setVisibility(View.VISIBLE);
-        verifica.setVisibility(View.GONE);
-        popup_email.setVisibility(View.VISIBLE);
-        save.setVisibility(View.GONE);
-    }
-
-    private void unchek() {
-        permesso1.setChecked(false);
-        permesso2.setChecked(false);
-        permesso3.setChecked(false);
-        permesso4.setChecked(false);
-    }
-
     private void caricaTesi() {
         List<String> documents = new ArrayList<String>();
 
-        Tesi tesi = new Tesi(eNomeTesi.getText().toString(), co_relatori, relatorePrincipaleObj, eDescrizione.getText().toString(), textAmbito, keywordSelezionate, Skill.getText().toString(), n_settimane, esami, textmedia, documents, null, eNote.getText().toString());
+        String nomeTesi = eNomeTesi.getText().toString();
+        String descrizione = eDescrizione.getText().toString();
+        String note = eNote.getText().toString();
 
-            db.collection("tesi").document(tesi.getId())
-                .set(tesi, SetOptions.merge())
-                .addOnSuccessListener(documentReference -> {
-                    saveKey();
-                    Toast.makeText(getContext(), "tesi creata", Toast.LENGTH_SHORT).show();
-                        }
-                ).addOnFailureListener(e -> Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show());
+        Tesi tesi = new Tesi(nomeTesi, co_relatori, relatorePrincipaleObj, descrizione, Utility.convertScopesToEnum(textAmbito), keywordSelezionate, skill, n_settimane, esami, textmedia, documents, null, note);
+        thesis = tesi;
+        if(selectedImageUri==null){
+            db.collection("tesi").document(thesis.getId())
+                    .set(thesis, SetOptions.merge())
+                    .addOnSuccessListener(documentReference -> {
+                                saveKey();
+                                showSaveToast(R.string.successfull);
+                            }
+                    ).addOnFailureListener(e -> showSaveToast(R.string.failed));
+            return;
+        }
+        uploadFile(thesis.getId(), selectedImageUri);
     }
 
     private String stampaKey(List<String> keywordSelezionate) {
@@ -374,7 +294,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                         }
                     }
                     if (findit){
-                        Toast.makeText(getContext(),"Chiave esistente", Toast.LENGTH_SHORT).show();
+                        showSaveToast(R.string.existing_keyword);
                     }
                     else {
                         // Creare una lista per gli elementi selezionati
@@ -401,11 +321,11 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                             keywordListView.setItemChecked(elemento, true);
                         }
                         keywordListView.setItemChecked(keywordListView.getCount()-1, true);
-                        paroleChiave.setText("Parole chiave (" + keywordListView.getCheckedItemCount()+")");
-                        Toast.makeText(getContext(), "Lista aggiornata", Toast.LENGTH_SHORT).show();
+                        paroleChiave.setText(getString(R.string.keyword) + " (" + keywordListView.getCheckedItemCount()+")");
+                        showSaveToast(R.string.list_updated);
                     }
                 }
-                else Toast.makeText(getContext(), "Inserire una chiave", Toast.LENGTH_SHORT).show();
+                else showSaveToast(R.string.insert_keyword);
             }
         });
     }
@@ -432,41 +352,6 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                 });
     }
 
-    public void viewVincoli(View vincoliPopup){
-        eSkill = vincoliPopup.findViewById(R.id.CeS_edit);
-        save2 = vincoliPopup.findViewById(R.id.save2Button);
-        cancel2 = vincoliPopup.findViewById(R.id.cancel2Button);
-        settimaneSeek = vincoliPopup.findViewById(R.id.settimane);
-        text_settimane = vincoliPopup.findViewById(R.id.n_settimane);
-        settimaneSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar settimane, int progress, boolean fromUser) {
-                text_settimane.setText(String.valueOf(progress));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar settimane) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar settimane) {}
-        });
-
-        voto = vincoliPopup.findViewById(R.id.voto);
-        mediaSeek = vincoliPopup.findViewById(R.id.media);
-
-        mediaSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar media, int progress, boolean fromUser) {
-                voto.setText(String.valueOf(progress));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar media) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar media) {}
-        });
-    }
 
     private void aggiungiAmbiti(LinearLayout parent){
         parent.addView(Ambito);
@@ -479,6 +364,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void aggiungiVincoli(LinearLayout parent){
+        parent.removeAllViews();
         parent.addView(Skill);
         parent.addView(Media);
         parent.addView(Tempistiche);
@@ -494,9 +380,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         Ambito = new TextView(getContext());
         Chiave = new TextView(getContext());
         Ambito.setTextSize(20);
-        Ambito.setTextColor(Color.BLACK);
         Chiave.setTextSize(20);
-        Chiave.setTextColor(Color.BLACK);
     }
 
     private void impostaVincoli() {
@@ -504,139 +388,38 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         Skill = new TextView(getContext());
         Media = new TextView(getContext());
         Media.setTextSize(20);
-        Media.setTextColor(Color.BLACK);
         Tempistiche.setTextSize(20);
-        Tempistiche.setTextColor(Color.BLACK);
         Skill.setTextSize(20);
-        Skill.setTextColor(Color.BLACK);
     }
 
-    private String checkPermessi() {
-        permessiList.clear();
-        permessi="";
-        if(permesso1.isChecked()){
-            permessi += permesso1.getText() + ", ";
-            permessiList.add(permesso1.getText().toString());
-        }
-        if(permesso2.isChecked())
-        {
-            permessi += permesso2.getText() + ", ";
-            permessiList.add(permesso2.getText().toString());
-        }
-        if(permesso3.isChecked()){
-            permessi += permesso3.getText() + ", ";
-            permessiList.add(permesso3.getText().toString());
-        }
-        if(permesso4.isChecked()){
-            permessi += permesso4.getText() + ", ";
-            permessiList.add(permesso4.getText().toString());
-        }
-        if(permessiList.isEmpty()){
-            permessi += "nessun permesso";
-        }
-        return permessi;
+    @Override
+    public void onStart() {
+        super.onStart();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
     }
 
-    private void viewRelatore(View relatorePopup) {
-        popup_nome = relatorePopup.findViewById(R.id.nome);
-        popup_email = relatorePopup.findViewById(R.id.email);
-        permesso1 = relatorePopup.findViewById(R.id.edit_search_keys_permission);
-        permesso2 = relatorePopup.findViewById(R.id.edit_documents_permission);
-        permesso3 = relatorePopup.findViewById(R.id.edit_constraints_permission);
-        permesso4 = relatorePopup.findViewById(R.id.edit_notes_permission);
-        save = relatorePopup.findViewById(R.id.saveButton);
-        cancel = relatorePopup.findViewById(R.id.cancelButton);
-        verifica = (Button) impostaVerifica(relatorePopup);
-    }
-
-    private void aggiungiRelatore(String permessi) {
-        TextView nuovo_relatore = new TextView(getContext());
-        nuovo_relatore.setText(popup_nome.getText() + " " + " (" + permessi + ").");
-        nuovo_relatore.setTextSize(20);
-        nuovo_relatore.setTextColor(Color.BLACK);
-    }
-
-    private View impostaModifica(View relatorePopup) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        modifica = new Button(this.getContext());
-        modifica.setLayoutParams(params);
-        modifica.setTextSize(20);
-        modifica.setBackgroundColor(save.getShadowColor());
-        modifica.setTextColor(Color.WHITE);
-        modifica.setText("modifica mail");
-        LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
-        tastiLayout.removeView(verifica);
-        tastiLayout.addView(modifica);
-        return modifica;
-    }
-
-    private View impostaVerifica(View relatorePopup) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        LinearLayout tastiLayout = relatorePopup.findViewById(R.id.tasti);
-        tastiLayout.removeView(verifica);
-        verifica = new Button(this.getContext());
-        verifica.setLayoutParams(params);
-        verifica.setTextSize(20);
-        verifica.setTextColor(Color.WHITE);
-        verifica.setBackgroundColor(save.getShadowColor());
-        verifica.setText("Verifica email");
-        trovato = false;
-        verifica.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                trovato2= false;
-                for(PersonaTesi relatore : co_relatori){
-                    if(relatore.getEmail().equals(popup_email.getText().toString())){
-                        trovato2=true;
-                    }
-                }
-                if(trovato2==true){
-                    Toast.makeText(getContext(), "Relatore già presente", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    relatoriRef.whereEqualTo("email", popup_email.getText().toString())
-                            .limit(1)
-                            .get()
-                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                        trovato = true;
-                                        relatoreObj = documentSnapshot.toObject(PersonaTesi.class);
-                                        popup_nome.setText(relatoreObj.getDisplayName());
-                                        popup_nome.setVisibility(View.VISIBLE);
-                                        popup_email.setVisibility(View.INVISIBLE);
-                                        modifica = (Button) impostaModifica(relatorePopup);
-                                        modifica.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                popup_nome.setVisibility(View.INVISIBLE);
-                                                popup_email.setVisibility(View.VISIBLE);
-                                                save.setVisibility(View.GONE);
-                                                impostaVerifica(relatorePopup);
-                                            }
-                                        });
-                                        save.setVisibility(View.VISIBLE);
-                                    }
-
-                            }
-                });
-                }
-            }
-        });
-        tastiLayout.removeView(modifica);
-        tastiLayout.addView(verifica);
-        return verifica;
+    @Override
+    public void onResume() {
+        super.onResume();
+        navBar = getActivity().findViewById(R.id.nav_view);
+        navBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        navBar.setVisibility(View.VISIBLE);
         binding = null;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(navBar != null) {
+            navBar.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
@@ -648,54 +431,8 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Uri selectedImageUri = data.getData();
-            addImage.setImageURI(selectedImageUri);
-            int height = 550;
-            int width = 550;
-            ViewGroup.LayoutParams layoutParams = addImage.getLayoutParams();
-            layoutParams.width = width;
-            layoutParams.height = height;
-
-            addImage.setLayoutParams(layoutParams);
-        }
-    }
-
-    // Metodo per aggiungere un elemento alla lista
-    private void addItemToList(String item) {
-        listRelatori.add(item);
-        adapterRelatori.notifyDataSetChanged();
-
-        // Ottenere i parametri di layout correnti della ListView
-        ViewGroup.LayoutParams params = listViewRelatori.getLayoutParams();
-
-        // Impostare la nuova altezza desiderata
-        params.height += 125;
-
-        // Applicare i nuovi parametri di layout alla ListView
-        listViewRelatori.setLayoutParams(params);
-    }
-
-    // Metodo per rimuovere un elemento dalla lista
-    private void removeItemFromList(int position) {
-        listRelatori.remove(position);
-        adapterRelatori.notifyDataSetChanged();
-
-            // Ottenere i parametri di layout correnti della ListView
-            ViewGroup.LayoutParams params = listViewRelatori.getLayoutParams();
-            // Impostare la nuova altezza desiderata
-            params.height -= 125;
-
-            // Applicare i nuovi parametri di layout alla ListView
-            listViewRelatori.setLayoutParams(params);
-    }
-
     private void setCardConstraintsCreator() {
         ImageView constraintsArrowCard = binding.aggiungiVincoli;
-        constraintsArrowCard.setImageResource(R.drawable.ic_baseline_edit_note_24);
         constraintsArrowCard.setClickable(true);
 
         CreaTesiFragment requireFragment = this;
@@ -723,16 +460,142 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
 
         rimuoviVincoli(parentLayout);
 
-        Tempistiche.setText("SETTIMANE PREVISTE: " + n_settimane);
-        Media.setText("MEDIA: " + textmedia);
+        Tempistiche.setText(getString(R.string.timelines) + ":" + n_settimane);
+        Media.setText(getString(R.string.average_votes) + ":" + textmedia);
         if(skill.isEmpty())
         {
-            Skill.setText("NESSUNA SKILL RICHIESTA");
+            Skill.setText(getString(R.string.no_skill_required));
         }
         else{
-            Skill.setText("SKILL: " + skill);
+            Skill.setText(getString(R.string.skills_and_competences) + ":" + skill);
         }
         aggiungiVincoli(parentLayout);
     }
 
+    private void setCardCoRelatorsCreator() {
+        ImageView relatorsArrowCard = binding.aggiungiRelatore;
+        CreaTesiFragment requireFragment = this;
+
+        relatorsArrowCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final View relatorePopup = getLayoutInflater().inflate(R.layout.popup_relatore, null);
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+                dialogBuilder.setView(relatorePopup);
+                AlertDialog dialog = dialogBuilder.create();
+
+                CoRelatoreDialoog coRelatoreDialoog = new CoRelatoreDialoog(dialog, relatorePopup, co_relatori, requireFragment);
+                coRelatoreDialoog.show();
+            }
+        });
+    }
+
+    public void addCoRelator(PersonaTesi coRelator) {
+        co_relatori.add(coRelator);
+        relatorsAdapter = null;
+        relatorsAdapter = new RelatorsAdapter(co_relatori, true, this);
+        recyclerViewRelators.setAdapter(relatorsAdapter);
+        // 4. Notifica all'adattatore che è stato aggiunto un nuovo elemento
+        relatorsAdapter.notifyDataSetChanged();
+        // Opzionalmente, scorrere la RecyclerView per visualizzare l'elemento appena aggiunto
+        recyclerViewRelators.scrollToPosition(0);
+        recyclerViewRelators.setVisibility(View.VISIBLE);
+        recyclerViewRelators.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    public void removeCoRelator(PersonaTesi coRelator) {
+        co_relatori.remove(coRelator);
+        relatorsAdapter = new RelatorsAdapter(co_relatori, true, this);
+        recyclerViewRelators.setAdapter(relatorsAdapter);
+        relatorsAdapter.notifyDataSetChanged();
+    }
+
+    // Gestisci la risposta dell'Intent
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_PICK_IMAGE && resultCode == MainActivity.RESULT_OK && data != null) {
+            selectedImageUri = data.getData();
+        }
+    }
+
+    private void openImageFromGallery() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            selectImageFromGallery();
+        } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            selectImageFromGallery();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                        MainActivity.REQUEST_READ_EXTERNAL_STORAGE);
+            } else {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MainActivity.REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        }
+    }
+
+    private void selectImageFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickPhotoLauncher.launch(intent);
+    }
+
+    private void uploadFile(String title, Uri fileUri) {
+
+        LoggedInUser user = mainActivityViewModel.getUser().getValue();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference documentRef = storageRef.child("images/tesi/" + title);
+
+        // Upload the file to Firebase Storage
+        documentRef.putFile(fileUri)
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        documentRef.getDownloadUrl()
+                                .addOnCompleteListener(task1 -> {
+                                    if(task1.isSuccessful()){
+                                        thesis.setImageTesi(task1.getResult().toString());
+                                    }
+                                    db.collection("tesi").document(thesis.getId())
+                                            .set(thesis, SetOptions.merge())
+                                            .addOnSuccessListener(documentReference -> {
+                                                        saveKey();
+                                                        showSaveToast(R.string.successfull);
+                                                    }
+                                            ).addOnFailureListener(e -> showSaveToast(R.string.failed));
+                                });
+                    }
+                    else{
+                        db.collection("tesi").document(thesis.getId())
+                                .set(thesis, SetOptions.merge())
+                                .addOnSuccessListener(documentReference -> {
+                                            saveKey();
+                                            showSaveToast(R.string.successfull);
+                                        }
+                                ).addOnFailureListener(e -> showSaveToast(R.string.failed));
+                    }
+                });
+    }
+
+    private void showSaveToast(@StringRes Integer message) {
+        if (getContext() != null && getContext().getApplicationContext() != null) {
+            Toast.makeText(
+                    getContext().getApplicationContext(),
+                    message,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MainActivity.REQUEST_READ_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectImageFromGallery();
+            } else {
+                showSaveToast(R.string.access_media_gallery_denied);
+            }
+        }
+    }
 }

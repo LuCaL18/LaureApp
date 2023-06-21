@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <com.github.sundeepk.compactcalendarview.CompactCalendarView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/compactcalendar_view"
@@ -36,33 +35,41 @@
         tools:ignore="MissingConstraints"
         android:scrollIndicators="bottom"
         android:scrollbars="horizontal"/>
+    <ImageView
+        android:id="@+id/restart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="15dp"
+        android:src="@drawable/baseline_restart_alt_24"/>
 
     <Button
         android:id="@+id/addRicevimentoB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/aggiungi"
+        android:text="@string/add"
         app:layout_constraintTop_toBottomOf="@id/compactcalendar_view" />
 
     <ScrollView
+        android:id="@+id/addRicevimentoL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/addRicevimentoB"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone">
 
     <LinearLayout
-        android:id="@+id/addRicevimentoL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="invisible">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tesiT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="TESI"
+            android:text="@string/thesis"
             android:textSize="20sp"
             android:layout_marginHorizontal="50dp"
             />
@@ -83,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="TASK IN ARGOMENTO"
+            android:text="@string/task"
             android:textSize="20sp"
             android:layout_marginHorizontal="50dp"
             android:visibility="gone"
@@ -104,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="TITOLO"
+            android:text="@string/title"
             android:textSize="20sp"
             android:layout_marginHorizontal="50dp"
             />
@@ -114,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="50dp"
-            android:hint="min 10 caratteri"
+            android:hint="@string/minimum_10_characters"
             android:textSize="20sp"
             android:visibility="visible"/>
 
@@ -123,7 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="RIEPILOGO"
+            android:text="@string/summary"
             android:textSize="20sp"
             android:layout_marginHorizontal="50dp"
             android:visibility="gone"
@@ -134,7 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="50dp"
-            android:hint="Note sul ricevimento avvenuto"
+            android:hint="@string/summary"
             android:textSize="20sp"
             android:visibility="gone"/>
 
@@ -148,7 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:text="Seleziona ora"/>
+            android:text="@string/choose_time"/>
 
         <TextView
             android:id="@+id/orarioT"
@@ -165,7 +172,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="SALVA"/>
+        android:text="@string/save"/>
 
         </LinearLayout>
     </ScrollView>

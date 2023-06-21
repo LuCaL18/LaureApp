@@ -13,7 +13,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.uniba.mobile.cddgl.laureapp.R;
 import com.uniba.mobile.cddgl.laureapp.data.model.Notification;
 import com.uniba.mobile.cddgl.laureapp.ui.bookings.interfaces.BookingItemClickCallback;
-import com.uniba.mobile.cddgl.laureapp.ui.calendario.MeetingItemClickCallback;
+import com.uniba.mobile.cddgl.laureapp.ui.calendario.interfaces.MeetingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.chat.interfaces.ChatItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationBookingItemClickCallback;
 import com.uniba.mobile.cddgl.laureapp.ui.notifications.impl.NotificationChatItemClickCallback;

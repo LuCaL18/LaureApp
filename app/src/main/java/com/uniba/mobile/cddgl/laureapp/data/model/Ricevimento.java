@@ -3,7 +3,11 @@ package com.uniba.mobile.cddgl.laureapp.data.model;
 import com.uniba.mobile.cddgl.laureapp.data.PersonaTesi;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Classe che rappresenta l'istanza del ricevimento
@@ -19,7 +23,7 @@ public class Ricevimento implements Serializable {
     private String titolo;
     private String studente;
     private List<PersonaTesi> co_relatori;
-
+    private UUID guid = UUID.randomUUID();
     public Ricevimento() {
     }
     public Ricevimento(String ricevimentoId) {
@@ -27,8 +31,8 @@ public class Ricevimento implements Serializable {
     }
 
 
-    public Ricevimento(String ricevimentoId, String relatore, String riepilogo, List<String> task, String tesi, String tesiId, Long time, String titolo, String studente, List<PersonaTesi> co_relatori) {
-        this.ricevimentoId = ricevimentoId;
+    public Ricevimento(String relatore, String riepilogo, List<String> task, String tesi, String tesiId, Long time, String titolo, String studente, List<PersonaTesi> co_relatori) {
+        this.ricevimentoId = guid.toString();
         this.relatore=relatore;
         this.riepilogo = riepilogo;
         this.task = task;
@@ -80,8 +84,15 @@ public class Ricevimento implements Serializable {
         this.tesiId = tesiId;
     }
 
-    public Long getTime() {
+    public long getTime() {
         return time;
+    }
+    // Inizializza l'adattatore e collegalo alla RecyclerView
+
+    public String getTimeString(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        Date date = new Date(time);
+        return formatter.format(date);
     }
 
     public void setTime(Long time) {

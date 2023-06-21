@@ -3,28 +3,47 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize">
 
     <ScrollView
         android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="40dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/layout_vert"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_marginTop="15dp"
-                android:id="@+id/addImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@drawable/baseline_add_photo_alternate_24"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/tesi_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@mipmap/no_image" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/upload_image_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="21dp"
+                    android:src="@drawable/baseline_add_to_photos_24"
+                    android:tint="@color/white"
+                    app:backgroundTint="?attr/colorPrimary"
+                    app:tint="@color/white" />
+            </RelativeLayout>
 
             <EditText
                 android:id="@+id/nome_tesi"
@@ -32,18 +51,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginHorizontal="15dp"
-                android:hint="@string/nome_tesi"
-                android:textColor="@color/black"
+                android:hint="@string/thesis_name"
                 android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/descrizione"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="DESCRIZIONE"
+                android:hint="@string/invalid_description"
                 android:textSize="20sp"
                 android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="15dp"/>
+                android:layout_marginTop="15dp"
+                android:maxLength="200" />
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -53,7 +72,7 @@
                     android:id="@+id/T_relatori_tesi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/relatori"
+                    android:text="@string/relators"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/nome_tesi"
@@ -69,8 +88,8 @@
                         app:layout_constraintTop_toTopOf="@+id/T_relatori_tesi"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="17dp"
-                        android:background="@drawable/baseline_add_to_photos_24"
                         android:textAlignment="center"
+                        android:background="@drawable/baseline_add_to_photos_24"
                         android:clickable="true"
                         android:contextClickable="true"
                         android:allowClickWhenDisabled="true"/>
@@ -85,12 +104,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/T_relatori_tesi"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:textColor="@color/black" />
-            <ListView
+                android:layout_marginTop="15dp" />
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listaRelatori"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
+                android:layout_width="380dp"
+                android:layout_gravity="center_horizontal"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -100,7 +119,7 @@
                     android:id="@+id/T_ambito"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ambiti"
+                    android:text="@string/scope"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="20dp"
@@ -136,7 +155,7 @@
                     android:id="@+id/T_vincoli"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/vincoli"
+                    android:text="@string/constraints"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="20dp"
@@ -167,21 +186,23 @@
                 android:id="@+id/note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Note"
+                android:hint="@string/notes"
                 android:textSize="24sp"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="15dp"/>
+
+            <Button
+                android:id="@+id/salva"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/save"/>
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/salva"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
-        android:text="SALVA"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

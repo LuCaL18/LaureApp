@@ -200,6 +200,7 @@
     <string name="motivation_for_unfulfilled_constraints">Motivation for unfulfilled constraints</string>
     <string name="constraints_checks_the_constraints_satisfied">Checks the constraints satisfied</string>
     <string name="booking_successfully_saved">Booking successfully saved</string>
+    <string name="meeting_successfully_saved">Meeting successfully saved</string>
     <string name="impossible_to_save_the_booking">Impossible to save the booking</string>
     <string name="refused">Refused</string>
     <string name="accepted">Accepted</string>
@@ -330,6 +331,8 @@
     <string name="failed">Failed</string>
     <string name="task_name">Task name</string>
     <string name="profile">Profile</string>
+    <string name="fill_fields">fill in the blank fields</string>
+    <string name="insert_keyword">insert keyword</string>
 
     <!-- SPINNER-->
     <string-array name="ambiti">
@@ -378,4 +381,14 @@
     <string name="select_image">Select Image</string>
     <string name="take_picture">Take a picture</string>
     <string name="professor_email_not_found">Professor with the entered email not found</string>
+    <string name="list_updated">list updated</string>
+    <string name="keyword">Keyword</string>
+    <string name="no_skill_required">No skill required</string>
+    <string name="choose_time">Choose time</string>
+    <string name="hide">hide</string>
+    <string name="create_task">create and select a task before</string>
+    <string name="thesis_name">Thesis</string>
+    <string name="summary">Summary</string>
+    <string name="minimum_10_characters">minimum 10 characters</string>
+    <string name="es_robotica">ES...robotica</string>
 </resources>
