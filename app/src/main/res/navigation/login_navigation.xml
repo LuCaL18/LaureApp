@@ -6,12 +6,12 @@
     app:startDestination="@id/startFragment">
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.login.LoginFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.login.LoginFragment"
         android:label="@string/login"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/startFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.login.StartFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.login.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start">
         <action
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.login.registration.RegistrationFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.login.registration.RegistrationFragment"
         android:label="@string/sign_up"
         tools:layout="@layout/fragment_registration" >
         <action
@@ -32,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/confirmRegistrationFragment"
-        android:name="com.uniba.mobile.cddgl.laureapp.ui.login.registration.ConfirmRegistrationFragment"
+        android:name="it.uniba.dib.sms222327.laureapp.ui.login.registration.ConfirmRegistrationFragment"
         android:label="@string/confirm_registration"
         tools:layout="@layout/fragment_confirm_registration" />
 </navigation>

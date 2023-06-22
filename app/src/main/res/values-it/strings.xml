@@ -292,7 +292,7 @@
     <string name="requested_grade_average">Media voto richiesta</string>
     <string name="timeline_value_weeks">%s settimane</string>
     <string name="es_programming_in_java">ES. Programmazione in java…</string>
-    <string name="search_keys">Cerca parole chiave</string>
+    <string name="search_keys">Parole di ricerca</string>
     <string name="scopes">Ambiti</string>
     <string name="search_words">Cerca parole</string>
     <string name="key_words">Parole chiave</string>

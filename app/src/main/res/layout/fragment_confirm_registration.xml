@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
-    tools:context=".ui.login.registration.ConfirmRegistrationFragment">
+    tools:context="it.uniba.dib.sms222327.laureapp.ui.login.registration.ConfirmRegistrationFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

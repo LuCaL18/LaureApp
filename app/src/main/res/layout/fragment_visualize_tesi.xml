@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?android:attr/actionBarSize"
-    tools:context=".ui.tesi.VisualizeTesiFragment">
+    tools:context="it.uniba.dib.sms222327.laureapp.ui.tesi.VisualizeTesiFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -721,7 +721,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawablePadding="16dp"
                                 android:paddingStart="6dp"
-                                android:text="@string/search_words"
+                                android:text="@string/key_words"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 

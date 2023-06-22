@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.uniba.mobile.cddgl.laureapp'
+    namespace 'it.uniba.dib.sms222327.laureapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.uniba.mobile.cddgl.laureapp"
+        applicationId "it.uniba.dib.sms222327.laureapp"
         minSdk 27
         targetSdk 33
         versionCode 1
@@ -20,7 +20,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

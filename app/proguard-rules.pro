@@ -20,6 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile4
 
--keepclassmembers class com.uniba.mobile.cddgl.laureapp.data.model.Tesi {
+-keepclassmembers class it.uniba.dib.sms222327.laureapp.data.model.Tesi {
     public <init>();
 }

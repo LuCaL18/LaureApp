@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.calendario.CalendarioFragment">
+    tools:context="it.uniba.dib.sms222327.laureapp.ui.calendario.CalendarioFragment">
 
     <TextView
         android:id="@+id/mese"
