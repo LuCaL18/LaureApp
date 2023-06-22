@@ -15,18 +15,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import it.uniba.dib.sms222327.laureapp.R;
 
-import it.uniba.dib.sms222327.laureapp.data.PersonaTesi;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import it.uniba.dib.sms222327.laureapp.data.Result;
 import it.uniba.dib.sms222327.laureapp.data.RoleUser;
 import it.uniba.dib.sms222327.laureapp.data.model.LoggedInUser;
 import it.uniba.dib.sms222327.laureapp.data.model.Task;
 import it.uniba.dib.sms222327.laureapp.util.Utility;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * ViewModel della main activity si occupa del caricamento delle tesi presenti nella home e del recupero dei dati dell'utente
@@ -135,14 +133,9 @@ public class MainViewModel extends ViewModel {
         if (role.equals(RoleUser.PROFESSOR)) {
             Query queryProf = tesiRef.whereEqualTo("relatore.id", idUser).orderBy("created_at", Query.Direction.DESCENDING).limit(3);
 
-            Query queryCoRelatori = tesiRef.whereArrayContains("coRelatori", new PersonaTesi(idUser, user.getValue().getDisplayName(), user.getValue().getEmail(), null))
-                    .orderBy("created_at", Query.Direction.DESCENDING)
-                    .limit(3);
-
             com.google.android.gms.tasks.Task<QuerySnapshot> query1Task = queryProf.get();
-            com.google.android.gms.tasks.Task<QuerySnapshot> query2Task = queryCoRelatori.get();
 
-            Tasks.whenAllSuccess(query1Task, query2Task)
+            Tasks.whenAllSuccess(query1Task)
                     .addOnSuccessListener(new OnSuccessListener<List<Object>>() {
                         @Override
                         public void onSuccess(List<Object> objects) {

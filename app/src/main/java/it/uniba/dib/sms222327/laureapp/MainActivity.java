@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -369,6 +370,9 @@ public class MainActivity extends AppCompatActivity {
         Locale.setDefault(locale);
         Configuration configuration = getResources().getConfiguration();
         configuration.setLocale(locale);
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        getResources().updateConfiguration(configuration, displayMetrics);
     }
 
     @Override

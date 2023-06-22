@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_navigation_notifications_to_bookingFragment"
             app:destination="@id/bookingFragment" />
+        <action
+            android:id="@+id/action_navigation_notifications_to_calendario"
+            app:destination="@id/calendario" />
     </fragment>
     <fragment
         android:id="@+id/tesiFragmant"
@@ -50,7 +53,7 @@
     <fragment
         android:id="@+id/nav_lista_task"
         android:name="it.uniba.dib.sms222327.laureapp.ui.task.ListaTaskFragment"
-        android:label="ListaTask" >
+        android:label="@string/lista_task" >
         <action
             android:id="@+id/action_nav_lista_task_to_nav_new_task"
             app:destination="@id/nav_new_task" />
@@ -147,7 +150,7 @@
     <fragment
         android:id="@+id/calendario"
         android:name="it.uniba.dib.sms222327.laureapp.ui.calendario.CalendarioFragment"
-        android:label="Calendario"
+        android:label="@string/calendar"
         tools:layout="@layout/fragment_calendario" >
         <action
             android:id="@+id/action_calendario_to_nav_lista_task"
@@ -159,7 +162,7 @@
     <fragment
         android:id="@+id/visualizzaRicevimento"
         android:name="it.uniba.dib.sms222327.laureapp.ui.calendario.VisualizzaRicevimentoFragment"
-        android:label="Ricevimento"
+        android:label="@string/meetings"
         tools:layout="@layout/fragment_visualizza_ricevimento" />
     <fragment
         android:id="@+id/fragment_settings"

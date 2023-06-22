@@ -135,6 +135,15 @@ public class NotificationsFragment extends Fragment {
             NavController navController = NavHostFragment.findNavController(this);
             navController.navigate(R.id.action_navigation_notifications_to_bookingFragment);
         });
+
+        meetingViewModel.getRicevimento().observe(getViewLifecycleOwner(), ricevimento -> {
+            if(ricevimento == null || meetingViewModel.isAlreadyRead()) {
+                return;
+            }
+
+            NavController navController = NavHostFragment.findNavController(this);
+            navController.navigate(R.id.action_navigation_notifications_to_calendario);
+        });
     }
 
     @Override

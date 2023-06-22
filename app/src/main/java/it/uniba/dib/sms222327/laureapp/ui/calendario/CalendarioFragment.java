@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,6 +66,7 @@ import it.uniba.dib.sms222327.laureapp.data.model.Task;
 import it.uniba.dib.sms222327.laureapp.data.model.Tesi;
 import it.uniba.dib.sms222327.laureapp.databinding.FragmentCalendarioBinding;
 import it.uniba.dib.sms222327.laureapp.ui.calendario.adapters.MeetingAdapter;
+import it.uniba.dib.sms222327.laureapp.ui.calendario.viewModels.MeetingViewModel;
 import it.uniba.dib.sms222327.laureapp.util.BaseRequestNotification;
 
 public class CalendarioFragment extends Fragment {
@@ -111,6 +113,7 @@ public class CalendarioFragment extends Fragment {
     private CompactCalendarView calendario;
     public ImageView restart;
     private int meseAttuale = LocalDate.now().getMonthValue()-1;
+    private MeetingViewModel meetingViewModel;
 
 
     public CalendarioFragment() {
@@ -121,6 +124,8 @@ public class CalendarioFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        ViewModelProvider viewModelProvider = new ViewModelProvider(requireParentFragment());
+        meetingViewModel = viewModelProvider.get(MeetingViewModel.class);
     }
 
 
@@ -136,6 +141,9 @@ public class CalendarioFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Impostazione del comportamento quando il fragment viene visualizzato
+        meetingViewModel.setAlreadyRead(true);
+
         // Seleziona le tesi in cui il campo relatore o correlatore corrisponde all'ID del relatore loggato
 
         calendario = binding.compactcalendarView;

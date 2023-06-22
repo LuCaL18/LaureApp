@@ -14,22 +14,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import it.uniba.dib.sms222327.laureapp.R;
 import it.uniba.dib.sms222327.laureapp.data.PersonaTesi;
 import it.uniba.dib.sms222327.laureapp.data.TaskState;
 import it.uniba.dib.sms222327.laureapp.data.model.Task;
 import it.uniba.dib.sms222327.laureapp.data.model.Tesi;
 import it.uniba.dib.sms222327.laureapp.ui.component.DatePickerFragment;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Fragment che si occupa della gestione della creazione di un nuovo task
@@ -167,8 +171,12 @@ public class NewTaskFragment extends Fragment {
                 /* Salvataggio del nuovo task nel database */
                 db.collection("task")
                         .add(task)
-                        .addOnSuccessListener(documentReference -> Toast.makeText(getContext(), getString(R.string.successfull), Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(getContext(), getString(R.string.failed), Toast.LENGTH_SHORT).show());
+                        .addOnSuccessListener(documentReference -> {
+                            showSaveToast(R.string.successfull);
+                            NavController navController = NavHostFragment.findNavController(this);
+                            navController.popBackStack();
+                        })
+                        .addOnFailureListener(e -> showSaveToast(R.string.failed));
             });
         } catch (Exception e) {
             Toast.makeText(getContext(), getString(R.string.an_error_occured), Toast.LENGTH_SHORT).show();
@@ -236,6 +244,15 @@ public class NewTaskFragment extends Fragment {
         if (navBar != null) {
             navBar.setVisibility(View.VISIBLE);
             navBar = null;
+        }
+    }
+
+    private void showSaveToast(@StringRes Integer message) {
+        if (getContext() != null && getContext().getApplicationContext() != null) {
+            Toast.makeText(
+                    getContext().getApplicationContext(),
+                    message,
+                    Toast.LENGTH_LONG).show();
         }
     }
 }

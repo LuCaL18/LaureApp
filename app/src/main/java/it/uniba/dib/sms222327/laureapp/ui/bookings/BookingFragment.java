@@ -28,6 +28,12 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import it.uniba.dib.sms222327.laureapp.MainViewModel;
 import it.uniba.dib.sms222327.laureapp.R;
 import it.uniba.dib.sms222327.laureapp.data.BookingConstraints;
@@ -38,12 +44,8 @@ import it.uniba.dib.sms222327.laureapp.data.RoleUser;
 import it.uniba.dib.sms222327.laureapp.data.model.Booking;
 import it.uniba.dib.sms222327.laureapp.data.model.ChatData;
 import it.uniba.dib.sms222327.laureapp.data.model.LoggedInUser;
+import it.uniba.dib.sms222327.laureapp.data.model.Tesi;
 import it.uniba.dib.sms222327.laureapp.util.BaseRequestNotification;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class BookingFragment extends Fragment {
 
@@ -230,6 +232,7 @@ public class BookingFragment extends Fragment {
 
     /**
      * Visualizzazione di un dialog di conferma per la scelta dell'utente
+     *
      * @param message
      * @param newState
      */
@@ -413,22 +416,34 @@ public class BookingFragment extends Fragment {
         chatRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot result = task.getResult();
-                ChatData chat = result.toObject(ChatData.class);
+                final ChatData[] chat = {result.toObject(ChatData.class)};
 
-                if (chat != null) {
-                    chat.getMembers().add(booking.getStudentId());
+                if (chat[0] != null) {
+                    chat[0].getMembers().add(booking.getStudentId());
                     Map<String, Object> updates = new HashMap<>();
-                    updates.put("members", chat.getMembers());
+                    updates.put("members", chat[0].getMembers());
 
                     chatRef.update(updates);
                 } else {
 
-                    List<String> memeber = new ArrayList<>();
-                    memeber.add(booking.getProfId());
-                    memeber.add(booking.getStudentId());
-                    chat = new ChatData(booking.getIdThesis(), memeber, booking.getNameThesis());
+                    DocumentReference tesiRef = FirebaseFirestore.getInstance().collection("tesi").document(booking.getIdThesis());
+                    tesiRef.get().addOnCompleteListener(task1 -> {
+                        List<String> memeber = new ArrayList<>();
+                        if (task1.isSuccessful()) {
+                            Tesi tesi = task1.getResult().toObject(Tesi.class);
+                            if (tesi != null && tesi.getCoRelatori() != null) {
+                                for (PersonaTesi personaTesi : tesi.getCoRelatori()) {
+                                    memeber.add(personaTesi.getId());
+                                }
+                            }
+                        }
+                        memeber.add(booking.getProfId());
+                        memeber.add(booking.getStudentId());
+                        chat[0] = new ChatData(booking.getIdThesis(), memeber, booking.getNameThesis());
 
-                    chatRef.set(chat).addOnFailureListener(e -> Log.e(CLASS_ID, "Unable set chat --> " + e));
+                        chatRef.set(chat[0]).addOnFailureListener(e -> Log.e(CLASS_ID, "Unable set chat --> " + e));
+                    });
+
                 }
             }
         });

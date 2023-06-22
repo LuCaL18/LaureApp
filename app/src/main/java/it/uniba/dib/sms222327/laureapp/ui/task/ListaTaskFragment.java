@@ -32,19 +32,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import it.uniba.dib.sms222327.laureapp.MainActivity;
 import it.uniba.dib.sms222327.laureapp.MainViewModel;
 import it.uniba.dib.sms222327.laureapp.R;
-import it.uniba.dib.sms222327.laureapp.data.PersonaTesi;
 import it.uniba.dib.sms222327.laureapp.data.RoleUser;
 import it.uniba.dib.sms222327.laureapp.data.model.LoggedInUser;
 import it.uniba.dib.sms222327.laureapp.data.model.Task;
 import it.uniba.dib.sms222327.laureapp.data.model.Tesi;
 import it.uniba.dib.sms222327.laureapp.ui.task.adapter.ListaTaskAdapter;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Fragment che si occupa della gestione della visualizzazione
@@ -211,14 +211,10 @@ public class ListaTaskFragment extends Fragment {
 
         CollectionReference tesiReference = FirebaseFirestore.getInstance().collection("tesi");
         Query queryProf = tesiReference.whereEqualTo("relatore.id", user.getId()).whereNotEqualTo("student", null);
-
-        Query queryCoRelatori = tesiReference.whereArrayContains("coRelatori", new PersonaTesi(user.getId(), user.getDisplayName(), user.getEmail(), null)).whereNotEqualTo("student", null);
-
         com.google.android.gms.tasks.Task<QuerySnapshot> query1Task = queryProf.get();
-        com.google.android.gms.tasks.Task<QuerySnapshot> query2Task = queryCoRelatori.get();
 
 
-        Tasks.whenAllSuccess(query1Task, query2Task)
+        Tasks.whenAllSuccess(query1Task)
                 .addOnSuccessListener(objects -> {
                     for (Object object : objects) {
                         QuerySnapshot querySnapshot = (QuerySnapshot) object;

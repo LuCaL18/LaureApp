@@ -57,16 +57,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="?attr/colorOnPrimary"
-                        app:srcCompat="@drawable/ic_baseline_share_24" />
+                        app:srcCompat="@drawable/ic_baseline_share_24"
+                        android:layout_weight="1"/>
 
                     <ImageButton
                         android:id="@+id/addTesi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_toStartOf="@id/share_tesi"
                         android:backgroundTint="?attr/colorOnPrimary"
-                        android:src="@drawable/ic_baseline_favorite_border_24" />
+                        app:srcCompat="@drawable/ic_baseline_favorite_border_24"
+                        android:layout_weight="1"/>
 
                 </LinearLayout>
 

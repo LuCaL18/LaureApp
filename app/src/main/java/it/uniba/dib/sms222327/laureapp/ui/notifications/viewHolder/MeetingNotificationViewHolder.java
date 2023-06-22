@@ -40,9 +40,9 @@ public class MeetingNotificationViewHolder extends NotificationViewHolder {
         super.bind(notification, idNotification);
 
         meetingId = notification.getMeetingId();
-        iconImageView.setImageResource(R.drawable.ic_baseline_book_online_24);
+        iconImageView.setImageResource(R.drawable.ic_baseline_calendar_month_24_primary_color);
 
-        titleTextView.setText("Meeting");
+        titleTextView.setText(context.getString(R.string.meetings));
 
         bodyTextView.setText(notification.getBody());
     }

@@ -42,8 +42,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -75,7 +73,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
     private MainViewModel mainActivityViewModel;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference filtriRef = db.collection("filtri");
-    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private LoggedInUser currentUser;
     private List<String> esami = new ArrayList<String>();
     private Tesi thesis;
     private FragmentTesiBinding binding;
@@ -116,6 +114,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         mainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        currentUser = mainActivityViewModel.getUser().getValue();
     }
 
     @Override
@@ -134,7 +133,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
 
         NavController navController = NavHostFragment.findNavController(this);
 
-        relatorePrincipaleObj = new PersonaTesi(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail());
+        relatorePrincipaleObj = new PersonaTesi(currentUser.getId(), currentUser.getDisplayName(), currentUser.getEmail());
         relatore = binding.relatorePrincipale;
         relatore.setText(relatorePrincipaleObj.getDisplayName() + " ★");
         salva = binding.salva;
@@ -236,6 +235,7 @@ public class CreaTesiFragment extends Fragment implements AdapterView.OnItemSele
                 else {
                     caricaTesi();
                     mainActivityViewModel.loadLastTheses();
+                    mainActivityViewModel.loadTesiByRole(currentUser.getRole());
                     navController.popBackStack();
                 }
             }

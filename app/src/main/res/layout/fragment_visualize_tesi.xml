@@ -721,7 +721,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawablePadding="16dp"
                                 android:paddingStart="6dp"
-                                android:text="@string/search_words"
+                                android:text="@string/key_words"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
