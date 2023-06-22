@@ -8,35 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:672159346825:android:f0a61d2fb26ff365a65658",
-        "android_client_info": {
-          "package_name": "com.uniba.mobile.cddgl.laureapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "672159346825-d9aqnm3fppbvn6dt09e4uej9u8jblgt6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAHRWVZA7ucQQLDLHrY9ic4f6TwUkDLP7c"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "672159346825-d9aqnm3fppbvn6dt09e4uej9u8jblgt6.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:672159346825:android:ba23384062f346fca65658",
         "android_client_info": {
           "package_name": "it.uniba.dib.sms222327.laureapp"
