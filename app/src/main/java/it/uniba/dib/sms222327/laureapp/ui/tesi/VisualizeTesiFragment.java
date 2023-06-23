@@ -63,6 +63,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import it.uniba.dib.sms222327.laureapp.MainActivity;
 import it.uniba.dib.sms222327.laureapp.MainViewModel;
 import it.uniba.dib.sms222327.laureapp.R;
@@ -90,12 +97,6 @@ import it.uniba.dib.sms222327.laureapp.ui.tesi.viewModels.VisualizeThesisViewMod
 import it.uniba.dib.sms222327.laureapp.ui.ticket.TicketFragment;
 import it.uniba.dib.sms222327.laureapp.util.ShareContent;
 import it.uniba.dib.sms222327.laureapp.util.Utility;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Fragment che si occupa della visualizzazione di una tesi con tutti i suoi dati
@@ -758,13 +759,20 @@ public class VisualizeTesiFragment extends Fragment {
     }
 
     private void checkAndRequestReadExternalStorage() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_READ_EXTERNAL_STORAGE);
-        } else {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             // Permission has already been granted, continue with your code
             pickImageFile();
+        } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            // Permission has already been granted, continue with your code
+            pickImageFile();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                        REQUEST_READ_EXTERNAL_STORAGE);
+            } else {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_READ_EXTERNAL_STORAGE);
+            }
         }
     }
 
@@ -1210,8 +1218,8 @@ public class VisualizeTesiFragment extends Fragment {
 
                         chatRef.update(updatesChat);
                     }
+                    thesis.setStudent(null);
                 });
-                thesis.setStudent(null);
             }
         });
     }
